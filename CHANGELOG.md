@@ -41,3 +41,9 @@
 - Tool index builder for system prompt when > 10 tools
 - Conditional export: only available if `mcp` package is installed
 - `pip install freeagent-sdk[mcp]` optional dependency
+
+### Phase 6: Documentation & Polish
+- Updated README.md with skills, memory, providers, telemetry, MCP, and reliability sections
+- Updated freeagent-sdk.html with Skills, Providers, and Telemetry panels
+- Updated stats, roadmap, and feature grid to reflect v0.2.0 capabilities
+- 191 tests passing across all modules

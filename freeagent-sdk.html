@@ -62,6 +62,8 @@ footer{text-align:center;padding:3rem 1rem;color:var(--tf);font-size:0.75rem;fon
   <button data-t="hooks">Hooks</button>
   <button data-t="memory">Memory</button>
   <button data-t="tools">@tool</button>
+  <button data-t="skills">Skills</button>
+  <button data-t="providers">Providers</button>
   <button data-t="engine">Dual Engine</button>
   <button data-t="guard">Guardrails</button>
   <button data-t="tests">Tests</button>
@@ -74,18 +76,21 @@ footer{text-align:center;padding:3rem 1rem;color:var(--tf);font-size:0.75rem;fon
 <h2>FreeAgent SDK</h2>
 <p>A Python SDK for building AI agents on <strong>local models</strong> (Ollama, vLLM). Unlike Strands and LangChain, FreeAgent wraps your model in guardrails, hooks, and persistent memory — because small models need a co-pilot, not a blank check.</p>
 <div class="stats">
-  <div class="stat"><div class="sn">1,716</div><div class="sl">Lines</div></div>
-  <div class="stat"><div class="sn">0</div><div class="sl">Deps</div></div>
-  <div class="stat"><div class="sn">16</div><div class="sl">Files</div></div>
+  <div class="stat"><div class="sn">191</div><div class="sl">Tests</div></div>
+  <div class="stat"><div class="sn">1</div><div class="sl">Dep (httpx)</div></div>
+  <div class="stat"><div class="sn">3</div><div class="sl">Providers</div></div>
   <div class="stat"><div class="sn">13</div><div class="sl">Hook Events</div></div>
-  <div class="stat"><div class="sn">3</div><div class="sl">Built-in Tools</div></div>
+  <div class="stat"><div class="sn">~300</div><div class="sl">Token Overhead</div></div>
 </div>
 <h2>What's In The Box</h2>
 <div class="gr">
 <div class="cd"><div class="cl g">Hooks</div><p>13 lifecycle events. Decorator or direct registration. Pre-built logging and cost tracking. Hooks can skip tool calls, override responses, and modify behavior without subclassing.</p></div>
-<div class="cd"><div class="cl cy">Memory</div><p>Persistent key-value store on disk (JSON). Auto-loads on run, auto-saves after. Injected into system prompt automatically. Search by prefix. Metadata tracking (created, updated, access count).</p></div>
+<div class="cd"><div class="cl cy">Memory</div><p>Markdown-backed files in <code>.freeagent/memory/</code>. Single <code>memory</code> tool (read/write/append/search/list). Auto-load files in system prompt. Daily logs. Token-efficient.</p></div>
 <div class="cd"><div class="cl g">Dual Engine</div><p>Native tool calling for capable models (llama3.1, qwen3). ReAct text parsing with constrained JSON for everything else. Auto-detected per model.</p></div>
-<div class="cd"><div class="cl a">Guardrails</div><p>Fuzzy tool matching, type coercion, retry with error feedback, circuit breakers, timeouts, graceful degradation to partial results.</p></div>
+<div class="cd"><div class="cl a">Guardrails</div><p>Fuzzy tool matching, type coercion, retry with error feedback, circuit breakers, timeouts, output sanitization, context window management.</p></div>
+<div class="cd"><div class="cl p">Skills</div><p>Markdown SKILL.md with frontmatter. Bundled defaults. User skills extend or override. Injected into system prompt. ~157 tokens.</p></div>
+<div class="cd"><div class="cl b">Multi-Provider</div><p>Ollama, vLLM, OpenAI-compat (LM Studio, LocalAI, TGI). Small-model guardrails in every provider. Thinking tag stripping, JSON recovery.</p></div>
+<div class="cd"><div class="cl cy">MCP</div><p>Connect to MCP servers via stdio or HTTP. Tool schemas auto-converted. Description truncation for small models. <code>pip install freeagent-sdk[mcp]</code></p></div>
 </div>
 </div>
 
@@ -271,6 +276,67 @@ lookup_user.to_react_description()  <span class="cm"># → human-readable for Re
 <div class="cd"><div class="cl a">Design Rule</div><p>Keep schemas flat. One required field is ideal. Use strings over enums. Provide defaults. Every field you add is a chance for a small model to fail.</p></div>
 </div>
 
+<!-- SKILLS -->
+<div class="panel" id="tab-skills">
+<h2>Skills System</h2>
+<p>Skills are <strong>markdown directories</strong> with <code>SKILL.md</code> files containing YAML frontmatter. They get injected into the system prompt automatically.</p>
+<div class="cb"><div class="f">SKILL.md</div>
+<pre><span class="cm">---</span>
+<span class="kw">name</span>: nba-analyst
+<span class="kw">description</span>: Basketball statistics expert
+<span class="kw">version</span>: 1.0
+<span class="kw">tools</span>: [search, calculator]
+<span class="cm">---</span>
+
+You are an NBA analyst. Always cite your sources.
+When comparing players, use per-game averages.</pre></div>
+<h2>Loading Skills</h2>
+<div class="cb"><div class="f">python</div>
+<pre>agent = <span class="tp">Agent</span>(
+    model=<span class="st">"qwen3:8b"</span>,
+    tools=[search, calculator],
+    skills=[<span class="st">"./my-skills"</span>],   <span class="cm"># directory of skill folders</span>
+)</pre></div>
+<h2>How It Works</h2>
+<div class="gr">
+<div class="cd"><div class="cl g">Bundled</div><p><code>general-assistant</code> and <code>tool-user</code> load automatically. ~157 tokens total.</p></div>
+<div class="cd"><div class="cl cy">User Skills</div><p>Extend bundled skills. Duplicate names override (last wins).</p></div>
+<div class="cd"><div class="cl a">Budget</div><p><code>build_skill_context(skills, max_chars=N)</code> — truncates when over budget.</p></div>
+<div class="cd"><div class="cl p">No PyYAML</div><p>Built-in frontmatter parser handles the subset we need. Zero extra deps.</p></div>
+</div>
+</div>
+
+<!-- PROVIDERS -->
+<div class="panel" id="tab-providers">
+<h2>Multi-Provider</h2>
+<p>All providers implement the same 3-method interface: <code>chat()</code>, <code>chat_with_tools()</code>, <code>chat_with_format()</code>.</p>
+<div class="gr">
+<div class="cd"><div class="cl g">OllamaProvider</div><p>Default. Connects to <code>localhost:11434</code>. Native tool calling + constrained JSON via GBNF.</p></div>
+<div class="cd"><div class="cl b">VLLMProvider</div><p>OpenAI-compatible with vLLM defaults. <code>VLLMProvider(model="qwen3-8b")</code></p></div>
+<div class="cd"><div class="cl p">OpenAICompatProvider</div><p>Any OpenAI-compatible server: LM Studio, LocalAI, TGI. Custom API keys and headers.</p></div>
+</div>
+<h2>Usage</h2>
+<div class="cb"><div class="f">python</div>
+<pre><span class="kw">from</span> freeagent <span class="kw">import</span> <span class="tp">Agent</span>, <span class="tp">VLLMProvider</span>
+
+provider = <span class="tp">VLLMProvider</span>(model=<span class="st">"qwen3-8b"</span>)
+agent = <span class="tp">Agent</span>(model=<span class="st">"qwen3-8b"</span>, provider=provider, tools=[my_tool])</pre></div>
+<h2>Small-Model Guardrails</h2>
+<p>The OpenAI-compat provider includes automatic recovery for common small-model issues:</p>
+<div class="gr">
+<div class="cd"><div class="cl a">Thinking Tags</div><p>Strips <code>&lt;think&gt;...&lt;/think&gt;</code> from qwen3/deepseek responses.</p></div>
+<div class="cd"><div class="cl cy">JSON Recovery</div><p>Recovers arguments from code fences, embedded JSON in text, malformed strings.</p></div>
+</div>
+<h2>Telemetry</h2>
+<p>Built into every agent — no setup: <code>agent.metrics</code></p>
+<div class="cb"><div class="f">python</div>
+<pre>agent.run(<span class="st">"What's the weather?"</span>)
+<span class="fn">print</span>(agent.metrics)               <span class="cm"># quick summary</span>
+<span class="fn">print</span>(agent.metrics.tool_stats())  <span class="cm"># per-tool breakdown</span>
+agent.metrics.to_json(<span class="st">"m.json"</span>)   <span class="cm"># export</span></pre></div>
+<p>Optional OpenTelemetry: <code>pip install freeagent-sdk[otel]</code> — traces and metrics flow automatically.</p>
+</div>
+
 <!-- DUAL ENGINE -->
 <div class="panel" id="tab-engine">
 <h2>Dual-Mode Engine</h2>
@@ -383,22 +449,24 @@ lookup_user.to_react_description()  <span class="cm"># → human-readable for Re
 
 <!-- ROADMAP -->
 <div class="panel" id="tab-next">
-<h2>What's Done</h2>
+<h2>What's Done (v0.2.0)</h2>
 <div class="gr">
-<div class="cd"><div class="cl g">✓ Core Agent Loop</div><p>Dual-mode, guardrails, timeout, partial results</p></div>
+<div class="cd"><div class="cl g">✓ Core Agent Loop</div><p>Dual-mode, guardrails, timeout, partial results, parallel tool calling</p></div>
 <div class="cd"><div class="cl g">✓ Hooks</div><p>13 events, decorator API, skip/override, pre-built hooks</p></div>
-<div class="cd"><div class="cl g">✓ Memory</div><p>Persistent JSON store, auto-inject into prompts, search</p></div>
-<div class="cd"><div class="cl g">✓ @tool Decorator</div><p>Auto schema, type coercion, 3 built-in tools</p></div>
+<div class="cd"><div class="cl g">✓ Memory</div><p>Markdown-backed files, single memory tool, auto_load, daily logs</p></div>
+<div class="cd"><div class="cl g">✓ Skills</div><p>Markdown SKILL.md with frontmatter, bundled defaults, user extensions</p></div>
+<div class="cd"><div class="cl g">✓ Multi-Provider</div><p>Ollama, vLLM, OpenAI-compat with small-model guardrails</p></div>
+<div class="cd"><div class="cl g">✓ MCP Support</div><p>Stdio + HTTP transports, schema conversion, conditional import</p></div>
+<div class="cd"><div class="cl g">✓ Reliability</div><p>Output sanitization, context window management, model fallback</p></div>
+<div class="cd"><div class="cl g">✓ Telemetry</div><p>Built-in metrics, optional OTEL export, per-tool stats</p></div>
 </div>
 <h2>What's Next</h2>
-<div class="cd"><div class="cl cy">Skills (Auto-Discovery)</div><p>Drop a <code>.py</code> into <code>skills/</code> → tools available next run. Hot reload. Versioned. This is OpenClaw's skill system, but pythonic.</p></div>
-<div class="cd"><div class="cl p">Cron / Heartbeat</div><p>Lightweight daemon. Wake agent on interval. Run a checklist. "Check disk. Summarize emails. Alert if anomaly." Proactive, not reactive.</p></div>
 <div class="cd"><div class="cl a">Streaming</div><p>Token-by-token output via hooks (<code>on_token</code> event). Works with both native and ReAct engines.</p></div>
 <div class="cd"><div class="cl b">Multi-Agent</div><p>Agent-as-tool. Manager routes to specialists. Each with own tools, memory, hooks.</p></div>
-<div class="cd"><div class="cl r">More Providers</div><p>vLLM, LM Studio, Anthropic, OpenAI. The interface is abstracted — two methods to implement.</p></div>
+<div class="cd"><div class="cl p">Cron / Heartbeat</div><p>Lightweight daemon. Wake agent on interval. Run a checklist. Proactive, not reactive.</p></div>
 </div>
 
-<footer>FreeAgent SDK v0.2.0 · 1,716 lines · 0 deps · hooks + memory · MIT</footer>
+<footer>FreeAgent SDK v0.2.0 · 191 tests · httpx only · skills + memory + MCP · MIT</footer>
 
 <script>
 document.getElementById('nav').addEventListener('click',e=>{
