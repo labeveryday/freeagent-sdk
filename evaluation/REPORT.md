@@ -9,48 +9,48 @@ These results establish the performance floor that FreeAgent must beat.
 
 | Framework / Model | Success Rate | Accuracy | Avg Latency | Avg TPS |
 |---|---|---|---|---|
-| ollama_raw / qwen3:8b | 5/5 (100%) | 5/5 (100%) | 12291.2ms | 28.7 |
-| ollama_raw / qwen3:4b | 5/5 (100%) | 5/5 (100%) | 26040.9ms | 48.4 |
-| ollama_raw / llama3.1:latest | 5/5 (100%) | 4/5 (80%) | 2484.5ms | 33.2 |
-| strands / qwen3:8b | 5/5 (100%) | 5/5 (100%) | 13544.0ms | N/A |
-| strands / qwen3:4b | 5/5 (100%) | 5/5 (100%) | 12841.1ms | N/A |
-| strands / llama3.1:latest | 5/5 (100%) | 4/5 (80%) | 2448.4ms | N/A |
+| ollama_raw / qwen3:8b | 5/5 (100%) | 5/5 (100%) | 12275.9ms | 29.2 |
+| ollama_raw / qwen3:4b | 5/5 (100%) | 5/5 (100%) | 8696.9ms | 49.3 |
+| ollama_raw / llama3.1:latest | 5/5 (100%) | 4/5 (80%) | 2451.6ms | 33.6 |
+| strands / qwen3:8b | 5/5 (100%) | 5/5 (100%) | 15460.7ms | N/A |
+| strands / qwen3:4b | 5/5 (100%) | 5/5 (100%) | 27911.6ms | N/A |
+| strands / llama3.1:latest | 5/5 (100%) | 4/5 (80%) | 2402.7ms | N/A |
 
 <details>
 <summary>Detailed Results (30 cases)</summary>
 
 | Case | Framework | Model | Pass | Latency | TPS | Error |
 |---|---|---|---|---|---|---|
-| factual_simple | ollama_raw | qwen3:8b | PASS | 9358ms | 28.0 |  |
-| factual_reasoning | ollama_raw | qwen3:8b | PASS | 10861ms | 28.7 |  |
-| code_generation | ollama_raw | qwen3:8b | PASS | 22070ms | 28.9 |  |
-| multi_step_reasoning | ollama_raw | qwen3:8b | PASS | 13028ms | 29.0 |  |
-| instruction_following | ollama_raw | qwen3:8b | PASS | 6139ms | 29.0 |  |
-| factual_simple | ollama_raw | qwen3:4b | PASS | 7448ms | 49.4 |  |
-| factual_reasoning | ollama_raw | qwen3:4b | PASS | 7575ms | 49.3 |  |
-| code_generation | ollama_raw | qwen3:4b | PASS | 67451ms | 46.2 |  |
-| multi_step_reasoning | ollama_raw | qwen3:4b | PASS | 10984ms | 49.2 |  |
-| instruction_following | ollama_raw | qwen3:4b | PASS | 36746ms | 48.0 |  |
-| factual_simple | ollama_raw | llama3.1:latest | PASS | 7686ms | 35.0 |  |
-| factual_reasoning | ollama_raw | llama3.1:latest | PASS | 919ms | 32.7 |  |
-| code_generation | ollama_raw | llama3.1:latest | PASS | 949ms | 32.8 |  |
-| multi_step_reasoning | ollama_raw | llama3.1:latest | FAIL | 1622ms | 32.6 |  |
-| instruction_following | ollama_raw | llama3.1:latest | PASS | 1247ms | 33.0 |  |
-| factual_simple | strands | qwen3:8b | PASS | 17931ms | - |  |
-| factual_reasoning | strands | qwen3:8b | PASS | 11338ms | - |  |
-| code_generation | strands | qwen3:8b | PASS | 19433ms | - |  |
-| multi_step_reasoning | strands | qwen3:8b | PASS | 12413ms | - |  |
-| instruction_following | strands | qwen3:8b | PASS | 6605ms | - |  |
-| factual_simple | strands | qwen3:4b | PASS | 6735ms | - |  |
-| factual_reasoning | strands | qwen3:4b | PASS | 7765ms | - |  |
-| code_generation | strands | qwen3:4b | PASS | 9704ms | - |  |
-| multi_step_reasoning | strands | qwen3:4b | PASS | 12604ms | - |  |
-| instruction_following | strands | qwen3:4b | PASS | 27397ms | - |  |
-| factual_simple | strands | llama3.1:latest | PASS | 7857ms | - |  |
-| factual_reasoning | strands | llama3.1:latest | PASS | 974ms | - |  |
-| code_generation | strands | llama3.1:latest | PASS | 957ms | - |  |
-| multi_step_reasoning | strands | llama3.1:latest | FAIL | 1182ms | - |  |
-| instruction_following | strands | llama3.1:latest | PASS | 1273ms | - |  |
+| factual_simple | ollama_raw | qwen3:8b | PASS | 9284ms | 29.5 |  |
+| factual_reasoning | ollama_raw | qwen3:8b | PASS | 16037ms | 29.0 |  |
+| code_generation | ollama_raw | qwen3:8b | PASS | 17340ms | 29.3 |  |
+| multi_step_reasoning | ollama_raw | qwen3:8b | PASS | 12598ms | 29.1 |  |
+| instruction_following | ollama_raw | qwen3:8b | PASS | 6121ms | 29.1 |  |
+| factual_simple | ollama_raw | qwen3:4b | PASS | 7692ms | 49.6 |  |
+| factual_reasoning | ollama_raw | qwen3:4b | PASS | 7168ms | 49.3 |  |
+| code_generation | ollama_raw | qwen3:4b | PASS | 4946ms | 49.0 |  |
+| multi_step_reasoning | ollama_raw | qwen3:4b | PASS | 11431ms | 49.4 |  |
+| instruction_following | ollama_raw | qwen3:4b | PASS | 12248ms | 49.3 |  |
+| factual_simple | ollama_raw | llama3.1:latest | PASS | 7944ms | 35.4 |  |
+| factual_reasoning | ollama_raw | llama3.1:latest | PASS | 909ms | 33.1 |  |
+| code_generation | ollama_raw | llama3.1:latest | PASS | 945ms | 33.3 |  |
+| multi_step_reasoning | ollama_raw | llama3.1:latest | FAIL | 1169ms | 33.3 |  |
+| instruction_following | ollama_raw | llama3.1:latest | PASS | 1290ms | 32.9 |  |
+| factual_simple | strands | qwen3:8b | PASS | 20243ms | - |  |
+| factual_reasoning | strands | qwen3:8b | PASS | 11350ms | - |  |
+| code_generation | strands | qwen3:8b | PASS | 22266ms | - |  |
+| multi_step_reasoning | strands | qwen3:8b | PASS | 13735ms | - |  |
+| instruction_following | strands | qwen3:8b | PASS | 9709ms | - |  |
+| factual_simple | strands | qwen3:4b | PASS | 6749ms | - |  |
+| factual_reasoning | strands | qwen3:4b | PASS | 7583ms | - |  |
+| code_generation | strands | qwen3:4b | PASS | 80824ms | - |  |
+| multi_step_reasoning | strands | qwen3:4b | PASS | 10885ms | - |  |
+| instruction_following | strands | qwen3:4b | PASS | 33517ms | - |  |
+| factual_simple | strands | llama3.1:latest | PASS | 7689ms | - |  |
+| factual_reasoning | strands | llama3.1:latest | PASS | 910ms | - |  |
+| code_generation | strands | llama3.1:latest | PASS | 954ms | - |  |
+| multi_step_reasoning | strands | llama3.1:latest | FAIL | 1188ms | - |  |
+| instruction_following | strands | llama3.1:latest | PASS | 1272ms | - |  |
 
 </details>
 
@@ -58,69 +58,133 @@ These results establish the performance floor that FreeAgent must beat.
 
 | Framework / Model | Success Rate | Accuracy | Avg Latency | Avg TPS |
 |---|---|---|---|---|
-| ollama_raw / qwen3:8b | 7/8 (88%) | 6/8 (75%) | 21182.7ms | 28.9 |
-| ollama_raw / qwen3:4b | 8/8 (100%) | 6/8 (75%) | 30198.5ms | 48.1 |
-| ollama_raw / llama3.1:latest | 8/8 (100%) | 6/8 (75%) | 5223.9ms | 32.5 |
-| strands / qwen3:8b | 8/8 (100%) | 7/8 (88%) | 24404.2ms | N/A |
-| strands / qwen3:4b | 8/8 (100%) | 7/8 (88%) | 33477.2ms | N/A |
-| strands / llama3.1:latest | 8/8 (100%) | 6/8 (75%) | 5015.1ms | N/A |
-
-**Errors (ollama_raw / qwen3:8b):**
-- `timed out`
+| ollama_raw / qwen3:8b | 8/8 (100%) | 6/8 (75%) | 28701.8ms | 28.8 |
+| ollama_raw / qwen3:4b | 8/8 (100%) | 8/8 (100%) | 26735.6ms | 48.3 |
+| ollama_raw / llama3.1:latest | 8/8 (100%) | 5/8 (62%) | 5471.4ms | 32.7 |
+| strands / qwen3:8b | 8/8 (100%) | 6/8 (75%) | 27678.1ms | N/A |
+| strands / qwen3:4b | 8/8 (100%) | 7/8 (88%) | 27372.5ms | N/A |
+| strands / llama3.1:latest | 8/8 (100%) | 5/8 (62%) | 5150.1ms | N/A |
 
 <details>
 <summary>Detailed Results (48 cases)</summary>
 
 | Case | Framework | Model | Pass | Latency | TPS | Error |
 |---|---|---|---|---|---|---|
-| single_weather | ollama_raw | qwen3:8b | PASS | 26729ms | 29.0 |  |
-| single_calc | ollama_raw | qwen3:8b | FAIL | 10709ms | 29.1 |  |
-| single_convert | ollama_raw | qwen3:8b | PASS | 13101ms | 28.9 |  |
-| tool_selection | ollama_raw | qwen3:8b | PASS | 20838ms | 28.9 |  |
-| multi_step_convert | ollama_raw | qwen3:8b | ERR | 0ms | - | timed out |
-| multi_tool_compare | ollama_raw | qwen3:8b | PASS | 40229ms | 28.8 |  |
-| tool_plus_calc | ollama_raw | qwen3:8b | PASS | 11682ms | 29.2 |  |
-| chained_reasoning | ollama_raw | qwen3:8b | PASS | 46173ms | 28.7 |  |
-| single_weather | ollama_raw | qwen3:4b | PASS | 11536ms | 49.4 |  |
-| single_calc | ollama_raw | qwen3:4b | FAIL | 11850ms | 49.1 |  |
-| single_convert | ollama_raw | qwen3:4b | PASS | 13544ms | 48.9 |  |
-| tool_selection | ollama_raw | qwen3:4b | PASS | 13195ms | 48.7 |  |
-| multi_step_convert | ollama_raw | qwen3:4b | PASS | 55198ms | 46.5 |  |
-| multi_tool_compare | ollama_raw | qwen3:4b | PASS | 18159ms | 48.5 |  |
-| tool_plus_calc | ollama_raw | qwen3:4b | PASS | 13692ms | 48.7 |  |
-| chained_reasoning | ollama_raw | qwen3:4b | FAIL | 104415ms | 45.0 |  |
-| single_weather | ollama_raw | llama3.1:latest | PASS | 9951ms | 32.4 |  |
-| single_calc | ollama_raw | llama3.1:latest | FAIL | 2424ms | 32.8 |  |
-| single_convert | ollama_raw | llama3.1:latest | PASS | 2857ms | 32.9 |  |
-| tool_selection | ollama_raw | llama3.1:latest | PASS | 6721ms | 31.8 |  |
-| multi_step_convert | ollama_raw | llama3.1:latest | PASS | 4325ms | 32.4 |  |
-| multi_tool_compare | ollama_raw | llama3.1:latest | FAIL | 8301ms | 32.0 |  |
-| tool_plus_calc | ollama_raw | llama3.1:latest | PASS | 2674ms | 33.4 |  |
-| chained_reasoning | ollama_raw | llama3.1:latest | PASS | 4539ms | 32.3 |  |
-| single_weather | strands | qwen3:8b | PASS | 32030ms | - |  |
-| single_calc | strands | qwen3:8b | FAIL | 11035ms | - |  |
-| single_convert | strands | qwen3:8b | PASS | 12010ms | - |  |
-| tool_selection | strands | qwen3:8b | PASS | 16594ms | - |  |
-| multi_step_convert | strands | qwen3:8b | PASS | 22714ms | - |  |
-| multi_tool_compare | strands | qwen3:8b | PASS | 28660ms | - |  |
-| tool_plus_calc | strands | qwen3:8b | PASS | 17177ms | - |  |
-| chained_reasoning | strands | qwen3:8b | PASS | 55014ms | - |  |
-| single_weather | strands | qwen3:4b | PASS | 13100ms | - |  |
-| single_calc | strands | qwen3:4b | PASS | 12273ms | - |  |
-| single_convert | strands | qwen3:4b | PASS | 15587ms | - |  |
-| tool_selection | strands | qwen3:4b | PASS | 15712ms | - |  |
-| multi_step_convert | strands | qwen3:4b | PASS | 49853ms | - |  |
-| multi_tool_compare | strands | qwen3:4b | PASS | 29258ms | - |  |
-| tool_plus_calc | strands | qwen3:4b | PASS | 11762ms | - |  |
-| chained_reasoning | strands | qwen3:4b | FAIL | 120273ms | - |  |
-| single_weather | strands | llama3.1:latest | PASS | 9354ms | - |  |
-| single_calc | strands | llama3.1:latest | FAIL | 2383ms | - |  |
-| single_convert | strands | llama3.1:latest | PASS | 2883ms | - |  |
-| tool_selection | strands | llama3.1:latest | PASS | 7478ms | - |  |
-| multi_step_convert | strands | llama3.1:latest | FAIL | 4317ms | - |  |
-| multi_tool_compare | strands | llama3.1:latest | PASS | 6599ms | - |  |
-| tool_plus_calc | strands | llama3.1:latest | PASS | 2708ms | - |  |
-| chained_reasoning | strands | llama3.1:latest | PASS | 4399ms | - |  |
+| single_weather | ollama_raw | qwen3:8b | PASS | 32053ms | 28.7 |  |
+| single_calc | ollama_raw | qwen3:8b | FAIL | 11019ms | 29.1 |  |
+| single_convert | ollama_raw | qwen3:8b | PASS | 13034ms | 29.1 |  |
+| tool_selection | ollama_raw | qwen3:8b | PASS | 19893ms | 28.8 |  |
+| multi_step_convert | ollama_raw | qwen3:8b | PASS | 23115ms | 28.7 |  |
+| multi_tool_compare | ollama_raw | qwen3:8b | PASS | 36993ms | 28.7 |  |
+| tool_plus_calc | ollama_raw | qwen3:8b | PASS | 11804ms | 28.8 |  |
+| chained_reasoning | ollama_raw | qwen3:8b | FAIL | 81703ms | 28.3 |  |
+| single_weather | ollama_raw | qwen3:4b | PASS | 11622ms | 49.4 |  |
+| single_calc | ollama_raw | qwen3:4b | PASS | 13253ms | 48.9 |  |
+| single_convert | ollama_raw | qwen3:4b | PASS | 18750ms | 48.6 |  |
+| tool_selection | ollama_raw | qwen3:4b | PASS | 8234ms | 49.3 |  |
+| multi_step_convert | ollama_raw | qwen3:4b | PASS | 55140ms | 46.8 |  |
+| multi_tool_compare | ollama_raw | qwen3:4b | PASS | 18598ms | 48.7 |  |
+| tool_plus_calc | ollama_raw | qwen3:4b | PASS | 14382ms | 48.9 |  |
+| chained_reasoning | ollama_raw | qwen3:4b | PASS | 73906ms | 46.0 |  |
+| single_weather | ollama_raw | llama3.1:latest | PASS | 10160ms | 31.9 |  |
+| single_calc | ollama_raw | llama3.1:latest | FAIL | 2364ms | 33.7 |  |
+| single_convert | ollama_raw | llama3.1:latest | PASS | 2782ms | 33.3 |  |
+| tool_selection | ollama_raw | llama3.1:latest | PASS | 8499ms | 31.9 |  |
+| multi_step_convert | ollama_raw | llama3.1:latest | PASS | 4316ms | 32.6 |  |
+| multi_tool_compare | ollama_raw | llama3.1:latest | FAIL | 8329ms | 32.1 |  |
+| tool_plus_calc | ollama_raw | llama3.1:latest | FAIL | 2786ms | 33.4 |  |
+| chained_reasoning | ollama_raw | llama3.1:latest | PASS | 4535ms | 32.5 |  |
+| single_weather | strands | qwen3:8b | PASS | 30565ms | - |  |
+| single_calc | strands | qwen3:8b | FAIL | 10888ms | - |  |
+| single_convert | strands | qwen3:8b | PASS | 11773ms | - |  |
+| tool_selection | strands | qwen3:8b | PASS | 13134ms | - |  |
+| multi_step_convert | strands | qwen3:8b | PASS | 30063ms | - |  |
+| multi_tool_compare | strands | qwen3:8b | FAIL | 23753ms | - |  |
+| tool_plus_calc | strands | qwen3:8b | PASS | 13670ms | - |  |
+| chained_reasoning | strands | qwen3:8b | PASS | 87579ms | - |  |
+| single_weather | strands | qwen3:4b | PASS | 11388ms | - |  |
+| single_calc | strands | qwen3:4b | PASS | 9162ms | - |  |
+| single_convert | strands | qwen3:4b | PASS | 14843ms | - |  |
+| tool_selection | strands | qwen3:4b | PASS | 16065ms | - |  |
+| multi_step_convert | strands | qwen3:4b | PASS | 53804ms | - |  |
+| multi_tool_compare | strands | qwen3:4b | FAIL | 30080ms | - |  |
+| tool_plus_calc | strands | qwen3:4b | PASS | 11986ms | - |  |
+| chained_reasoning | strands | qwen3:4b | PASS | 71650ms | - |  |
+| single_weather | strands | llama3.1:latest | PASS | 9998ms | - |  |
+| single_calc | strands | llama3.1:latest | FAIL | 2387ms | - |  |
+| single_convert | strands | llama3.1:latest | PASS | 2877ms | - |  |
+| tool_selection | strands | llama3.1:latest | PASS | 8397ms | - |  |
+| multi_step_convert | strands | llama3.1:latest | FAIL | 4206ms | - |  |
+| multi_tool_compare | strands | llama3.1:latest | FAIL | 5844ms | - |  |
+| tool_plus_calc | strands | llama3.1:latest | PASS | 2707ms | - |  |
+| chained_reasoning | strands | llama3.1:latest | PASS | 4786ms | - |  |
+
+</details>
+
+## MCP NBA Stats Baseline
+
+| Framework / Model | Success Rate | Accuracy | Avg Latency | Avg TPS |
+|---|---|---|---|---|
+| ollama_raw_mcp / qwen3:8b | 8/8 (100%) | 8/8 (100%) | 28302.6ms | 27.0 |
+| ollama_raw_mcp / qwen3:4b | 8/8 (100%) | 7/8 (88%) | 44252.6ms | 42.8 |
+| ollama_raw_mcp / llama3.1:latest | 8/8 (100%) | 8/8 (100%) | 13085.3ms | 28.5 |
+| strands_mcp / qwen3:8b | 8/8 (100%) | 7/8 (88%) | 43657.4ms | N/A |
+| strands_mcp / qwen3:4b | 8/8 (100%) | 6/8 (75%) | 47469.5ms | N/A |
+| strands_mcp / llama3.1:latest | 8/8 (100%) | 8/8 (100%) | 12875.3ms | N/A |
+
+<details>
+<summary>Detailed Results (48 cases)</summary>
+
+| Case | Framework | Model | Pass | Latency | TPS | Error |
+|---|---|---|---|---|---|---|
+| team_lookup | ollama_raw_mcp | qwen3:8b | PASS | 14625ms | 28.0 |  |
+| player_lookup | ollama_raw_mcp | qwen3:8b | PASS | 18385ms | 27.9 |  |
+| standings | ollama_raw_mcp | qwen3:8b | PASS | 52063ms | 27.2 |  |
+| player_stats | ollama_raw_mcp | qwen3:8b | PASS | 22020ms | 27.1 |  |
+| team_roster | ollama_raw_mcp | qwen3:8b | PASS | 20412ms | 27.4 |  |
+| compare_players | ollama_raw_mcp | qwen3:8b | PASS | 20759ms | 27.6 |  |
+| team_deep_dive | ollama_raw_mcp | qwen3:8b | PASS | 51469ms | 25.1 |  |
+| league_leaders | ollama_raw_mcp | qwen3:8b | PASS | 26688ms | 25.8 |  |
+| team_lookup | ollama_raw_mcp | qwen3:4b | PASS | 30109ms | 39.6 |  |
+| player_lookup | ollama_raw_mcp | qwen3:4b | PASS | 21342ms | 42.5 |  |
+| standings | ollama_raw_mcp | qwen3:4b | FAIL | 71402ms | 40.6 |  |
+| player_stats | ollama_raw_mcp | qwen3:4b | PASS | 62921ms | 42.8 |  |
+| team_roster | ollama_raw_mcp | qwen3:4b | PASS | 41695ms | 43.7 |  |
+| compare_players | ollama_raw_mcp | qwen3:4b | PASS | 30284ms | 44.0 |  |
+| team_deep_dive | ollama_raw_mcp | qwen3:4b | PASS | 55365ms | 44.0 |  |
+| league_leaders | ollama_raw_mcp | qwen3:4b | PASS | 40903ms | 45.1 |  |
+| team_lookup | ollama_raw_mcp | llama3.1:latest | PASS | 17445ms | 32.9 |  |
+| player_lookup | ollama_raw_mcp | llama3.1:latest | PASS | 7898ms | 30.1 |  |
+| standings | ollama_raw_mcp | llama3.1:latest | PASS | 12258ms | 29.1 |  |
+| player_stats | ollama_raw_mcp | llama3.1:latest | PASS | 8261ms | 31.4 |  |
+| team_roster | ollama_raw_mcp | llama3.1:latest | PASS | 12510ms | 27.3 |  |
+| compare_players | ollama_raw_mcp | llama3.1:latest | PASS | 15983ms | 26.3 |  |
+| team_deep_dive | ollama_raw_mcp | llama3.1:latest | PASS | 16604ms | 25.7 |  |
+| league_leaders | ollama_raw_mcp | llama3.1:latest | PASS | 13723ms | 24.8 |  |
+| team_lookup | strands_mcp | qwen3:8b | PASS | 27459ms | - |  |
+| player_lookup | strands_mcp | qwen3:8b | PASS | 23510ms | - |  |
+| standings | strands_mcp | qwen3:8b | PASS | 109278ms | - |  |
+| player_stats | strands_mcp | qwen3:8b | PASS | 21743ms | - |  |
+| team_roster | strands_mcp | qwen3:8b | PASS | 24783ms | - |  |
+| compare_players | strands_mcp | qwen3:8b | PASS | 28165ms | - |  |
+| team_deep_dive | strands_mcp | qwen3:8b | PASS | 74628ms | - |  |
+| league_leaders | strands_mcp | qwen3:8b | FAIL | 39693ms | - |  |
+| team_lookup | strands_mcp | qwen3:4b | PASS | 24913ms | - |  |
+| player_lookup | strands_mcp | qwen3:4b | PASS | 24839ms | - |  |
+| standings | strands_mcp | qwen3:4b | FAIL | 76037ms | - |  |
+| player_stats | strands_mcp | qwen3:4b | PASS | 56141ms | - |  |
+| team_roster | strands_mcp | qwen3:4b | PASS | 26450ms | - |  |
+| compare_players | strands_mcp | qwen3:4b | PASS | 72411ms | - |  |
+| team_deep_dive | strands_mcp | qwen3:4b | PASS | 52698ms | - |  |
+| league_leaders | strands_mcp | qwen3:4b | FAIL | 46266ms | - |  |
+| team_lookup | strands_mcp | llama3.1:latest | PASS | 21110ms | - |  |
+| player_lookup | strands_mcp | llama3.1:latest | PASS | 9549ms | - |  |
+| standings | strands_mcp | llama3.1:latest | PASS | 15429ms | - |  |
+| player_stats | strands_mcp | llama3.1:latest | PASS | 9736ms | - |  |
+| team_roster | strands_mcp | llama3.1:latest | PASS | 13213ms | - |  |
+| compare_players | strands_mcp | llama3.1:latest | PASS | 10482ms | - |  |
+| team_deep_dive | strands_mcp | llama3.1:latest | PASS | 11715ms | - |  |
+| league_leaders | strands_mcp | llama3.1:latest | PASS | 11768ms | - |  |
 
 </details>
 
@@ -128,108 +192,229 @@ These results establish the performance floor that FreeAgent must beat.
 
 | Framework / Model | Success Rate | Accuracy | Avg Latency | Avg TPS |
 |---|---|---|---|---|
-| ollama_raw / qwen3:8b | 15/15 (100%) | 14/15 (93%) | 13872.5ms | 29.0 |
-| ollama_raw / qwen3:4b | 15/15 (100%) | 14/15 (93%) | 17692.3ms | 48.4 |
-| ollama_raw / llama3.1:latest | 15/15 (100%) | 13/15 (87%) | 3601.2ms | 33.2 |
-| strands / qwen3:8b | 15/15 (100%) | 14/15 (93%) | 14617.3ms | N/A |
-| strands / qwen3:4b | 15/15 (100%) | 15/15 (100%) | 15035.5ms | N/A |
-| strands / llama3.1:latest | 15/15 (100%) | 13/15 (87%) | 3571.6ms | N/A |
+| ollama_raw / qwen3:8b | 15/15 (100%) | 14/15 (93%) | 14629.0ms | 28.2 |
+| ollama_raw / qwen3:4b | 15/15 (100%) | 14/15 (93%) | 17442.6ms | 46.7 |
+| ollama_raw / llama3.1:latest | 15/15 (100%) | 13/15 (87%) | 3518.6ms | 31.6 |
+| strands / qwen3:8b | 15/15 (100%) | 11/15 (73%) | 16308.9ms | N/A |
+| strands / qwen3:4b | 15/15 (100%) | 12/15 (80%) | 15473.4ms | N/A |
+| strands / llama3.1:latest | 15/15 (100%) | 11/15 (73%) | 3570.3ms | N/A |
 
 <details>
 <summary>Detailed Results (90 cases)</summary>
 
 | Case | Framework | Model | Pass | Latency | TPS | Error |
 |---|---|---|---|---|---|---|
-| weather_then_convert_turn1 | ollama_raw | qwen3:8b | PASS | 15350ms | 29.2 |  |
-| weather_then_convert_turn2 | ollama_raw | qwen3:8b | PASS | 20535ms | 28.9 |  |
-| compare_two_cities_turn1 | ollama_raw | qwen3:8b | PASS | 12131ms | 29.0 |  |
-| compare_two_cities_turn2 | ollama_raw | qwen3:8b | PASS | 14743ms | 29.0 |  |
-| compare_two_cities_turn3 | ollama_raw | qwen3:8b | PASS | 5445ms | 29.1 |  |
-| chained_conversion_and_calc_turn1 | ollama_raw | qwen3:8b | PASS | 11759ms | 29.2 |  |
-| chained_conversion_and_calc_turn2 | ollama_raw | qwen3:8b | PASS | 16502ms | 28.8 |  |
-| context_retention_no_tools_turn1 | ollama_raw | qwen3:8b | PASS | 9105ms | 29.2 |  |
-| context_retention_no_tools_turn2 | ollama_raw | qwen3:8b | FAIL | 9886ms | 28.8 |  |
-| three_city_itinerary_turn1 | ollama_raw | qwen3:8b | PASS | 8887ms | 28.9 |  |
-| three_city_itinerary_turn2 | ollama_raw | qwen3:8b | PASS | 12611ms | 28.9 |  |
-| three_city_itinerary_turn3 | ollama_raw | qwen3:8b | PASS | 12246ms | 28.9 |  |
-| three_city_itinerary_turn4 | ollama_raw | qwen3:8b | PASS | 11866ms | 28.7 |  |
-| correction_handling_turn1 | ollama_raw | qwen3:8b | PASS | 27297ms | 28.8 |  |
-| correction_handling_turn2 | ollama_raw | qwen3:8b | PASS | 19723ms | 28.8 |  |
-| weather_then_convert_turn1 | ollama_raw | qwen3:4b | PASS | 17931ms | 48.8 |  |
-| weather_then_convert_turn2 | ollama_raw | qwen3:4b | PASS | 18884ms | 48.3 |  |
-| compare_two_cities_turn1 | ollama_raw | qwen3:4b | PASS | 9093ms | 49.2 |  |
-| compare_two_cities_turn2 | ollama_raw | qwen3:4b | PASS | 13090ms | 48.8 |  |
-| compare_two_cities_turn3 | ollama_raw | qwen3:4b | PASS | 6811ms | 48.8 |  |
-| chained_conversion_and_calc_turn1 | ollama_raw | qwen3:4b | PASS | 38202ms | 47.6 |  |
-| chained_conversion_and_calc_turn2 | ollama_raw | qwen3:4b | PASS | 16596ms | 48.5 |  |
-| context_retention_no_tools_turn1 | ollama_raw | qwen3:4b | PASS | 7719ms | 49.0 |  |
-| context_retention_no_tools_turn2 | ollama_raw | qwen3:4b | FAIL | 36682ms | 47.3 |  |
-| three_city_itinerary_turn1 | ollama_raw | qwen3:4b | PASS | 14526ms | 48.7 |  |
-| three_city_itinerary_turn2 | ollama_raw | qwen3:4b | PASS | 17346ms | 48.4 |  |
-| three_city_itinerary_turn3 | ollama_raw | qwen3:4b | PASS | 15468ms | 48.1 |  |
-| three_city_itinerary_turn4 | ollama_raw | qwen3:4b | PASS | 9126ms | 48.2 |  |
-| correction_handling_turn1 | ollama_raw | qwen3:4b | PASS | 24657ms | 48.2 |  |
-| correction_handling_turn2 | ollama_raw | qwen3:4b | PASS | 19255ms | 48.2 |  |
-| weather_then_convert_turn1 | ollama_raw | llama3.1:latest | PASS | 9789ms | 33.1 |  |
-| weather_then_convert_turn2 | ollama_raw | llama3.1:latest | PASS | 2890ms | 32.8 |  |
-| compare_two_cities_turn1 | ollama_raw | llama3.1:latest | PASS | 2598ms | 33.7 |  |
-| compare_two_cities_turn2 | ollama_raw | llama3.1:latest | PASS | 2420ms | 33.4 |  |
-| compare_two_cities_turn3 | ollama_raw | llama3.1:latest | PASS | 3532ms | 32.7 |  |
-| chained_conversion_and_calc_turn1 | ollama_raw | llama3.1:latest | FAIL | 3564ms | 32.5 |  |
-| chained_conversion_and_calc_turn2 | ollama_raw | llama3.1:latest | FAIL | 3278ms | 33.2 |  |
-| context_retention_no_tools_turn1 | ollama_raw | llama3.1:latest | PASS | 2608ms | 33.2 |  |
-| context_retention_no_tools_turn2 | ollama_raw | llama3.1:latest | PASS | 2734ms | 32.4 |  |
-| three_city_itinerary_turn1 | ollama_raw | llama3.1:latest | PASS | 3571ms | 33.3 |  |
-| three_city_itinerary_turn2 | ollama_raw | llama3.1:latest | PASS | 2667ms | 33.4 |  |
-| three_city_itinerary_turn3 | ollama_raw | llama3.1:latest | PASS | 2651ms | 33.2 |  |
-| three_city_itinerary_turn4 | ollama_raw | llama3.1:latest | PASS | 6733ms | 32.1 |  |
-| correction_handling_turn1 | ollama_raw | llama3.1:latest | PASS | 2196ms | 34.6 |  |
-| correction_handling_turn2 | ollama_raw | llama3.1:latest | PASS | 2788ms | 33.7 |  |
-| weather_then_convert_turn1 | strands | qwen3:8b | PASS | 16246ms | - |  |
-| weather_then_convert_turn2 | strands | qwen3:8b | PASS | 14804ms | - |  |
-| compare_two_cities_turn1 | strands | qwen3:8b | PASS | 10353ms | - |  |
-| compare_two_cities_turn2 | strands | qwen3:8b | PASS | 16847ms | - |  |
-| compare_two_cities_turn3 | strands | qwen3:8b | PASS | 5755ms | - |  |
-| chained_conversion_and_calc_turn1 | strands | qwen3:8b | PASS | 10850ms | - |  |
-| chained_conversion_and_calc_turn2 | strands | qwen3:8b | PASS | 21978ms | - |  |
-| context_retention_no_tools_turn1 | strands | qwen3:8b | PASS | 10660ms | - |  |
-| context_retention_no_tools_turn2 | strands | qwen3:8b | FAIL | 6380ms | - |  |
-| three_city_itinerary_turn1 | strands | qwen3:8b | PASS | 13828ms | - |  |
-| three_city_itinerary_turn2 | strands | qwen3:8b | PASS | 14067ms | - |  |
-| three_city_itinerary_turn3 | strands | qwen3:8b | PASS | 11530ms | - |  |
-| three_city_itinerary_turn4 | strands | qwen3:8b | PASS | 15759ms | - |  |
-| correction_handling_turn1 | strands | qwen3:8b | PASS | 30482ms | - |  |
-| correction_handling_turn2 | strands | qwen3:8b | PASS | 19720ms | - |  |
-| weather_then_convert_turn1 | strands | qwen3:4b | PASS | 16682ms | - |  |
-| weather_then_convert_turn2 | strands | qwen3:4b | PASS | 13450ms | - |  |
-| compare_two_cities_turn1 | strands | qwen3:4b | PASS | 7229ms | - |  |
-| compare_two_cities_turn2 | strands | qwen3:4b | PASS | 12284ms | - |  |
-| compare_two_cities_turn3 | strands | qwen3:4b | PASS | 15751ms | - |  |
-| chained_conversion_and_calc_turn1 | strands | qwen3:4b | PASS | 29030ms | - |  |
-| chained_conversion_and_calc_turn2 | strands | qwen3:4b | PASS | 22146ms | - |  |
-| context_retention_no_tools_turn1 | strands | qwen3:4b | PASS | 9156ms | - |  |
-| context_retention_no_tools_turn2 | strands | qwen3:4b | PASS | 11471ms | - |  |
-| three_city_itinerary_turn1 | strands | qwen3:4b | PASS | 8559ms | - |  |
-| three_city_itinerary_turn2 | strands | qwen3:4b | PASS | 16905ms | - |  |
-| three_city_itinerary_turn3 | strands | qwen3:4b | PASS | 18720ms | - |  |
-| three_city_itinerary_turn4 | strands | qwen3:4b | PASS | 5600ms | - |  |
-| correction_handling_turn1 | strands | qwen3:4b | PASS | 24168ms | - |  |
-| correction_handling_turn2 | strands | qwen3:4b | PASS | 14381ms | - |  |
-| weather_then_convert_turn1 | strands | llama3.1:latest | PASS | 10070ms | - |  |
-| weather_then_convert_turn2 | strands | llama3.1:latest | PASS | 2950ms | - |  |
-| compare_two_cities_turn1 | strands | llama3.1:latest | PASS | 2651ms | - |  |
-| compare_two_cities_turn2 | strands | llama3.1:latest | PASS | 2447ms | - |  |
-| compare_two_cities_turn3 | strands | llama3.1:latest | PASS | 3450ms | - |  |
-| chained_conversion_and_calc_turn1 | strands | llama3.1:latest | FAIL | 3444ms | - |  |
-| chained_conversion_and_calc_turn2 | strands | llama3.1:latest | FAIL | 3328ms | - |  |
-| context_retention_no_tools_turn1 | strands | llama3.1:latest | PASS | 2642ms | - |  |
-| context_retention_no_tools_turn2 | strands | llama3.1:latest | PASS | 2718ms | - |  |
-| three_city_itinerary_turn1 | strands | llama3.1:latest | PASS | 2822ms | - |  |
-| three_city_itinerary_turn2 | strands | llama3.1:latest | PASS | 2683ms | - |  |
-| three_city_itinerary_turn3 | strands | llama3.1:latest | PASS | 2697ms | - |  |
-| three_city_itinerary_turn4 | strands | llama3.1:latest | PASS | 6596ms | - |  |
-| correction_handling_turn1 | strands | llama3.1:latest | PASS | 2229ms | - |  |
-| correction_handling_turn2 | strands | llama3.1:latest | PASS | 2845ms | - |  |
+| weather_then_convert_turn1 | ollama_raw | qwen3:8b | PASS | 21185ms | 28.0 |  |
+| weather_then_convert_turn2 | ollama_raw | qwen3:8b | PASS | 12885ms | 28.9 |  |
+| compare_two_cities_turn1 | ollama_raw | qwen3:8b | PASS | 11700ms | 29.0 |  |
+| compare_two_cities_turn2 | ollama_raw | qwen3:8b | PASS | 12233ms | 29.1 |  |
+| compare_two_cities_turn3 | ollama_raw | qwen3:8b | PASS | 5349ms | 29.0 |  |
+| chained_conversion_and_calc_turn1 | ollama_raw | qwen3:8b | PASS | 12129ms | 28.9 |  |
+| chained_conversion_and_calc_turn2 | ollama_raw | qwen3:8b | PASS | 20772ms | 28.7 |  |
+| context_retention_no_tools_turn1 | ollama_raw | qwen3:8b | PASS | 8941ms | 28.7 |  |
+| context_retention_no_tools_turn2 | ollama_raw | qwen3:8b | FAIL | 8439ms | 29.0 |  |
+| three_city_itinerary_turn1 | ollama_raw | qwen3:8b | PASS | 10916ms | 28.2 |  |
+| three_city_itinerary_turn2 | ollama_raw | qwen3:8b | PASS | 17796ms | 26.7 |  |
+| three_city_itinerary_turn3 | ollama_raw | qwen3:8b | PASS | 13167ms | 26.7 |  |
+| three_city_itinerary_turn4 | ollama_raw | qwen3:8b | PASS | 14150ms | 26.6 |  |
+| correction_handling_turn1 | ollama_raw | qwen3:8b | PASS | 30075ms | 28.7 |  |
+| correction_handling_turn2 | ollama_raw | qwen3:8b | PASS | 19698ms | 26.9 |  |
+| weather_then_convert_turn1 | ollama_raw | qwen3:4b | PASS | 21498ms | 48.6 |  |
+| weather_then_convert_turn2 | ollama_raw | qwen3:4b | PASS | 12805ms | 48.4 |  |
+| compare_two_cities_turn1 | ollama_raw | qwen3:4b | PASS | 10352ms | 48.5 |  |
+| compare_two_cities_turn2 | ollama_raw | qwen3:4b | PASS | 14669ms | 48.1 |  |
+| compare_two_cities_turn3 | ollama_raw | qwen3:4b | PASS | 8424ms | 48.3 |  |
+| chained_conversion_and_calc_turn1 | ollama_raw | qwen3:4b | PASS | 36303ms | 47.0 |  |
+| chained_conversion_and_calc_turn2 | ollama_raw | qwen3:4b | PASS | 25250ms | 45.5 |  |
+| context_retention_no_tools_turn1 | ollama_raw | qwen3:4b | PASS | 7764ms | 47.2 |  |
+| context_retention_no_tools_turn2 | ollama_raw | qwen3:4b | FAIL | 29819ms | 45.6 |  |
+| three_city_itinerary_turn1 | ollama_raw | qwen3:4b | PASS | 12498ms | 45.9 |  |
+| three_city_itinerary_turn2 | ollama_raw | qwen3:4b | PASS | 11937ms | 46.7 |  |
+| three_city_itinerary_turn3 | ollama_raw | qwen3:4b | PASS | 11513ms | 45.2 |  |
+| three_city_itinerary_turn4 | ollama_raw | qwen3:4b | PASS | 5951ms | 47.6 |  |
+| correction_handling_turn1 | ollama_raw | qwen3:4b | PASS | 30241ms | 40.8 |  |
+| correction_handling_turn2 | ollama_raw | qwen3:4b | PASS | 22614ms | 47.6 |  |
+| weather_then_convert_turn1 | ollama_raw | llama3.1:latest | PASS | 8593ms | 29.9 |  |
+| weather_then_convert_turn2 | ollama_raw | llama3.1:latest | PASS | 3160ms | 32.8 |  |
+| compare_two_cities_turn1 | ollama_raw | llama3.1:latest | PASS | 2722ms | 31.9 |  |
+| compare_two_cities_turn2 | ollama_raw | llama3.1:latest | PASS | 2535ms | 32.8 |  |
+| compare_two_cities_turn3 | ollama_raw | llama3.1:latest | PASS | 4895ms | 31.8 |  |
+| chained_conversion_and_calc_turn1 | ollama_raw | llama3.1:latest | FAIL | 3495ms | 32.6 |  |
+| chained_conversion_and_calc_turn2 | ollama_raw | llama3.1:latest | FAIL | 2459ms | 33.1 |  |
+| context_retention_no_tools_turn1 | ollama_raw | llama3.1:latest | PASS | 2634ms | 32.7 |  |
+| context_retention_no_tools_turn2 | ollama_raw | llama3.1:latest | PASS | 3054ms | 30.8 |  |
+| three_city_itinerary_turn1 | ollama_raw | llama3.1:latest | PASS | 3287ms | 28.7 |  |
+| three_city_itinerary_turn2 | ollama_raw | llama3.1:latest | PASS | 3261ms | 28.7 |  |
+| three_city_itinerary_turn3 | ollama_raw | llama3.1:latest | PASS | 3034ms | 30.8 |  |
+| three_city_itinerary_turn4 | ollama_raw | llama3.1:latest | PASS | 4444ms | 31.8 |  |
+| correction_handling_turn1 | ollama_raw | llama3.1:latest | PASS | 2266ms | 34.0 |  |
+| correction_handling_turn2 | ollama_raw | llama3.1:latest | PASS | 2940ms | 31.5 |  |
+| weather_then_convert_turn1 | strands | qwen3:8b | PASS | 17018ms | - |  |
+| weather_then_convert_turn2 | strands | qwen3:8b | FAIL | 12400ms | - |  |
+| compare_two_cities_turn1 | strands | qwen3:8b | PASS | 10746ms | - |  |
+| compare_two_cities_turn2 | strands | qwen3:8b | PASS | 17783ms | - |  |
+| compare_two_cities_turn3 | strands | qwen3:8b | PASS | 6070ms | - |  |
+| chained_conversion_and_calc_turn1 | strands | qwen3:8b | PASS | 12483ms | - |  |
+| chained_conversion_and_calc_turn2 | strands | qwen3:8b | FAIL | 30496ms | - |  |
+| context_retention_no_tools_turn1 | strands | qwen3:8b | PASS | 10848ms | - |  |
+| context_retention_no_tools_turn2 | strands | qwen3:8b | FAIL | 6997ms | - |  |
+| three_city_itinerary_turn1 | strands | qwen3:8b | PASS | 12075ms | - |  |
+| three_city_itinerary_turn2 | strands | qwen3:8b | PASS | 13237ms | - |  |
+| three_city_itinerary_turn3 | strands | qwen3:8b | PASS | 11824ms | - |  |
+| three_city_itinerary_turn4 | strands | qwen3:8b | PASS | 16739ms | - |  |
+| correction_handling_turn1 | strands | qwen3:8b | PASS | 42214ms | - |  |
+| correction_handling_turn2 | strands | qwen3:8b | FAIL | 23703ms | - |  |
+| weather_then_convert_turn1 | strands | qwen3:4b | PASS | 18752ms | - |  |
+| weather_then_convert_turn2 | strands | qwen3:4b | FAIL | 15606ms | - |  |
+| compare_two_cities_turn1 | strands | qwen3:4b | PASS | 9263ms | - |  |
+| compare_two_cities_turn2 | strands | qwen3:4b | PASS | 14672ms | - |  |
+| compare_two_cities_turn3 | strands | qwen3:4b | PASS | 6235ms | - |  |
+| chained_conversion_and_calc_turn1 | strands | qwen3:4b | PASS | 27182ms | - |  |
+| chained_conversion_and_calc_turn2 | strands | qwen3:4b | FAIL | 18338ms | - |  |
+| context_retention_no_tools_turn1 | strands | qwen3:4b | PASS | 8142ms | - |  |
+| context_retention_no_tools_turn2 | strands | qwen3:4b | PASS | 16553ms | - |  |
+| three_city_itinerary_turn1 | strands | qwen3:4b | PASS | 11132ms | - |  |
+| three_city_itinerary_turn2 | strands | qwen3:4b | PASS | 9949ms | - |  |
+| three_city_itinerary_turn3 | strands | qwen3:4b | PASS | 13814ms | - |  |
+| three_city_itinerary_turn4 | strands | qwen3:4b | PASS | 9177ms | - |  |
+| correction_handling_turn1 | strands | qwen3:4b | PASS | 40020ms | - |  |
+| correction_handling_turn2 | strands | qwen3:4b | FAIL | 13267ms | - |  |
+| weather_then_convert_turn1 | strands | llama3.1:latest | PASS | 9237ms | - |  |
+| weather_then_convert_turn2 | strands | llama3.1:latest | FAIL | 2951ms | - |  |
+| compare_two_cities_turn1 | strands | llama3.1:latest | PASS | 2675ms | - |  |
+| compare_two_cities_turn2 | strands | llama3.1:latest | PASS | 2571ms | - |  |
+| compare_two_cities_turn3 | strands | llama3.1:latest | PASS | 3514ms | - |  |
+| chained_conversion_and_calc_turn1 | strands | llama3.1:latest | FAIL | 3506ms | - |  |
+| chained_conversion_and_calc_turn2 | strands | llama3.1:latest | FAIL | 3300ms | - |  |
+| context_retention_no_tools_turn1 | strands | llama3.1:latest | PASS | 2639ms | - |  |
+| context_retention_no_tools_turn2 | strands | llama3.1:latest | PASS | 2961ms | - |  |
+| three_city_itinerary_turn1 | strands | llama3.1:latest | PASS | 2768ms | - |  |
+| three_city_itinerary_turn2 | strands | llama3.1:latest | PASS | 2704ms | - |  |
+| three_city_itinerary_turn3 | strands | llama3.1:latest | PASS | 2761ms | - |  |
+| three_city_itinerary_turn4 | strands | llama3.1:latest | PASS | 6820ms | - |  |
+| correction_handling_turn1 | strands | llama3.1:latest | PASS | 2286ms | - |  |
+| correction_handling_turn2 | strands | llama3.1:latest | FAIL | 2861ms | - |  |
+
+</details>
+
+## Multi-Turn MCP — NBA Conversations
+
+| Framework / Model | Success Rate | Accuracy | Avg Latency | Avg TPS |
+|---|---|---|---|---|
+| ollama_raw_mcp / qwen3:8b | 17/17 (100%) | 15/17 (88%) | 58752.6ms | 26.5 |
+| ollama_raw_mcp / qwen3:4b | 17/17 (100%) | 14/17 (82%) | 57426.7ms | 43.0 |
+| ollama_raw_mcp / llama3.1:latest | 17/17 (100%) | 17/17 (100%) | 13028.9ms | 29.6 |
+| strands_mcp / qwen3:8b | 17/17 (100%) | 16/17 (94%) | 55991.7ms | N/A |
+| strands_mcp / qwen3:4b | 17/17 (100%) | 16/17 (94%) | 69050.1ms | N/A |
+| strands_mcp / llama3.1:latest | 17/17 (100%) | 17/17 (100%) | 13472.4ms | N/A |
+
+<details>
+<summary>Detailed Results (102 cases)</summary>
+
+| Case | Framework | Model | Pass | Latency | TPS | Error |
+|---|---|---|---|---|---|---|
+| lebron_vs_mj_turn1 | ollama_raw_mcp | qwen3:8b | PASS | 131684ms | 26.9 |  |
+| lebron_vs_mj_turn2 | ollama_raw_mcp | qwen3:8b | PASS | 78431ms | 27.2 |  |
+| lebron_vs_mj_turn3 | ollama_raw_mcp | qwen3:8b | PASS | 51821ms | 27.2 |  |
+| mj_vs_kobe_deep_turn1 | ollama_raw_mcp | qwen3:8b | PASS | 72630ms | 27.3 |  |
+| mj_vs_kobe_deep_turn2 | ollama_raw_mcp | qwen3:8b | PASS | 67818ms | 25.9 |  |
+| mj_vs_kobe_deep_turn3 | ollama_raw_mcp | qwen3:8b | FAIL | 60423ms | 26.9 |  |
+| mj_vs_kobe_deep_turn4 | ollama_raw_mcp | qwen3:8b | PASS | 80953ms | 26.7 |  |
+| team_exploration_turn1 | ollama_raw_mcp | qwen3:8b | PASS | 27839ms | 27.6 |  |
+| team_exploration_turn2 | ollama_raw_mcp | qwen3:8b | PASS | 52962ms | 26.9 |  |
+| team_exploration_turn3 | ollama_raw_mcp | qwen3:8b | PASS | 58183ms | 26.7 |  |
+| scoring_leaders_drill_turn1 | ollama_raw_mcp | qwen3:8b | PASS | 39677ms | 27.1 |  |
+| scoring_leaders_drill_turn2 | ollama_raw_mcp | qwen3:8b | PASS | 44212ms | 26.9 |  |
+| scoring_leaders_drill_turn3 | ollama_raw_mcp | qwen3:8b | PASS | 32755ms | 26.7 |  |
+| player_career_arc_turn1 | ollama_raw_mcp | qwen3:8b | PASS | 23256ms | 26.2 |  |
+| player_career_arc_turn2 | ollama_raw_mcp | qwen3:8b | PASS | 36910ms | 24.4 |  |
+| player_career_arc_turn3 | ollama_raw_mcp | qwen3:8b | PASS | 55558ms | 24.3 |  |
+| player_career_arc_turn4 | ollama_raw_mcp | qwen3:8b | FAIL | 83683ms | 25.5 |  |
+| lebron_vs_mj_turn1 | ollama_raw_mcp | qwen3:4b | PASS | 107973ms | 43.8 |  |
+| lebron_vs_mj_turn2 | ollama_raw_mcp | qwen3:4b | FAIL | 57843ms | 43.4 |  |
+| lebron_vs_mj_turn3 | ollama_raw_mcp | qwen3:4b | PASS | 53967ms | 43.4 |  |
+| mj_vs_kobe_deep_turn1 | ollama_raw_mcp | qwen3:4b | PASS | 123275ms | 42.9 |  |
+| mj_vs_kobe_deep_turn2 | ollama_raw_mcp | qwen3:4b | PASS | 75818ms | 43.2 |  |
+| mj_vs_kobe_deep_turn3 | ollama_raw_mcp | qwen3:4b | FAIL | 41885ms | 43.5 |  |
+| mj_vs_kobe_deep_turn4 | ollama_raw_mcp | qwen3:4b | PASS | 68029ms | 43.3 |  |
+| team_exploration_turn1 | ollama_raw_mcp | qwen3:4b | PASS | 34517ms | 44.6 |  |
+| team_exploration_turn2 | ollama_raw_mcp | qwen3:4b | FAIL | 55185ms | 43.1 |  |
+| team_exploration_turn3 | ollama_raw_mcp | qwen3:4b | PASS | 64527ms | 41.4 |  |
+| scoring_leaders_drill_turn1 | ollama_raw_mcp | qwen3:4b | PASS | 31338ms | 44.7 |  |
+| scoring_leaders_drill_turn2 | ollama_raw_mcp | qwen3:4b | PASS | 44231ms | 42.6 |  |
+| scoring_leaders_drill_turn3 | ollama_raw_mcp | qwen3:4b | PASS | 25401ms | 43.0 |  |
+| player_career_arc_turn1 | ollama_raw_mcp | qwen3:4b | PASS | 21195ms | 45.2 |  |
+| player_career_arc_turn2 | ollama_raw_mcp | qwen3:4b | PASS | 46607ms | 41.9 |  |
+| player_career_arc_turn3 | ollama_raw_mcp | qwen3:4b | PASS | 66523ms | 40.3 |  |
+| player_career_arc_turn4 | ollama_raw_mcp | qwen3:4b | PASS | 57943ms | 40.4 |  |
+| lebron_vs_mj_turn1 | ollama_raw_mcp | llama3.1:latest | PASS | 24054ms | 30.0 |  |
+| lebron_vs_mj_turn2 | ollama_raw_mcp | llama3.1:latest | PASS | 14398ms | 30.7 |  |
+| lebron_vs_mj_turn3 | ollama_raw_mcp | llama3.1:latest | PASS | 16371ms | 29.7 |  |
+| mj_vs_kobe_deep_turn1 | ollama_raw_mcp | llama3.1:latest | PASS | 8854ms | 30.2 |  |
+| mj_vs_kobe_deep_turn2 | ollama_raw_mcp | llama3.1:latest | PASS | 15087ms | 24.7 |  |
+| mj_vs_kobe_deep_turn3 | ollama_raw_mcp | llama3.1:latest | PASS | 9211ms | 29.5 |  |
+| mj_vs_kobe_deep_turn4 | ollama_raw_mcp | llama3.1:latest | PASS | 10717ms | 30.7 |  |
+| team_exploration_turn1 | ollama_raw_mcp | llama3.1:latest | PASS | 13352ms | 31.6 |  |
+| team_exploration_turn2 | ollama_raw_mcp | llama3.1:latest | PASS | 10985ms | 30.0 |  |
+| team_exploration_turn3 | ollama_raw_mcp | llama3.1:latest | PASS | 9131ms | 30.2 |  |
+| scoring_leaders_drill_turn1 | ollama_raw_mcp | llama3.1:latest | PASS | 10818ms | 30.3 |  |
+| scoring_leaders_drill_turn2 | ollama_raw_mcp | llama3.1:latest | PASS | 17966ms | 29.9 |  |
+| scoring_leaders_drill_turn3 | ollama_raw_mcp | llama3.1:latest | PASS | 9916ms | 30.0 |  |
+| player_career_arc_turn1 | ollama_raw_mcp | llama3.1:latest | PASS | 8749ms | 32.0 |  |
+| player_career_arc_turn2 | ollama_raw_mcp | llama3.1:latest | PASS | 10514ms | 29.8 |  |
+| player_career_arc_turn3 | ollama_raw_mcp | llama3.1:latest | PASS | 14884ms | 26.9 |  |
+| player_career_arc_turn4 | ollama_raw_mcp | llama3.1:latest | PASS | 16484ms | 27.6 |  |
+| lebron_vs_mj_turn1 | strands_mcp | qwen3:8b | PASS | 90406ms | - |  |
+| lebron_vs_mj_turn2 | strands_mcp | qwen3:8b | PASS | 90011ms | - |  |
+| lebron_vs_mj_turn3 | strands_mcp | qwen3:8b | PASS | 57787ms | - |  |
+| mj_vs_kobe_deep_turn1 | strands_mcp | qwen3:8b | PASS | 63767ms | - |  |
+| mj_vs_kobe_deep_turn2 | strands_mcp | qwen3:8b | PASS | 64291ms | - |  |
+| mj_vs_kobe_deep_turn3 | strands_mcp | qwen3:8b | PASS | 86254ms | - |  |
+| mj_vs_kobe_deep_turn4 | strands_mcp | qwen3:8b | PASS | 70050ms | - |  |
+| team_exploration_turn1 | strands_mcp | qwen3:8b | PASS | 35739ms | - |  |
+| team_exploration_turn2 | strands_mcp | qwen3:8b | PASS | 52334ms | - |  |
+| team_exploration_turn3 | strands_mcp | qwen3:8b | PASS | 84876ms | - |  |
+| scoring_leaders_drill_turn1 | strands_mcp | qwen3:8b | FAIL | 28112ms | - |  |
+| scoring_leaders_drill_turn2 | strands_mcp | qwen3:8b | PASS | 37917ms | - |  |
+| scoring_leaders_drill_turn3 | strands_mcp | qwen3:8b | PASS | 26669ms | - |  |
+| player_career_arc_turn1 | strands_mcp | qwen3:8b | PASS | 20408ms | - |  |
+| player_career_arc_turn2 | strands_mcp | qwen3:8b | PASS | 32951ms | - |  |
+| player_career_arc_turn3 | strands_mcp | qwen3:8b | PASS | 46492ms | - |  |
+| player_career_arc_turn4 | strands_mcp | qwen3:8b | PASS | 63794ms | - |  |
+| lebron_vs_mj_turn1 | strands_mcp | qwen3:4b | PASS | 142238ms | - |  |
+| lebron_vs_mj_turn2 | strands_mcp | qwen3:4b | PASS | 85741ms | - |  |
+| lebron_vs_mj_turn3 | strands_mcp | qwen3:4b | PASS | 81997ms | - |  |
+| mj_vs_kobe_deep_turn1 | strands_mcp | qwen3:4b | PASS | 107128ms | - |  |
+| mj_vs_kobe_deep_turn2 | strands_mcp | qwen3:4b | PASS | 85213ms | - |  |
+| mj_vs_kobe_deep_turn3 | strands_mcp | qwen3:4b | PASS | 107521ms | - |  |
+| mj_vs_kobe_deep_turn4 | strands_mcp | qwen3:4b | PASS | 68447ms | - |  |
+| team_exploration_turn1 | strands_mcp | qwen3:4b | PASS | 55121ms | - |  |
+| team_exploration_turn2 | strands_mcp | qwen3:4b | PASS | 80803ms | - |  |
+| team_exploration_turn3 | strands_mcp | qwen3:4b | PASS | 85564ms | - |  |
+| scoring_leaders_drill_turn1 | strands_mcp | qwen3:4b | FAIL | 44813ms | - |  |
+| scoring_leaders_drill_turn2 | strands_mcp | qwen3:4b | PASS | 54350ms | - |  |
+| scoring_leaders_drill_turn3 | strands_mcp | qwen3:4b | PASS | 32050ms | - |  |
+| player_career_arc_turn1 | strands_mcp | qwen3:4b | PASS | 22548ms | - |  |
+| player_career_arc_turn2 | strands_mcp | qwen3:4b | PASS | 27140ms | - |  |
+| player_career_arc_turn3 | strands_mcp | qwen3:4b | PASS | 44317ms | - |  |
+| player_career_arc_turn4 | strands_mcp | qwen3:4b | PASS | 48861ms | - |  |
+| lebron_vs_mj_turn1 | strands_mcp | llama3.1:latest | PASS | 25092ms | - |  |
+| lebron_vs_mj_turn2 | strands_mcp | llama3.1:latest | PASS | 11943ms | - |  |
+| lebron_vs_mj_turn3 | strands_mcp | llama3.1:latest | PASS | 13848ms | - |  |
+| mj_vs_kobe_deep_turn1 | strands_mcp | llama3.1:latest | PASS | 13137ms | - |  |
+| mj_vs_kobe_deep_turn2 | strands_mcp | llama3.1:latest | PASS | 14741ms | - |  |
+| mj_vs_kobe_deep_turn3 | strands_mcp | llama3.1:latest | PASS | 10794ms | - |  |
+| mj_vs_kobe_deep_turn4 | strands_mcp | llama3.1:latest | PASS | 12865ms | - |  |
+| team_exploration_turn1 | strands_mcp | llama3.1:latest | PASS | 14891ms | - |  |
+| team_exploration_turn2 | strands_mcp | llama3.1:latest | PASS | 11171ms | - |  |
+| team_exploration_turn3 | strands_mcp | llama3.1:latest | PASS | 10588ms | - |  |
+| scoring_leaders_drill_turn1 | strands_mcp | llama3.1:latest | PASS | 10895ms | - |  |
+| scoring_leaders_drill_turn2 | strands_mcp | llama3.1:latest | PASS | 17709ms | - |  |
+| scoring_leaders_drill_turn3 | strands_mcp | llama3.1:latest | PASS | 10063ms | - |  |
+| player_career_arc_turn1 | strands_mcp | llama3.1:latest | PASS | 9363ms | - |  |
+| player_career_arc_turn2 | strands_mcp | llama3.1:latest | PASS | 11212ms | - |  |
+| player_career_arc_turn3 | strands_mcp | llama3.1:latest | PASS | 15360ms | - |  |
+| player_career_arc_turn4 | strands_mcp | llama3.1:latest | PASS | 15359ms | - |  |
 
 </details>
 
