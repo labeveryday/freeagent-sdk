@@ -32,3 +32,10 @@ __all__ = [
     "Skill",
     "Metrics",
 ]
+
+# Conditional MCP export (only if mcp package is installed)
+try:
+    from .mcp import connect as mcp_connect
+    __all__.append("mcp_connect")
+except ImportError:
+    pass

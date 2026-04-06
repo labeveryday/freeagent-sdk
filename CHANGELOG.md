@@ -32,3 +32,12 @@
 - One bad call doesn't block good ones — valid calls execute, errors get feedback
 - Circuit breaker checks each call independently
 - ReactEngine stays single-call (by design — small models)
+
+### Phase 5: MCP Support
+- Added `freeagent/mcp/` package with client and adapter modules
+- `connect()` context manager for stdio and streamable HTTP transports
+- MCP tool schemas converted to FreeAgent ToolParam objects
+- Verbose descriptions auto-truncated to 100 chars for small model context budgets
+- Tool index builder for system prompt when > 10 tools
+- Conditional export: only available if `mcp` package is installed
+- `pip install freeagent-sdk[mcp]` optional dependency
