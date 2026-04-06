@@ -329,6 +329,9 @@ class Memory:
         """Resolve a filename to a full path in the memory directory."""
         # Prevent directory traversal
         clean = Path(filename).name
+        # Auto-append .md if missing (models often omit the extension)
+        if not clean.endswith(".md"):
+            clean = clean + ".md"
         return self._dir / clean
 
     def _ensure_dir(self):
