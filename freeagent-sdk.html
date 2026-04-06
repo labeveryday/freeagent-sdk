@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreeAgent SDK v0.2</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0b0b;--s:#141414;--s2:#1c1c1c;--s3:#242424;--bd:#2a2a2a;--t:#e8e8e8;--td:#888;--tf:#555;--g:#22c55e;--gd:#16a34a;--r:#ef4444;--b:#3b82f6;--a:#f59e0b;--p:#a855f7;--cy:#06b6d4;--cb:#0e0e0e;--kw:#c084fc;--fn:#60a5fa;--st:#86efac;--tp:#fbbf24;--cm:#4b5563;--an:#fb923c;--nb:#f87171}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--t);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.65}
+::selection{background:var(--g);color:#000}
+header{padding:2.5rem 1.5rem 2rem;text-align:center;border-bottom:1px solid var(--bd);position:relative;overflow:hidden}
+header::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 50% 120%,rgba(34,197,94,0.04) 0%,transparent 50%);pointer-events:none}
+.logo{font-family:'JetBrains Mono',monospace;font-size:2.4rem;font-weight:700;letter-spacing:-0.04em}.logo span{color:var(--g)}
+.tagline{color:var(--td);font-size:0.9rem;margin-top:0.5rem;font-style:italic}
+.badge{display:inline-block;margin-top:0.75rem;font-family:'JetBrains Mono',monospace;font-size:0.65rem;padding:0.25rem 0.7rem;border:1px solid var(--gd);color:var(--g);border-radius:100px;letter-spacing:0.06em;text-transform:uppercase}
+nav{display:flex;gap:1px;padding:0.75rem;justify-content:center;flex-wrap:wrap;background:var(--s)}
+nav button{background:0;border:0;color:var(--td);font-family:'JetBrains Mono',monospace;font-size:0.66rem;padding:0.5rem 0.75rem;cursor:pointer;transition:all 0.15s;letter-spacing:0.03em;border-radius:4px}
+nav button:hover{color:var(--t);background:var(--s2)}
+nav button.active{color:var(--g);background:var(--s2);font-weight:600}
+.panel{max-width:860px;margin:0 auto;padding:2rem 1.5rem;display:none;animation:fi 0.2s ease}
+.panel.active{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+h2{font-family:'JetBrains Mono',monospace;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--g);margin:2.25rem 0 0.75rem;display:flex;align-items:center;gap:0.5rem}
+h2::after{content:'';flex:1;height:1px;background:var(--bd)}
+h2:first-child{margin-top:0}
+h3{font-size:0.85rem;color:var(--t);margin:1.5rem 0 0.5rem;font-weight:600}
+p{margin-bottom:0.85rem;font-size:0.88rem;color:var(--td);line-height:1.75}
+p strong{color:var(--t);font-weight:600}
+code{font-family:'JetBrains Mono',monospace;font-size:0.8em;background:var(--s2);padding:0.15em 0.4em;border-radius:3px;color:var(--g)}
+.cb{background:var(--cb);border:1px solid var(--bd);border-radius:6px;padding:1.25rem;margin:0.75rem 0 1.5rem;overflow-x:auto;position:relative}
+.cb .f{position:absolute;top:0;right:0;background:var(--s2);color:var(--tf);font-family:'JetBrains Mono',monospace;font-size:0.6rem;padding:0.2rem 0.6rem;border-bottom-left-radius:4px}
+pre{font-family:'JetBrains Mono',monospace;font-size:0.76rem;line-height:1.7;white-space:pre;margin:0}
+.kw{color:var(--kw)} .fn{color:var(--fn)} .st{color:var(--st)} .tp{color:var(--tp)} .cm{color:var(--cm);font-style:italic} .an{color:var(--an)} .nb{color:var(--nb)}
+.cd{background:var(--s);border:1px solid var(--bd);border-radius:6px;padding:1rem 1.15rem;margin:0.5rem 0}
+.cl{font-family:'JetBrains Mono',monospace;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.35rem;font-weight:600}
+.cl.g{color:var(--g)} .cl.r{color:var(--r)} .cl.b{color:var(--b)} .cl.a{color:var(--a)} .cl.p{color:var(--p)} .cl.cy{color:var(--cy)}
+.cd p{margin-bottom:0;font-size:0.82rem}
+.gr{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin:0.75rem 0}
+@media(max-width:680px){.gr{grid-template-columns:1fr}}
+.stats{display:flex;gap:1px;margin:1rem 0;flex-wrap:wrap}
+.stat{background:var(--s);padding:0.75rem 1rem;flex:1;min-width:100px;text-align:center;border:1px solid var(--bd);border-radius:4px}
+.sn{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--g)}
+.sl{font-size:0.66rem;color:var(--td);margin-top:0.2rem;text-transform:uppercase;letter-spacing:0.06em}
+.to{background:#050505;border:1px solid var(--bd);border-radius:6px;padding:1rem;font-family:'JetBrains Mono',monospace;font-size:0.72rem;line-height:1.7;color:var(--td);overflow-x:auto;margin:0.75rem 0}
+.to .p{color:var(--g)} .to .fl{color:var(--r)} .to .lb{color:var(--a)}
+.diagram{background:var(--s);border:1px solid var(--bd);border-radius:6px;padding:1.5rem;margin:1rem 0;font-family:'JetBrains Mono',monospace;font-size:0.7rem;line-height:1.8;overflow-x:auto;white-space:pre;color:var(--tf);text-align:center}
+footer{text-align:center;padding:3rem 1rem;color:var(--tf);font-size:0.75rem;font-family:'JetBrains Mono',monospace;border-top:1px solid var(--bd)}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Free<span>Agent</span></div>
+  <div class="tagline">Local-first AI agent framework. Built for models that aren't perfect.</div>
+  <div class="badge">v0.2.0 · hooks · memory · zero deps · mit</div>
+</header>
+
+<nav id="nav">
+  <button class="active" data-t="overview">Overview</button>
+  <button data-t="start">Quick Start</button>
+  <button data-t="hooks">Hooks</button>
+  <button data-t="memory">Memory</button>
+  <button data-t="tools">@tool</button>
+  <button data-t="engine">Dual Engine</button>
+  <button data-t="guard">Guardrails</button>
+  <button data-t="tests">Tests</button>
+  <button data-t="tree">Project</button>
+  <button data-t="next">Roadmap</button>
+</nav>
+
+<!-- OVERVIEW -->
+<div class="panel active" id="tab-overview">
+<h2>FreeAgent SDK</h2>
+<p>A Python SDK for building AI agents on <strong>local models</strong> (Ollama, vLLM). Unlike Strands and LangChain, FreeAgent wraps your model in guardrails, hooks, and persistent memory — because small models need a co-pilot, not a blank check.</p>
+<div class="stats">
+  <div class="stat"><div class="sn">1,716</div><div class="sl">Lines</div></div>
+  <div class="stat"><div class="sn">0</div><div class="sl">Deps</div></div>
+  <div class="stat"><div class="sn">16</div><div class="sl">Files</div></div>
+  <div class="stat"><div class="sn">13</div><div class="sl">Hook Events</div></div>
+  <div class="stat"><div class="sn">3</div><div class="sl">Built-in Tools</div></div>
+</div>
+<h2>What's In The Box</h2>
+<div class="gr">
+<div class="cd"><div class="cl g">Hooks</div><p>13 lifecycle events. Decorator or direct registration. Pre-built logging and cost tracking. Hooks can skip tool calls, override responses, and modify behavior without subclassing.</p></div>
+<div class="cd"><div class="cl cy">Memory</div><p>Persistent key-value store on disk (JSON). Auto-loads on run, auto-saves after. Injected into system prompt automatically. Search by prefix. Metadata tracking (created, updated, access count).</p></div>
+<div class="cd"><div class="cl g">Dual Engine</div><p>Native tool calling for capable models (llama3.1, qwen3). ReAct text parsing with constrained JSON for everything else. Auto-detected per model.</p></div>
+<div class="cd"><div class="cl a">Guardrails</div><p>Fuzzy tool matching, type coercion, retry with error feedback, circuit breakers, timeouts, graceful degradation to partial results.</p></div>
+</div>
+</div>
+
+<!-- QUICK START -->
+<div class="panel" id="tab-start">
+<h2>Hello World</h2>
+<div class="cb"><div class="f">01_hello.py</div>
+<pre><span class="kw">from</span> freeagent <span class="kw">import</span> <span class="tp">Agent</span>
+
+agent = <span class="tp">Agent</span>(model=<span class="st">"llama3.1:8b"</span>)
+<span class="fn">print</span>(agent.<span class="fn">run</span>(<span class="st">"What is Python?"</span>))</pre></div>
+
+<h2>With Tools</h2>
+<div class="cb"><div class="f">02_tools.py</div>
+<pre><span class="kw">from</span> freeagent <span class="kw">import</span> <span class="tp">Agent</span>, <span class="fn">tool</span>
+<span class="kw">from</span> freeagent.tools <span class="kw">import</span> system_info, calculator
+
+<span class="an">@tool</span>
+<span class="kw">def</span> <span class="fn">weather</span>(city: <span class="tp">str</span>) -> <span class="tp">dict</span>:
+    <span class="st">"""Get weather for a city.
+    city: The city name
+    """</span>
+    <span class="kw">return</span> {<span class="st">"temp"</span>: <span class="nb">72</span>, <span class="st">"condition"</span>: <span class="st">"sunny"</span>}
+
+agent = <span class="tp">Agent</span>(
+    model=<span class="st">"qwen3:8b"</span>,
+    tools=[weather, system_info, calculator],
+    memory_path=<span class="st">"~/.freeagent/memory.json"</span>,
+)
+
+<span class="fn">print</span>(agent.<span class="fn">run</span>(<span class="st">"Weather in Portland and disk space?"</span>))</pre></div>
+</div>
+
+<!-- HOOKS -->
+<div class="panel" id="tab-hooks">
+<h2>Hooks — Lifecycle Events</h2>
+<p>Hooks let you observe and modify agent behavior at every stage. Register via decorator or direct call. Hooks never crash the agent — exceptions are silently caught.</p>
+
+<h3>All 13 Events</h3>
+<div class="gr">
+<div class="cd"><div class="cl g">Agent Lifecycle</div><p><code>before_run</code> · <code>after_run</code></p></div>
+<div class="cd"><div class="cl b">Model</div><p><code>before_model</code> · <code>after_model</code></p></div>
+<div class="cd"><div class="cl a">Tools</div><p><code>before_tool</code> · <code>after_tool</code></p></div>
+<div class="cd"><div class="cl r">Errors</div><p><code>on_validation_error</code> · <code>on_retry</code> · <code>on_error</code></p></div>
+<div class="cd"><div class="cl p">Circuit Breaker</div><p><code>on_loop</code> · <code>on_max_iter</code> · <code>on_timeout</code></p></div>
+<div class="cd"><div class="cl cy">Memory</div><p><code>memory_load</code> · <code>memory_save</code> · <code>memory_update</code></p></div>
+</div>
+
+<h3>Decorator Style</h3>
+<div class="cb"><div class="f">hooks example</div>
+<pre><span class="an">@agent.on</span>(<span class="st">"before_tool"</span>)
+<span class="kw">def</span> <span class="fn">log_tool</span>(ctx):
+    <span class="fn">print</span>(<span class="st">f"→ Calling </span>{ctx.tool_name}<span class="st">(</span>{ctx.args}<span class="st">)"</span>)
+
+<span class="an">@agent.on</span>(<span class="st">"after_tool"</span>)
+<span class="kw">def</span> <span class="fn">cache_result</span>(ctx):
+    <span class="kw">if</span> ctx.result <span class="kw">and</span> ctx.result.success:
+        agent.memory.<span class="fn">set</span>(
+            <span class="st">f"cache.</span>{ctx.tool_name}<span class="st">"</span>,
+            ctx.result.data
+        )
+
+<span class="an">@agent.on</span>(<span class="st">"on_error"</span>)
+<span class="kw">def</span> <span class="fn">alert</span>(ctx):
+    send_to_slack(<span class="st">f"Agent error: </span>{ctx.error}<span class="st">"</span>)</pre></div>
+
+<h3>Mutable Context — Skip & Override</h3>
+<div class="cb">
+<pre><span class="an">@agent.on</span>(<span class="st">"before_tool"</span>)
+<span class="kw">def</span> <span class="fn">use_cache</span>(ctx):
+    <span class="cm"># Skip the actual tool call if we have cached data</span>
+    cached = agent.memory.<span class="fn">get</span>(<span class="st">f"cache.</span>{ctx.tool_name}<span class="st">"</span>)
+    <span class="kw">if</span> cached:
+        ctx.skip = <span class="kw">True</span>  <span class="cm"># tool won't execute</span>
+
+<span class="an">@agent.on</span>(<span class="st">"after_run"</span>)
+<span class="kw">def</span> <span class="fn">sanitize</span>(ctx):
+    <span class="cm"># Override the final response</span>
+    ctx.override_response = ctx.response.<span class="fn">replace</span>(<span class="st">"password"</span>, <span class="st">"***"</span>)</pre></div>
+
+<h3>Pre-Built Hooks</h3>
+<div class="cb">
+<pre><span class="kw">from</span> freeagent <span class="kw">import</span> log_hook, cost_hook
+
+<span class="cm"># Logging — prints every lifecycle event</span>
+logger = <span class="fn">log_hook</span>(verbose=<span class="kw">True</span>)
+agent.<span class="fn">on</span>(<span class="st">"before_run"</span>, logger)
+agent.<span class="fn">on</span>(<span class="st">"before_tool"</span>, logger)
+agent.<span class="fn">on</span>(<span class="st">"after_tool"</span>, logger)
+agent.<span class="fn">on</span>(<span class="st">"after_run"</span>, logger)
+
+<span class="cm"># Cost tracking — counts tool calls per tool</span>
+track, stats = <span class="fn">cost_hook</span>()
+agent.<span class="fn">on</span>(<span class="st">"before_tool"</span>, track)
+agent.<span class="fn">run</span>(<span class="st">"check disk space"</span>)
+<span class="fn">print</span>(<span class="fn">stats</span>())
+<span class="cm"># → {"calls": 1, "tools": {"system_info": 1}, "errors": 0}</span></pre></div>
+</div>
+
+<!-- MEMORY -->
+<div class="panel" id="tab-memory">
+<h2>Memory — Persistent Key-Value Store</h2>
+<p>File-backed JSON store that persists between runs. Auto-loads on agent start, auto-saves after each run. Memory context is injected into the system prompt so the model knows what it remembers.</p>
+
+<h3>Agent Integration</h3>
+<div class="cb"><div class="f">memory with agent</div>
+<pre>agent = <span class="tp">Agent</span>(
+    model=<span class="st">"llama3.1:8b"</span>,
+    tools=[weather],
+    memory_path=<span class="st">"~/.freeagent/memory.json"</span>,  <span class="cm"># persists to disk</span>
+)
+
+<span class="cm"># Pre-load preferences</span>
+agent.memory.<span class="fn">set</span>(<span class="st">"user.name"</span>, <span class="st">"Alice"</span>, source=<span class="st">"user"</span>)
+agent.memory.<span class="fn">set</span>(<span class="st">"user.units"</span>, <span class="st">"metric"</span>, source=<span class="st">"user"</span>)
+
+<span class="cm"># The model sees this in its system prompt:</span>
+<span class="cm"># ## Your Memory (facts you remember):</span>
+<span class="cm"># - user.name: Alice</span>
+<span class="cm"># - user.units: metric</span>
+
+agent.<span class="fn">run</span>(<span class="st">"What's the weather?"</span>)
+<span class="cm"># Model knows to use metric because it's in memory</span></pre></div>
+
+<h3>Standalone API</h3>
+<div class="cb"><div class="f">memory API</div>
+<pre><span class="kw">from</span> freeagent <span class="kw">import</span> <span class="tp">Memory</span>
+
+mem = <span class="tp">Memory</span>(path=<span class="st">"~/.freeagent/memory.json"</span>)
+
+mem.<span class="fn">set</span>(<span class="st">"user.name"</span>, <span class="st">"Alice"</span>)          <span class="cm"># create/update</span>
+mem.<span class="fn">get</span>(<span class="st">"user.name"</span>)                     <span class="cm"># → "Alice"</span>
+mem.<span class="fn">get</span>(<span class="st">"missing"</span>, <span class="st">"default"</span>)            <span class="cm"># → "default"</span>
+mem.<span class="fn">has</span>(<span class="st">"user.name"</span>)                     <span class="cm"># → True</span>
+mem.<span class="fn">delete</span>(<span class="st">"user.name"</span>)                  <span class="cm"># → True</span>
+
+mem.<span class="fn">search</span>(<span class="st">"user."</span>)                      <span class="cm"># → all keys starting with "user."</span>
+mem.<span class="fn">all</span>()                                <span class="cm"># → full dict</span>
+mem.<span class="fn">keys</span>()                               <span class="cm"># → list of keys</span>
+<span class="fn">len</span>(mem)                                <span class="cm"># → entry count</span>
+<span class="st">"user.name"</span> <span class="kw">in</span> mem                      <span class="cm"># → True</span>
+
+<span class="cm"># Each entry tracks metadata:</span>
+<span class="cm"># created_at, updated_at, access_count, source</span></pre></div>
+
+<h3>Memory + Hooks Together</h3>
+<div class="cb">
+<pre><span class="cm"># Auto-cache tool results in memory</span>
+<span class="an">@agent.on</span>(<span class="st">"after_tool"</span>)
+<span class="kw">def</span> <span class="fn">auto_cache</span>(ctx):
+    <span class="kw">if</span> ctx.result <span class="kw">and</span> ctx.result.success:
+        agent.memory.<span class="fn">set</span>(
+            <span class="st">f"cache.</span>{ctx.tool_name}<span class="st">.</span>{<span class="fn">hash</span>(<span class="fn">str</span>(ctx.args))}<span class="st">"</span>,
+            ctx.result.data,
+            source=<span class="st">"tool"</span>
+        )
+
+<span class="cm"># Use cache to skip redundant calls</span>
+<span class="an">@agent.on</span>(<span class="st">"before_tool"</span>)
+<span class="kw">def</span> <span class="fn">check_cache</span>(ctx):
+    key = <span class="st">f"cache.</span>{ctx.tool_name}<span class="st">.</span>{<span class="fn">hash</span>(<span class="fn">str</span>(ctx.args))}<span class="st">"</span>
+    <span class="kw">if</span> agent.memory.<span class="fn">has</span>(key):
+        ctx.skip = <span class="kw">True</span>  <span class="cm"># don't re-run</span></pre></div>
+</div>
+
+<!-- @TOOL -->
+<div class="panel" id="tab-tools">
+<h2>@tool Decorator</h2>
+<p>Write a function with type hints and a docstring. FreeAgent builds the JSON schema, Ollama spec, and ReAct description automatically.</p>
+<div class="cb"><div class="f">tool decorator</div>
+<pre><span class="an">@tool</span>
+<span class="kw">def</span> <span class="fn">lookup_user</span>(username: <span class="tp">str</span>) -> <span class="tp">dict</span>:
+    <span class="st">"""Look up a user by username.
+    username: The username to look up
+    """</span>
+    <span class="kw">return</span> {<span class="st">"name"</span>: <span class="st">"Alice"</span>, <span class="st">"role"</span>: <span class="st">"engineer"</span>}
+
+<span class="cm"># Auto-generated:</span>
+lookup_user.name         <span class="cm"># → "lookup_user"</span>
+lookup_user.schema()     <span class="cm"># → JSON schema from type hints</span>
+lookup_user.to_ollama_spec()    <span class="cm"># → Ollama tool format</span>
+lookup_user.to_react_description()  <span class="cm"># → human-readable for ReAct</span></pre></div>
+<div class="cd"><div class="cl a">Design Rule</div><p>Keep schemas flat. One required field is ideal. Use strings over enums. Provide defaults. Every field you add is a chance for a small model to fail.</p></div>
+</div>
+
+<!-- DUAL ENGINE -->
+<div class="panel" id="tab-engine">
+<h2>Dual-Mode Engine</h2>
+<div class="diagram">
+             ┌──────────────────────────────┐
+             │       <span style="color:var(--g)">Agent.run()</span>            │
+             └──────────────┬───────────────┘
+                            │
+              <span style="color:var(--a)">Model Profile Detection</span>
+            "llama3.1" → native │ "phi3" → react
+                   ┌────────┴────────┐
+          ┌────────▼──────┐ ┌────────▼────────┐
+          │ <span style="color:var(--g)">NativeEngine</span>  │ │ <span style="color:var(--p)">ReactEngine</span>     │
+          │ Ollama tool   │ │ 1. Free-text    │
+          │ API → struct  │ │ 2. GBNF JSON    │
+          │ tool_calls    │ │ (two-step)      │
+          └───────┬───────┘ └────────┬────────┘
+                  └────────┬─────────┘
+                    <span style="color:var(--a)">Validator</span> → <span style="color:var(--r)">Retry</span> → <span style="color:var(--g)">Dispatch</span>
+                           │
+                    <span style="color:var(--b)">Circuit Breaker</span>
+                    <span style="color:var(--cy)">Hooks fire at each step</span></div>
+<div class="cd"><div class="cl p">Two-Step Generation</div><p>The key insight: asking a small model to think AND produce JSON in one shot fails. Split reasoning (free text) from structured output (constrained JSON). The model thinks naturally, then gives just the arguments with grammar constraints.</p></div>
+</div>
+
+<!-- GUARDRAILS -->
+<div class="panel" id="tab-guard">
+<h2>Guardrails</h2>
+<div class="gr">
+<div class="cd"><div class="cl g">Fuzzy Matching</div><p>Model says "gret"? → "Did you mean 'greet'?"</p></div>
+<div class="cd"><div class="cl g">Type Coercion</div><p>"42" → 42, "true" → True. Auto-fixed.</p></div>
+<div class="cd"><div class="cl a">Retry + Feedback</div><p>"Missing field 'city'. Schema: {city: string}." Concrete errors, not generic retries.</p></div>
+<div class="cd"><div class="cl r">Circuit Breaker</div><p>Same tool+args 3x = stuck. Max iterations = stop. Timeout = partial result.</p></div>
+</div>
+</div>
+
+<!-- TESTS -->
+<div class="panel" id="tab-tests">
+<h2>Test Results — All Systems</h2>
+<div class="to">
+<span class="lb">=== Memory ===</span>
+  <span class="p">get:     Alice</span>
+  <span class="p">search:  {'user.name': 'Alice', 'user.units': 'metric'}</span>
+  <span class="p">has:     True</span>
+  <span class="p">persist: test_value (survived write → read cycle)</span>
+  <span class="p">prompt:  76 chars, contains memory context</span>
+
+<span class="lb">=== Hooks ===</span>
+  <span class="p">events:  ['before_tool', 'after_tool', 'on_error'] ← all fired</span>
+  <span class="p">skip:    True ← hook can skip tool execution</span>
+  <span class="p">override: 'intercepted!' ← hook can override response</span>
+  <span class="p">pre-built: log_hook, cost_hook OK</span>
+
+<span class="lb">=== Agent Integration ===</span>
+  <span class="p">Agent(model='llama3.1:8b', mode='native', tools=['greet', 'system_info'], memory=1)</span>
+  <span class="p">hooks registered: before_tool, after_run</span>
+  <span class="p">memory in prompt: True ← auto-injected</span>
+
+<span class="lb">=== Validator ===</span>
+  <span class="p">coerce:  {'name': 'Test', 'loud': True} ← "true"→True</span>
+  <span class="p">fuzzy:   "Unknown tool 'gret'. Did you mean 'greet'?"</span>
+
+<span class="lb">=== Circuit Breaker ===</span>
+  <span class="p">sequence: [CONTINUE, CONTINUE, CONTINUE, LOOP_DETECTED, LOOP_DETECTED]</span>
+
+<span class="lb">=== Built-in Tools ===</span>
+  <span class="p">cpu:  {'cpu_cores': 2}</span>
+  <span class="p">calc: {'expression': '99 * 3', 'result': 297}</span>
+
+<span class="lb">=== Stats ===</span>
+  <span class="p">16 Python files · 1,716 lines · 0 dependencies</span>
+
+<span class="p" style="font-size:0.85rem;font-weight:bold">ALL TESTS PASSED</span>
+</div>
+</div>
+
+<!-- PROJECT -->
+<div class="panel" id="tab-tree">
+<h2>Project Structure</h2>
+<pre style="font-size:0.74rem;line-height:1.8;color:var(--td);padding:0.5rem 0">
+<span style="color:var(--a)">freeagent/</span>
+├── <span style="color:var(--p)">pyproject.toml</span>
+├── <span style="color:var(--b)">README.md</span>
+├── <span style="color:var(--a)">freeagent/</span>
+│   ├── <span style="color:var(--g)">__init__.py</span>           <span class="cm">← Agent, tool, Memory, hooks exports</span>
+│   ├── <span style="color:var(--g)">agent.py</span>              <span class="cm">← Agent class w/ hooks + memory integration</span>
+│   ├── <span style="color:var(--g)">hooks.py</span>              <span class="cm">← 13 events, HookRegistry, log_hook, cost_hook</span>
+│   ├── <span style="color:var(--g)">memory.py</span>             <span class="cm">← Memory class, MemoryEntry, persistence</span>
+│   ├── <span style="color:var(--g)">tool.py</span>               <span class="cm">← @tool decorator, schema gen</span>
+│   ├── <span style="color:var(--g)">config.py</span>             <span class="cm">← AgentConfig, model profiles</span>
+│   ├── <span style="color:var(--g)">messages.py</span>           <span class="cm">← Message types, error feedback</span>
+│   ├── <span style="color:var(--g)">validator.py</span>          <span class="cm">← fuzzy match, coercion, field checks</span>
+│   ├── <span style="color:var(--g)">circuit_breaker.py</span>    <span class="cm">← loop detect, iteration limits</span>
+│   ├── <span style="color:var(--a)">engines/</span>
+│   │   └── <span style="color:var(--g)">__init__.py</span>       <span class="cm">← NativeEngine + ReactEngine</span>
+│   ├── <span style="color:var(--a)">providers/</span>
+│   │   └── <span style="color:var(--g)">ollama.py</span>         <span class="cm">← stdlib-only Ollama client</span>
+│   └── <span style="color:var(--a)">tools/</span>
+│       ├── <span style="color:var(--g)">system_info.py</span>    <span class="cm">← disk, cpu, os</span>
+│       ├── <span style="color:var(--g)">calculator.py</span>     <span class="cm">← safe math</span>
+│       └── <span style="color:var(--g)">shell.py</span>          <span class="cm">← sandboxed commands</span>
+└── <span style="color:var(--a)">examples/</span>
+    ├── <span style="color:var(--g)">01_hello.py</span>
+    ├── <span style="color:var(--g)">02_builtin_tools.py</span>
+    ├── <span style="color:var(--g)">03_custom_tool.py</span>
+    ├── <span style="color:var(--g)">04_hooks.py</span>           <span class="cm">← NEW: hooks demo</span>
+    └── <span style="color:var(--g)">05_memory.py</span>          <span class="cm">← NEW: memory demo</span>
+</pre>
+</div>
+
+<!-- ROADMAP -->
+<div class="panel" id="tab-next">
+<h2>What's Done</h2>
+<div class="gr">
+<div class="cd"><div class="cl g">✓ Core Agent Loop</div><p>Dual-mode, guardrails, timeout, partial results</p></div>
+<div class="cd"><div class="cl g">✓ Hooks</div><p>13 events, decorator API, skip/override, pre-built hooks</p></div>
+<div class="cd"><div class="cl g">✓ Memory</div><p>Persistent JSON store, auto-inject into prompts, search</p></div>
+<div class="cd"><div class="cl g">✓ @tool Decorator</div><p>Auto schema, type coercion, 3 built-in tools</p></div>
+</div>
+<h2>What's Next</h2>
+<div class="cd"><div class="cl cy">Skills (Auto-Discovery)</div><p>Drop a <code>.py</code> into <code>skills/</code> → tools available next run. Hot reload. Versioned. This is OpenClaw's skill system, but pythonic.</p></div>
+<div class="cd"><div class="cl p">Cron / Heartbeat</div><p>Lightweight daemon. Wake agent on interval. Run a checklist. "Check disk. Summarize emails. Alert if anomaly." Proactive, not reactive.</p></div>
+<div class="cd"><div class="cl a">Streaming</div><p>Token-by-token output via hooks (<code>on_token</code> event). Works with both native and ReAct engines.</p></div>
+<div class="cd"><div class="cl b">Multi-Agent</div><p>Agent-as-tool. Manager routes to specialists. Each with own tools, memory, hooks.</p></div>
+<div class="cd"><div class="cl r">More Providers</div><p>vLLM, LM Studio, Anthropic, OpenAI. The interface is abstracted — two methods to implement.</p></div>
+</div>
+
+<footer>FreeAgent SDK v0.2.0 · 1,716 lines · 0 deps · hooks + memory · MIT</footer>
+
+<script>
+document.getElementById('nav').addEventListener('click',e=>{
+if(e.target.tagName!=='BUTTON')return;
+document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+e.target.classList.add('active');
+document.getElementById('tab-'+e.target.dataset.t).classList.add('active');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "freeagent-sdk"
+version = "0.1.0"
+description = "Local-first AI agent framework. Built for models that aren't perfect."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "FreeAgent Contributors"},
+]
+keywords = ["ai", "agents", "llm", "ollama", "local", "tool-calling"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "httpx>=0.25.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21",
+]
+otel = [
+    "opentelemetry-api>=1.20.0",
+    "opentelemetry-sdk>=1.20.0",
+    "opentelemetry-exporter-otlp>=1.20.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/freeagent-sdk/freeagent"
+Documentation = "https://freeagent-sdk.dev"
+
+[tool.setuptools.packages.find]
+include = ["freeagent*"]

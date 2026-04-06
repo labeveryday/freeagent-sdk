@@ -1,0 +1,509 @@
+{
+  "version": "1.0",
+  "description": "Framework-agnostic NBA evaluation dataset for testing LLM tool calling with nba-stats-mcp. 100 questions across 4 personas (kids, sports fans, fantasy basketball, DraftKings). Each entry specifies the expected tool(s) and validation criteria.",
+  "mcp_server": "nba-stats-mcp",
+  "mcp_server_pypi": "https://pypi.org/project/nba-stats-mcp/",
+  "available_tools": [
+    "resolve_team_id", "resolve_player_id", "get_scoreboard", "find_game",
+    "get_game_details", "get_box_score", "get_player_info", "get_player_stats",
+    "get_player_awards", "get_shooting_data", "get_team_roster", "get_standings",
+    "get_leaders", "get_schedule", "get_season_awards", "get_team_advanced_stats",
+    "get_play_by_play", "get_game_rotation", "compare_players", "daily_summary",
+    "team_overview"
+  ],
+  "tool_notes": {
+    "get_player_stats": "stat_type param: season (default), career, game_log, hustle, defense, advanced",
+    "get_shooting_data": "data_type param: splits (default) or chart",
+    "get_leaders": "category param: points, assists, rebounds, etc. scope param: current_season, all_time, hustle"
+  },
+  "cases": [
+
+    {"id": 1, "persona": "kid", "complexity": "single_tool", "turns": [
+      {"user": "Who plays for the Lakers?", "expected_tools": ["get_team_roster"], "expected_in_response": ["lakers"]}
+    ]},
+
+    {"id": 2, "persona": "kid", "complexity": "single_tool", "turns": [
+      {"user": "How tall is LeBron James?", "expected_tools": ["get_player_info"], "expected_in_response": ["lebron"]}
+    ]},
+
+    {"id": 3, "persona": "kid", "complexity": "single_tool", "turns": [
+      {"user": "What team does Stephen Curry play for?", "expected_tools": ["get_player_info"], "expected_in_response": ["curry"]}
+    ]},
+
+    {"id": 4, "persona": "kid", "complexity": "single_tool", "turns": [
+      {"user": "Are there any NBA games today?", "expected_tools": ["daily_summary"], "expected_in_response": []}
+    ]},
+
+    {"id": 5, "persona": "kid", "complexity": "single_tool", "turns": [
+      {"user": "Who is the best scorer in the NBA right now?", "expected_tools": ["get_leaders"], "expected_in_response": ["points"]}
+    ]},
+
+    {"id": 6, "persona": "kid", "complexity": "single_tool", "turns": [
+      {"user": "What number does Giannis Antetokounmpo wear?", "expected_tools": ["get_player_info"], "expected_in_response": ["giannis"]}
+    ]},
+
+    {"id": 7, "persona": "kid", "complexity": "single_tool", "turns": [
+      {"user": "Who won MVP this year?", "expected_tools": ["get_season_awards"], "expected_in_response": []}
+    ]},
+
+    {"id": 8, "persona": "kid", "complexity": "single_tool", "turns": [
+      {"user": "Show me the Boston Celtics players.", "expected_tools": ["get_team_roster"], "expected_in_response": ["celtics"]}
+    ]},
+
+    {"id": 9, "persona": "kid", "complexity": "multi_tool", "turns": [
+      {"user": "Who is better, LeBron James or Kevin Durant?", "expected_tools": ["compare_players"], "expected_in_response": ["lebron", "durant"]}
+    ]},
+
+    {"id": 10, "persona": "kid", "complexity": "multi_tool", "turns": [
+      {"user": "Tell me about Luka Doncic. What are his stats and what team is he on?",
+       "expected_tools": ["get_player_info", "get_player_stats"], "expected_in_response": ["luka"]}
+    ]},
+
+    {"id": 11, "persona": "kid", "complexity": "multi_turn", "turns": [
+      {"user": "Who are the top scorers in the NBA?", "expected_tools": ["get_leaders"], "expected_in_response": []},
+      {"user": "Tell me more about the #1 scorer. What team does he play for?", "expected_tools": ["get_player_info"], "expected_in_response": []}
+    ]},
+
+    {"id": 12, "persona": "kid", "complexity": "multi_turn", "turns": [
+      {"user": "What teams are in the NBA?", "expected_tools": ["get_standings"], "expected_in_response": []},
+      {"user": "Which team is in first place?", "expected_tools": [], "expected_in_response": []}
+    ]},
+
+    {"id": 13, "persona": "fan", "complexity": "single_tool", "turns": [
+      {"user": "What are the current NBA standings?", "expected_tools": ["get_standings"], "expected_in_response": []}
+    ]},
+
+    {"id": 14, "persona": "fan", "complexity": "single_tool", "turns": [
+      {"user": "When is the next Lakers game?", "expected_tools": ["get_schedule"], "expected_in_response": ["lakers"]}
+    ]},
+
+    {"id": 15, "persona": "fan", "complexity": "single_tool", "turns": [
+      {"user": "Show me today's NBA scores.", "expected_tools": ["daily_summary"], "expected_in_response": []}
+    ]},
+
+    {"id": 16, "persona": "fan", "complexity": "single_tool", "turns": [
+      {"user": "What's the Celtics record this season?", "expected_tools": ["team_overview"], "expected_in_response": ["celtics"]}
+    ]},
+
+    {"id": 17, "persona": "fan", "complexity": "single_tool", "turns": [
+      {"user": "Show me LeBron James's career stats.", "expected_tools": ["get_player_stats"], "expected_in_response": ["lebron"]}
+    ]},
+
+    {"id": 18, "persona": "fan", "complexity": "single_tool", "turns": [
+      {"user": "What awards has Nikola Jokic won?", "expected_tools": ["get_player_awards"], "expected_in_response": ["jokic"]}
+    ]},
+
+    {"id": 19, "persona": "fan", "complexity": "single_tool", "turns": [
+      {"user": "Who leads the league in assists this season?", "expected_tools": ["get_leaders"], "expected_in_response": ["assists"]}
+    ]},
+
+    {"id": 20, "persona": "fan", "complexity": "single_tool", "turns": [
+      {"user": "Give me a full overview of the Golden State Warriors.", "expected_tools": ["team_overview"], "expected_in_response": ["warriors"]}
+    ]},
+
+    {"id": 21, "persona": "fan", "complexity": "single_tool", "turns": [
+      {"user": "What are the Thunder's advanced stats like offensive and defensive rating?", "expected_tools": ["get_team_advanced_stats"], "expected_in_response": ["thunder"]}
+    ]},
+
+    {"id": 22, "persona": "fan", "complexity": "single_tool", "turns": [
+      {"user": "Who are the all-time scoring leaders?", "expected_tools": ["get_leaders"], "expected_in_response": []}
+    ]},
+
+    {"id": 23, "persona": "fan", "complexity": "single_tool", "turns": [
+      {"user": "Show me Jayson Tatum's shooting splits.", "expected_tools": ["get_shooting_data"], "expected_in_response": ["tatum"]}
+    ]},
+
+    {"id": 24, "persona": "fan", "complexity": "multi_tool", "turns": [
+      {"user": "Compare Jayson Tatum and Jaylen Brown. Who's the better Celtic?",
+       "expected_tools": ["compare_players"], "expected_in_response": ["tatum", "brown"]}
+    ]},
+
+    {"id": 25, "persona": "fan", "complexity": "multi_tool", "turns": [
+      {"user": "Who is better historically — Michael Jordan or LeBron James? Show me career stats and awards for both.",
+       "expected_tools": ["compare_players", "get_player_awards"], "expected_in_response": ["jordan", "lebron"]}
+    ]},
+
+    {"id": 26, "persona": "fan", "complexity": "multi_tool", "turns": [
+      {"user": "How does the Nuggets roster and record compare to the Timberwolves?",
+       "expected_tools": ["team_overview", "team_overview"], "expected_in_response": ["nuggets", "timberwolves"]}
+    ]},
+
+    {"id": 27, "persona": "fan", "complexity": "multi_tool", "turns": [
+      {"user": "Show me the Knicks schedule and their current standings position.",
+       "expected_tools": ["get_schedule", "get_standings"], "expected_in_response": ["knicks"]}
+    ]},
+
+    {"id": 28, "persona": "fan", "complexity": "multi_turn", "turns": [
+      {"user": "Who is better, Michael Jordan or Kobe Bryant?", "expected_tools": ["compare_players"], "expected_in_response": ["jordan", "kobe"]},
+      {"user": "What about their awards? Who has more rings?", "expected_tools": ["get_player_awards"], "expected_in_response": []},
+      {"user": "Can you look at their game logs and tell me about their best and worst performances?", "expected_tools": ["get_player_stats"], "expected_in_response": []},
+      {"user": "So who had the better career overall?", "expected_tools": [], "expected_in_response": []}
+    ]},
+
+    {"id": 29, "persona": "fan", "complexity": "multi_turn", "turns": [
+      {"user": "Who is better, LeBron James or Michael Jordan? Compare their career stats.", "expected_tools": ["compare_players"], "expected_in_response": ["lebron", "jordan"]},
+      {"user": "What about their awards? Who has more MVPs and championships?", "expected_tools": ["get_player_awards"], "expected_in_response": ["mvp"]},
+      {"user": "Based on everything, who do you think is the GOAT and why?", "expected_tools": [], "expected_in_response": []}
+    ]},
+
+    {"id": 30, "persona": "fan", "complexity": "multi_turn", "turns": [
+      {"user": "Give me a full overview of the Warriors.", "expected_tools": ["team_overview"], "expected_in_response": ["warriors"]},
+      {"user": "Who is their best player? Show me their season stats.", "expected_tools": ["get_player_stats"], "expected_in_response": []},
+      {"user": "How do the Warriors compare to the Celtics in advanced metrics?", "expected_tools": ["get_team_advanced_stats"], "expected_in_response": ["warriors", "celtics"]}
+    ]},
+
+    {"id": 31, "persona": "fan", "complexity": "multi_turn", "turns": [
+      {"user": "Who are the top 5 scoring leaders this season?", "expected_tools": ["get_leaders"], "expected_in_response": []},
+      {"user": "Compare the top 2 head to head.", "expected_tools": ["compare_players"], "expected_in_response": []},
+      {"user": "Show me the shooting splits for the #1 scorer.", "expected_tools": ["get_shooting_data"], "expected_in_response": []}
+    ]},
+
+    {"id": 32, "persona": "fan", "complexity": "multi_turn", "turns": [
+      {"user": "Tell me about Stephen Curry's bio and profile.", "expected_tools": ["get_player_info"], "expected_in_response": ["curry"]},
+      {"user": "What are his career stats?", "expected_tools": ["get_player_stats"], "expected_in_response": []},
+      {"user": "How about his awards?", "expected_tools": ["get_player_awards"], "expected_in_response": []},
+      {"user": "Now compare him to Kevin Durant.", "expected_tools": ["compare_players"], "expected_in_response": ["durant"]}
+    ]},
+
+    {"id": 33, "persona": "fan", "complexity": "multi_turn", "turns": [
+      {"user": "What were today's NBA scores?", "expected_tools": ["daily_summary"], "expected_in_response": []},
+      {"user": "Show me the box score for the closest game.", "expected_tools": ["get_box_score"], "expected_in_response": []}
+    ]},
+
+    {"id": 34, "persona": "fan", "complexity": "single_tool", "turns": [
+      {"user": "Who are the hustle leaders in the NBA?", "expected_tools": ["get_leaders"], "expected_in_response": []}
+    ]},
+
+    {"id": 35, "persona": "fan", "complexity": "single_tool", "turns": [
+      {"user": "What's Anthony Edwards's defensive stats?", "expected_tools": ["get_player_stats"], "expected_in_response": ["edwards"]}
+    ]},
+
+    {"id": 36, "persona": "fan", "complexity": "multi_tool", "turns": [
+      {"user": "Show me the Bucks roster and their best player's stats.",
+       "expected_tools": ["get_team_roster", "get_player_stats"], "expected_in_response": ["bucks"]}
+    ]},
+
+    {"id": 37, "persona": "fan", "complexity": "single_tool", "turns": [
+      {"user": "What are Shai Gilgeous-Alexander's advanced stats?", "expected_tools": ["get_player_stats"], "expected_in_response": ["shai"]}
+    ]},
+
+    {"id": 38, "persona": "fan", "complexity": "multi_turn", "turns": [
+      {"user": "Who leads the league in rebounds?", "expected_tools": ["get_leaders"], "expected_in_response": ["rebounds"]},
+      {"user": "Tell me about that player's full profile.", "expected_tools": ["get_player_info"], "expected_in_response": []},
+      {"user": "What are their hustle stats?", "expected_tools": ["get_player_stats"], "expected_in_response": []}
+    ]},
+
+    {"id": 39, "persona": "fantasy", "complexity": "single_tool", "turns": [
+      {"user": "What are Luka Doncic's season averages?", "expected_tools": ["get_player_stats"], "expected_in_response": ["luka"]}
+    ]},
+
+    {"id": 40, "persona": "fantasy", "complexity": "single_tool", "turns": [
+      {"user": "Show me Tyrese Haliburton's recent game log.", "expected_tools": ["get_player_stats"], "expected_in_response": ["haliburton"]}
+    ]},
+
+    {"id": 41, "persona": "fantasy", "complexity": "single_tool", "turns": [
+      {"user": "Who are the top assist leaders this season?", "expected_tools": ["get_leaders"], "expected_in_response": ["assists"]}
+    ]},
+
+    {"id": 42, "persona": "fantasy", "complexity": "single_tool", "turns": [
+      {"user": "What's Domantas Sabonis averaging in rebounds this season?", "expected_tools": ["get_player_stats"], "expected_in_response": ["sabonis"]}
+    ]},
+
+    {"id": 43, "persona": "fantasy", "complexity": "single_tool", "turns": [
+      {"user": "Show me De'Aaron Fox's shooting splits.", "expected_tools": ["get_shooting_data"], "expected_in_response": ["fox"]}
+    ]},
+
+    {"id": 44, "persona": "fantasy", "complexity": "multi_tool", "turns": [
+      {"user": "I need to choose between Trae Young and Tyrese Haliburton for my fantasy team. Compare their stats.",
+       "expected_tools": ["compare_players"], "expected_in_response": ["trae", "haliburton"]}
+    ]},
+
+    {"id": 45, "persona": "fantasy", "complexity": "multi_tool", "turns": [
+      {"user": "Who should I start this week — Devin Booker or Donovan Mitchell? Show me their recent game logs.",
+       "expected_tools": ["get_player_stats", "get_player_stats"], "expected_in_response": ["booker", "mitchell"]}
+    ]},
+
+    {"id": 46, "persona": "fantasy", "complexity": "multi_tool", "turns": [
+      {"user": "I'm looking at the waiver wire. Who are the top rebounders and who has the best hustle stats?",
+       "expected_tools": ["get_leaders", "get_leaders"], "expected_in_response": ["rebounds"]}
+    ]},
+
+    {"id": 47, "persona": "fantasy", "complexity": "multi_tool", "turns": [
+      {"user": "Compare Nikola Jokic and Joel Embiid — season stats and shooting splits.",
+       "expected_tools": ["compare_players", "get_shooting_data"], "expected_in_response": ["jokic", "embiid"]}
+    ]},
+
+    {"id": 48, "persona": "fantasy", "complexity": "multi_turn", "turns": [
+      {"user": "Show me the top 10 scoring leaders.", "expected_tools": ["get_leaders"], "expected_in_response": []},
+      {"user": "Now show me the top assist leaders.", "expected_tools": ["get_leaders"], "expected_in_response": ["assists"]},
+      {"user": "Which players appear on both lists? They'd be great fantasy picks.", "expected_tools": [], "expected_in_response": []}
+    ]},
+
+    {"id": 49, "persona": "fantasy", "complexity": "multi_turn", "turns": [
+      {"user": "I have Anthony Edwards on my team. How's he been doing lately?", "expected_tools": ["get_player_stats"], "expected_in_response": ["edwards"]},
+      {"user": "What about his shooting efficiency?", "expected_tools": ["get_shooting_data"], "expected_in_response": []},
+      {"user": "Should I trade him for Jayson Tatum? Compare them.", "expected_tools": ["compare_players"], "expected_in_response": ["tatum"]}
+    ]},
+
+    {"id": 50, "persona": "fantasy", "complexity": "multi_turn", "turns": [
+      {"user": "Which teams have the most games this week?", "expected_tools": ["get_schedule"], "expected_in_response": []},
+      {"user": "Show me the roster for the team with the most games.", "expected_tools": ["get_team_roster"], "expected_in_response": []}
+    ]},
+
+    {"id": 51, "persona": "fantasy", "complexity": "single_tool", "turns": [
+      {"user": "What's Chet Holmgren's season stats? Is he worth a roster spot?", "expected_tools": ["get_player_stats"], "expected_in_response": ["holmgren"]}
+    ]},
+
+    {"id": 52, "persona": "fantasy", "complexity": "single_tool", "turns": [
+      {"user": "Show me Victor Wembanyama's game log this season.", "expected_tools": ["get_player_stats"], "expected_in_response": ["wembanyama"]}
+    ]},
+
+    {"id": 53, "persona": "fantasy", "complexity": "multi_tool", "turns": [
+      {"user": "Compare the top 3 point guards: Luka, SGA, and Trae Young. I need to pick 2 for my roster.",
+       "expected_tools": ["compare_players", "get_player_stats"], "expected_in_response": ["luka"]}
+    ]},
+
+    {"id": 54, "persona": "fantasy", "complexity": "multi_turn", "turns": [
+      {"user": "What are Nikola Jokic's season averages?", "expected_tools": ["get_player_stats"], "expected_in_response": ["jokic"]},
+      {"user": "How does that compare to his career averages?", "expected_tools": ["get_player_stats"], "expected_in_response": []},
+      {"user": "Is he having a better or worse year than usual?", "expected_tools": [], "expected_in_response": []}
+    ]},
+
+    {"id": 55, "persona": "fantasy", "complexity": "multi_turn", "turns": [
+      {"user": "Who are the top steal leaders this season?", "expected_tools": ["get_leaders"], "expected_in_response": []},
+      {"user": "Compare the top 2 in a head-to-head matchup.", "expected_tools": ["compare_players"], "expected_in_response": []},
+      {"user": "Which one has better defensive stats overall?", "expected_tools": ["get_player_stats"], "expected_in_response": []}
+    ]},
+
+    {"id": 56, "persona": "fantasy", "complexity": "single_tool", "turns": [
+      {"user": "What are Paolo Banchero's advanced stats?", "expected_tools": ["get_player_stats"], "expected_in_response": ["banchero"]}
+    ]},
+
+    {"id": 57, "persona": "fantasy", "complexity": "multi_tool", "turns": [
+      {"user": "Show me Ja Morant's game log and shooting data. I need to decide if he's trending up.",
+       "expected_tools": ["get_player_stats", "get_shooting_data"], "expected_in_response": ["morant"]}
+    ]},
+
+    {"id": 58, "persona": "fantasy", "complexity": "multi_turn", "turns": [
+      {"user": "Who are the best three-point shooters this season?", "expected_tools": ["get_leaders"], "expected_in_response": []},
+      {"user": "Show me the shooting splits for the top shooter.", "expected_tools": ["get_shooting_data"], "expected_in_response": []},
+      {"user": "How many games has he played?", "expected_tools": ["get_player_stats"], "expected_in_response": []}
+    ]},
+
+    {"id": 59, "persona": "draftkings", "complexity": "single_tool", "turns": [
+      {"user": "What NBA games are on today's slate?", "expected_tools": ["daily_summary"], "expected_in_response": []}
+    ]},
+
+    {"id": 60, "persona": "draftkings", "complexity": "single_tool", "turns": [
+      {"user": "Show me Damian Lillard's recent game log for DFS research.", "expected_tools": ["get_player_stats"], "expected_in_response": ["lillard"]}
+    ]},
+
+    {"id": 61, "persona": "draftkings", "complexity": "single_tool", "turns": [
+      {"user": "What's the pace rating for the Pacers? I'm looking for high-pace games.", "expected_tools": ["get_team_advanced_stats"], "expected_in_response": ["pacers"]}
+    ]},
+
+    {"id": 62, "persona": "draftkings", "complexity": "single_tool", "turns": [
+      {"user": "Who leads the league in usage rate or scoring? I want high-volume shooters.", "expected_tools": ["get_leaders"], "expected_in_response": []}
+    ]},
+
+    {"id": 63, "persona": "draftkings", "complexity": "multi_tool", "turns": [
+      {"user": "Show me tonight's games and the pace ratings for all teams playing.",
+       "expected_tools": ["daily_summary", "get_team_advanced_stats"], "expected_in_response": []}
+    ]},
+
+    {"id": 64, "persona": "draftkings", "complexity": "multi_tool", "turns": [
+      {"user": "I'm building a DFS lineup. Compare Jalen Brunson and LaMelo Ball — recent game log and shooting splits.",
+       "expected_tools": ["get_player_stats", "get_player_stats", "get_shooting_data"], "expected_in_response": ["brunson"]}
+    ]},
+
+    {"id": 65, "persona": "draftkings", "complexity": "multi_tool", "turns": [
+      {"user": "Which teams have the worst defensive rating? Their opponents' players would be good DFS picks.",
+       "expected_tools": ["get_team_advanced_stats", "get_standings"], "expected_in_response": []}
+    ]},
+
+    {"id": 66, "persona": "draftkings", "complexity": "multi_turn", "turns": [
+      {"user": "What games are on tonight?", "expected_tools": ["daily_summary"], "expected_in_response": []},
+      {"user": "Show me the pace and defensive ratings for the teams in the game with the highest total.", "expected_tools": ["get_team_advanced_stats"], "expected_in_response": []},
+      {"user": "Who's the top scorer on each of those teams?", "expected_tools": ["get_team_roster", "get_player_stats"], "expected_in_response": []}
+    ]},
+
+    {"id": 67, "persona": "draftkings", "complexity": "multi_turn", "turns": [
+      {"user": "I'm targeting the Pacers game for DFS. Show me their roster.", "expected_tools": ["get_team_roster"], "expected_in_response": ["pacers"]},
+      {"user": "What's Tyrese Haliburton been averaging recently?", "expected_tools": ["get_player_stats"], "expected_in_response": ["haliburton"]},
+      {"user": "How about his shooting efficiency?", "expected_tools": ["get_shooting_data"], "expected_in_response": []},
+      {"user": "Compare him to the opposing team's point guard.", "expected_tools": ["compare_players"], "expected_in_response": []}
+    ]},
+
+    {"id": 68, "persona": "draftkings", "complexity": "multi_turn", "turns": [
+      {"user": "Show me the teams with the fastest pace in the league.", "expected_tools": ["get_team_advanced_stats"], "expected_in_response": []},
+      {"user": "Which of those teams play tonight?", "expected_tools": ["daily_summary"], "expected_in_response": []},
+      {"user": "Perfect. Show me the top scorers from those teams.", "expected_tools": ["get_leaders"], "expected_in_response": []}
+    ]},
+
+    {"id": 69, "persona": "draftkings", "complexity": "multi_tool", "turns": [
+      {"user": "Compare the advanced stats for the Celtics and Heat. I want to find the best DFS matchup.",
+       "expected_tools": ["get_team_advanced_stats", "get_team_advanced_stats"], "expected_in_response": ["celtics", "heat"]}
+    ]},
+
+    {"id": 70, "persona": "draftkings", "complexity": "single_tool", "turns": [
+      {"user": "Show me Anthony Davis's hustle stats. I need to know his stocks potential.", "expected_tools": ["get_player_stats"], "expected_in_response": ["davis"]}
+    ]},
+
+    {"id": 71, "persona": "draftkings", "complexity": "multi_turn", "turns": [
+      {"user": "Who are the top 10 fantasy-relevant players by scoring this season?", "expected_tools": ["get_leaders"], "expected_in_response": []},
+      {"user": "Now show me who leads in rebounds.", "expected_tools": ["get_leaders"], "expected_in_response": ["rebounds"]},
+      {"user": "And assists.", "expected_tools": ["get_leaders"], "expected_in_response": ["assists"]},
+      {"user": "Which players show up across multiple categories? Those are the best DFS value.", "expected_tools": [], "expected_in_response": []}
+    ]},
+
+    {"id": 72, "persona": "draftkings", "complexity": "multi_tool", "turns": [
+      {"user": "I need a cheap center for DFS. Compare Ivica Zubac and Daniel Gafford — stats and shooting.",
+       "expected_tools": ["compare_players", "get_shooting_data"], "expected_in_response": ["zubac", "gafford"]}
+    ]},
+
+    {"id": 73, "persona": "fan", "complexity": "single_tool", "turns": [
+      {"user": "What's the Miami Heat's upcoming schedule?", "expected_tools": ["get_schedule"], "expected_in_response": ["heat"]}
+    ]},
+
+    {"id": 74, "persona": "fan", "complexity": "single_tool", "turns": [
+      {"user": "Show me the Sixers roster.", "expected_tools": ["get_team_roster"], "expected_in_response": ["76ers"]}
+    ]},
+
+    {"id": 75, "persona": "fan", "complexity": "multi_tool", "turns": [
+      {"user": "Who has more awards — LeBron or Curry? Show me both.",
+       "expected_tools": ["get_player_awards", "get_player_awards"], "expected_in_response": ["lebron", "curry"]}
+    ]},
+
+    {"id": 76, "persona": "fan", "complexity": "multi_turn", "turns": [
+      {"user": "What's the Mavericks record this season?", "expected_tools": ["team_overview"], "expected_in_response": ["mavericks"]},
+      {"user": "How's Luka doing? Show me his season stats.", "expected_tools": ["get_player_stats"], "expected_in_response": ["luka"]},
+      {"user": "Compare Luka to SGA — who's having the better season?", "expected_tools": ["compare_players"], "expected_in_response": []}
+    ]},
+
+    {"id": 77, "persona": "kid", "complexity": "single_tool", "turns": [
+      {"user": "Who scored the most points ever in NBA history?", "expected_tools": ["get_leaders"], "expected_in_response": []}
+    ]},
+
+    {"id": 78, "persona": "kid", "complexity": "multi_turn", "turns": [
+      {"user": "Who is Victor Wembanyama?", "expected_tools": ["get_player_info"], "expected_in_response": ["wembanyama"]},
+      {"user": "How many points does he score per game?", "expected_tools": ["get_player_stats"], "expected_in_response": []},
+      {"user": "Is he better than Chet Holmgren?", "expected_tools": ["compare_players"], "expected_in_response": ["holmgren"]}
+    ]},
+
+    {"id": 79, "persona": "kid", "complexity": "single_tool", "turns": [
+      {"user": "What does the Spurs team look like?", "expected_tools": ["team_overview"], "expected_in_response": ["spurs"]}
+    ]},
+
+    {"id": 80, "persona": "kid", "complexity": "multi_tool", "turns": [
+      {"user": "Who is taller, Wembanyama or Giannis? Tell me about both of them.",
+       "expected_tools": ["get_player_info", "get_player_info"], "expected_in_response": ["wembanyama", "giannis"]}
+    ]},
+
+    {"id": 81, "persona": "fan", "complexity": "multi_turn", "turns": [
+      {"user": "Show me the Nuggets complete overview.", "expected_tools": ["team_overview"], "expected_in_response": ["nuggets"]},
+      {"user": "What's Jokic's advanced stats?", "expected_tools": ["get_player_stats"], "expected_in_response": ["jokic"]},
+      {"user": "How about his career awards?", "expected_tools": ["get_player_awards"], "expected_in_response": []},
+      {"user": "Compare him to the best center of all time — Hakeem Olajuwon.", "expected_tools": ["compare_players"], "expected_in_response": ["hakeem"]}
+    ]},
+
+    {"id": 82, "persona": "fan", "complexity": "single_tool", "turns": [
+      {"user": "What are the OKC Thunder's advanced metrics this season?", "expected_tools": ["get_team_advanced_stats"], "expected_in_response": ["thunder"]}
+    ]},
+
+    {"id": 83, "persona": "fan", "complexity": "multi_tool", "turns": [
+      {"user": "Show me the Celtics roster and their team advanced stats.",
+       "expected_tools": ["get_team_roster", "get_team_advanced_stats"], "expected_in_response": ["celtics"]}
+    ]},
+
+    {"id": 84, "persona": "fantasy", "complexity": "multi_turn", "turns": [
+      {"user": "My league is a points league. Who are the top fantasy producers this week?", "expected_tools": ["get_leaders"], "expected_in_response": []},
+      {"user": "Show me the game log for the #1 ranked player.", "expected_tools": ["get_player_stats"], "expected_in_response": []},
+      {"user": "How many games does his team have next week?", "expected_tools": ["get_schedule"], "expected_in_response": []}
+    ]},
+
+    {"id": 85, "persona": "fantasy", "complexity": "single_tool", "turns": [
+      {"user": "What's Lauri Markkanen's season stats? Is he playing well enough to keep?", "expected_tools": ["get_player_stats"], "expected_in_response": ["markkanen"]}
+    ]},
+
+    {"id": 86, "persona": "fantasy", "complexity": "multi_tool", "turns": [
+      {"user": "I have a trade offer: my Bam Adebayo for their Domantas Sabonis. Compare them and show shooting data.",
+       "expected_tools": ["compare_players", "get_shooting_data"], "expected_in_response": ["adebayo", "sabonis"]}
+    ]},
+
+    {"id": 87, "persona": "draftkings", "complexity": "multi_turn", "turns": [
+      {"user": "Show me the Cavs vs Knicks game details.", "expected_tools": ["find_game"], "expected_in_response": []},
+      {"user": "Who are the main players on each team? Show rosters.", "expected_tools": ["get_team_roster", "get_team_roster"], "expected_in_response": []},
+      {"user": "Compare Donovan Mitchell and Jalen Brunson for this matchup.", "expected_tools": ["compare_players"], "expected_in_response": ["mitchell", "brunson"]}
+    ]},
+
+    {"id": 88, "persona": "draftkings", "complexity": "single_tool", "turns": [
+      {"user": "What's the defensive rating of the Wizards? They give up the most points.", "expected_tools": ["get_team_advanced_stats"], "expected_in_response": ["wizards"]}
+    ]},
+
+    {"id": 89, "persona": "fan", "complexity": "multi_tool", "turns": [
+      {"user": "Who won the most recent MVP, Defensive Player of the Year, and Rookie of the Year awards?",
+       "expected_tools": ["get_season_awards"], "expected_in_response": []}
+    ]},
+
+    {"id": 90, "persona": "fan", "complexity": "multi_turn", "turns": [
+      {"user": "How are the Timberwolves doing this season?", "expected_tools": ["team_overview"], "expected_in_response": ["timberwolves"]},
+      {"user": "Show me Anthony Edwards's stats.", "expected_tools": ["get_player_stats"], "expected_in_response": ["edwards"]},
+      {"user": "Compare him to Ja Morant.", "expected_tools": ["compare_players"], "expected_in_response": ["morant"]},
+      {"user": "Who would you rather build a franchise around?", "expected_tools": [], "expected_in_response": []}
+    ]},
+
+    {"id": 91, "persona": "kid", "complexity": "single_tool", "turns": [
+      {"user": "What does LeBron James look like? Tell me about him.", "expected_tools": ["get_player_info"], "expected_in_response": ["lebron"]}
+    ]},
+
+    {"id": 92, "persona": "kid", "complexity": "multi_turn", "turns": [
+      {"user": "Who are the best players in the NBA?", "expected_tools": ["get_leaders"], "expected_in_response": []},
+      {"user": "Which one has won the most awards?", "expected_tools": ["get_player_awards"], "expected_in_response": []}
+    ]},
+
+    {"id": 93, "persona": "fantasy", "complexity": "multi_tool", "turns": [
+      {"user": "I need to stream a player for steals and blocks. Who leads the league in both?",
+       "expected_tools": ["get_leaders", "get_leaders"], "expected_in_response": []}
+    ]},
+
+    {"id": 94, "persona": "draftkings", "complexity": "multi_turn", "turns": [
+      {"user": "For tonight's DFS, I want to stack the highest-pace game. Show me all team pace ratings.", "expected_tools": ["get_team_advanced_stats"], "expected_in_response": []},
+      {"user": "Now show me the roster for the fastest team.", "expected_tools": ["get_team_roster"], "expected_in_response": []},
+      {"user": "What are their top scorer's recent game logs?", "expected_tools": ["get_player_stats"], "expected_in_response": []}
+    ]},
+
+    {"id": 95, "persona": "fan", "complexity": "single_tool", "turns": [
+      {"user": "Show me the Phoenix Suns schedule for this week.", "expected_tools": ["get_schedule"], "expected_in_response": ["suns"]}
+    ]},
+
+    {"id": 96, "persona": "fan", "complexity": "multi_tool", "turns": [
+      {"user": "Compare the Clippers and Lakers — roster and advanced stats for both.",
+       "expected_tools": ["team_overview", "team_overview", "get_team_advanced_stats"], "expected_in_response": ["clippers", "lakers"]}
+    ]},
+
+    {"id": 97, "persona": "fantasy", "complexity": "multi_turn", "turns": [
+      {"user": "What are Scottie Barnes's season stats?", "expected_tools": ["get_player_stats"], "expected_in_response": ["barnes"]},
+      {"user": "Show me his game log too, I want to see consistency.", "expected_tools": ["get_player_stats"], "expected_in_response": []},
+      {"user": "Compare him to Franz Wagner.", "expected_tools": ["compare_players"], "expected_in_response": ["wagner"]}
+    ]},
+
+    {"id": 98, "persona": "draftkings", "complexity": "multi_tool", "turns": [
+      {"user": "Show me Devin Booker's game log and the Suns' schedule. I need to plan my lineups for the week.",
+       "expected_tools": ["get_player_stats", "get_schedule"], "expected_in_response": ["booker", "suns"]}
+    ]},
+
+    {"id": 99, "persona": "fan", "complexity": "multi_turn", "turns": [
+      {"user": "Give me the Eastern Conference standings.", "expected_tools": ["get_standings"], "expected_in_response": ["east"]},
+      {"user": "Show me the overview for the #1 team.", "expected_tools": ["team_overview"], "expected_in_response": []},
+      {"user": "Compare their two best players.", "expected_tools": ["compare_players"], "expected_in_response": []},
+      {"user": "Who would win in a 7-game series against the #2 team?", "expected_tools": ["get_team_advanced_stats"], "expected_in_response": []}
+    ]},
+
+    {"id": 100, "persona": "fan", "complexity": "multi_turn", "turns": [
+      {"user": "I want the ultimate comparison: LeBron James vs Michael Jordan vs Kobe Bryant. Start with career stats for all three.", "expected_tools": ["get_player_stats", "get_player_stats", "get_player_stats"], "expected_in_response": ["lebron", "jordan", "kobe"]},
+      {"user": "Now show me awards for all three.", "expected_tools": ["get_player_awards", "get_player_awards", "get_player_awards"], "expected_in_response": []},
+      {"user": "Who has the best scoring season of the three? Check their game logs.", "expected_tools": ["get_player_stats"], "expected_in_response": []},
+      {"user": "Give me your final ranking of the three and explain why.", "expected_tools": [], "expected_in_response": []}
+    ]}
+  ]
+}
