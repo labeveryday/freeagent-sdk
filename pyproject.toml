@@ -42,3 +42,6 @@ Documentation = "https://freeagent-sdk.dev"
 
 [tool.setuptools.packages.find]
 include = ["freeagent*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
