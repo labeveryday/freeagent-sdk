@@ -17,7 +17,7 @@ from ._sync import _SyncBridge
 from .config import AgentConfig
 from .context import check_context_window
 from .circuit_breaker import CircuitBreaker, BreakerAction
-from .engines import NativeEngine, ReactEngine, EngineResult
+from .engines import NativeEngine, ReactEngine, EngineResult, ToolCall
 from .hooks import HookRegistry, HookContext, HookEvent
 from .memory import Memory, make_memory_tools
 from .messages import Message
@@ -25,7 +25,7 @@ from .providers.ollama import OllamaProvider
 from .sanitize import sanitize_tool_output, truncate_tool_output
 from .skills import load_skills, build_skill_context, BUNDLED_SKILLS_DIR
 from .telemetry import Metrics
-from .tool import Tool
+from .tool import Tool, ToolResult
 from .validator import Validator, ValidationOk, ValidationError
 
 
@@ -260,147 +260,125 @@ class Agent:
                 messages.append(Message.assistant(result.content))
                 return result.content
 
-            # ── Tool call ──
-            # Validate
-            validation = self.validator.validate(
-                result.tool_name, result.tool_args
-            )
+            # ── Tool call(s) — handle single or parallel ──
+            calls_to_execute = result.tool_calls or [
+                ToolCall(name=result.tool_name, args=result.tool_args)
+            ]
 
-            if isinstance(validation, ValidationError):
-                # ── Telemetry: validation error
-                self.metrics.record_validation_error(result.tool_name)
+            # Validate all calls
+            validated = []
+            had_error = False
+            for tc in calls_to_execute:
+                validation = self.validator.validate(tc.name, tc.args)
 
-                self._fire(
-                    HookEvent.ON_VALIDATION_ERROR,
-                    tool_name=result.tool_name,
-                    args=result.tool_args,
-                    errors=validation.errors,
-                    schema=validation.schema,
-                    retry_count=self.config.max_retries - retries_remaining,
-                )
+                if isinstance(validation, ValidationError):
+                    self.metrics.record_validation_error(tc.name)
+                    self._fire(
+                        HookEvent.ON_VALIDATION_ERROR,
+                        tool_name=tc.name, args=tc.args,
+                        errors=validation.errors, schema=validation.schema,
+                        retry_count=self.config.max_retries - retries_remaining,
+                    )
+                    messages.append(Message.tool_error(
+                        tc.name, validation.errors, validation.schema,
+                    ))
+                    retries_remaining -= 1
+                    self.metrics.record_retry(
+                        tc.name, self.config.max_retries - retries_remaining,
+                    )
+                    self._fire(
+                        HookEvent.ON_RETRY, tool_name=tc.name,
+                        retry_count=self.config.max_retries - retries_remaining,
+                    )
+                    had_error = True
+                else:
+                    validated.append((tc, validation))
 
-                messages.append(Message.tool_error(
-                    result.tool_name,
-                    validation.errors,
-                    validation.schema,
-                ))
-                retries_remaining -= 1
-
+            if had_error and not validated:
                 if retries_remaining <= 0:
                     messages.append(Message.system(
                         "Tool calls keep failing. Please provide your "
                         "best answer based on what you know."
                     ))
-
-                # ── Telemetry: retry
-                self.metrics.record_retry(
-                    result.tool_name,
-                    self.config.max_retries - retries_remaining,
-                )
-
-                self._fire(
-                    HookEvent.ON_RETRY,
-                    tool_name=result.tool_name,
-                    retry_count=self.config.max_retries - retries_remaining,
-                )
                 continue
 
-            # Circuit breaker
-            breaker_result = self.breaker.check(
-                result.tool_name, result.tool_args
-            )
+            # Circuit breaker check for each call
+            skip_loop = False
+            for tc, validation in validated:
+                breaker_result = self.breaker.check(tc.name, validation.args)
+                if breaker_result.action == BreakerAction.LOOP_DETECTED:
+                    self.metrics.record_loop_detected(tc.name)
+                    self._fire(HookEvent.ON_LOOP, tool_name=tc.name, args=validation.args)
+                    messages.append(Message.system(
+                        f"STOP. {breaker_result.reason} "
+                        "Give your best answer with the information gathered so far."
+                    ))
+                    skip_loop = True
+                    break
+                if breaker_result.action == BreakerAction.MAX_ITERATIONS:
+                    self.metrics.record_max_iterations(iteration)
+                    self._fire(HookEvent.ON_MAX_ITER, iteration=iteration)
+                    return self._partial_answer(messages)
 
-            if breaker_result.action == BreakerAction.LOOP_DETECTED:
-                # ── Telemetry: loop
-                self.metrics.record_loop_detected(result.tool_name)
-
-                self._fire(
-                    HookEvent.ON_LOOP,
-                    tool_name=result.tool_name,
-                    args=result.tool_args,
-                )
-                messages.append(Message.system(
-                    f"STOP. {breaker_result.reason} "
-                    "Give your best answer with the information gathered so far."
-                ))
+            if skip_loop:
                 continue
 
-            if breaker_result.action == BreakerAction.MAX_ITERATIONS:
-                # ── Telemetry: max iter
-                self.metrics.record_max_iterations(iteration)
-
-                self._fire(HookEvent.ON_MAX_ITER, iteration=iteration)
-                return self._partial_answer(messages)
-
-            # Fire before_tool hook
-            tool = validation.tool
-            ctx = self._fire(
-                HookEvent.BEFORE_TOOL,
-                tool_name=result.tool_name,
-                args=validation.args,
-                iteration=iteration,
-            )
-
-            # Hook can skip tool execution
-            if ctx.skip:
-                continue
-
-            # ── Telemetry: start tool
-            self.metrics.start_tool(result.tool_name, validation.args)
-
-            # Execute the tool
-            try:
-                tool_result = await tool.execute(**validation.args)
-            except Exception as e:
-                self._fire(
-                    HookEvent.ON_ERROR,
-                    tool_name=result.tool_name,
-                    error=e,
+            # Execute tools (concurrently if multiple)
+            async def _exec_one(tc: ToolCall, validation: ValidationOk):
+                ctx = self._fire(
+                    HookEvent.BEFORE_TOOL, tool_name=tc.name,
+                    args=validation.args, iteration=iteration,
                 )
-                from .tool import ToolResult
-                tool_result = ToolResult.fail(str(e))
+                if ctx.skip:
+                    return tc, None
 
-            # ── Telemetry: end tool
-            self.metrics.end_tool(
-                tool_name=result.tool_name,
-                args=validation.args,
-                success=tool_result.success,
-                result_preview=tool_result.to_message()[:100],
-                error=tool_result.error or "",
-            )
+                self.metrics.start_tool(tc.name, validation.args)
+                try:
+                    tool_result = await validation.tool.execute(**validation.args)
+                except Exception as e:
+                    self._fire(HookEvent.ON_ERROR, tool_name=tc.name, error=e)
+                    tool_result = ToolResult.fail(str(e))
 
-            # Fire after_tool hook
-            self._fire(
-                HookEvent.AFTER_TOOL,
-                tool_name=result.tool_name,
-                args=validation.args,
-                result=tool_result,
-                iteration=iteration,
-            )
+                self.metrics.end_tool(
+                    tool_name=tc.name, args=validation.args,
+                    success=tool_result.success,
+                    result_preview=tool_result.to_message()[:100],
+                    error=tool_result.error or "",
+                )
+                self._fire(
+                    HookEvent.AFTER_TOOL, tool_name=tc.name,
+                    args=validation.args, result=tool_result, iteration=iteration,
+                )
+                return tc, tool_result
 
-            # Sanitize and truncate tool output
-            tool_output = tool_result.to_message()
-            tool_output = sanitize_tool_output(tool_output)
-            tool_output = truncate_tool_output(
-                tool_output,
-                self.config.max_tool_result_chars,
-                self.config.max_tool_result_strategy,
-            )
+            if len(validated) == 1:
+                results = [await _exec_one(*validated[0])]
+            else:
+                results = await asyncio.gather(
+                    *[_exec_one(tc, v) for tc, v in validated]
+                )
 
-            # Add messages
+            # Build assistant message with all tool calls
+            all_tool_calls = [{
+                "function": {"name": tc.name, "arguments": tc.args}
+            } for tc, _ in validated]
             messages.append(Message.assistant(
-                f"Calling {result.tool_name}...",
-                tool_calls=[{
-                    "function": {
-                        "name": result.tool_name,
-                        "arguments": result.tool_args,
-                    }
-                }],
+                f"Calling {', '.join(tc.name for tc, _ in validated)}...",
+                tool_calls=all_tool_calls,
             ))
-            messages.append(Message.tool_result(
-                result.tool_name,
-                tool_output,
-            ))
+
+            # Append tool results
+            for tc, tool_result in results:
+                if tool_result is None:
+                    continue
+                tool_output = tool_result.to_message()
+                tool_output = sanitize_tool_output(tool_output)
+                tool_output = truncate_tool_output(
+                    tool_output,
+                    self.config.max_tool_result_chars,
+                    self.config.max_tool_result_strategy,
+                )
+                messages.append(Message.tool_result(tc.name, tool_output))
 
             retries_remaining = self.config.max_retries
 

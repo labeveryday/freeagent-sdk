@@ -12,7 +12,7 @@ from __future__ import annotations
 import json
 import re
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, TYPE_CHECKING
 
 from ..messages import Message
@@ -23,12 +23,21 @@ if TYPE_CHECKING:
 
 
 @dataclass
+class ToolCall:
+    """A single tool call from the model."""
+    id: str = ""
+    name: str = ""
+    args: dict = field(default_factory=dict)
+
+
+@dataclass
 class EngineResult:
     """Result from an execution engine step."""
     is_tool_call: bool
     content: str = ""
     tool_name: str = ""
     tool_args: dict = None
+    tool_calls: list[ToolCall] = field(default_factory=list)
 
     @classmethod
     def text(cls, content: str) -> EngineResult:
@@ -36,7 +45,19 @@ class EngineResult:
 
     @classmethod
     def tool_call(cls, name: str, args: dict) -> EngineResult:
-        return cls(is_tool_call=True, tool_name=name, tool_args=args or {})
+        tc = ToolCall(name=name, args=args or {})
+        return cls(is_tool_call=True, tool_name=name, tool_args=args or {}, tool_calls=[tc])
+
+    @classmethod
+    def multi_tool_call(cls, calls: list[ToolCall]) -> EngineResult:
+        """Multiple parallel tool calls."""
+        first = calls[0] if calls else ToolCall()
+        return cls(
+            is_tool_call=True,
+            tool_name=first.name,
+            tool_args=first.args,
+            tool_calls=calls,
+        )
 
 
 class ExecutionEngine(ABC):
@@ -76,12 +97,17 @@ class NativeEngine(ExecutionEngine):
 
         # Model returned tool calls
         if response.tool_calls:
-            call = response.tool_calls[0]  # handle first call
-            fn = call.get("function", {})
-            return EngineResult.tool_call(
-                name=fn.get("name", ""),
-                args=fn.get("arguments", {}),
-            )
+            calls = []
+            for i, call in enumerate(response.tool_calls):
+                fn = call.get("function", {})
+                calls.append(ToolCall(
+                    id=f"call_{i}",
+                    name=fn.get("name", ""),
+                    args=fn.get("arguments", {}),
+                ))
+            if len(calls) == 1:
+                return EngineResult.tool_call(calls[0].name, calls[0].args)
+            return EngineResult.multi_tool_call(calls)
 
         # Model returned text (final answer or thinking)
         return EngineResult.text(response.content)

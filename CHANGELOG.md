@@ -18,3 +18,17 @@
 - New `AgentConfig` fields: `max_tool_result_chars`, `context_window`, `context_soft_threshold`, `fallback_models`
 - Wired sanitization + truncation into agent loop after tool execution
 - Wired context window checking before each model call
+
+### Phase 3: Comprehensive Unit Tests
+- 173 tests covering all modules: validator, circuit breaker, tool, messages, skills, memory, telemetry, providers, engines, agent
+- Full integration tests with mock providers: chat mode, tool calls, validation retry, circuit breaker, timeout, hooks, telemetry
+- pytest-asyncio auto mode configured
+
+### Phase 4: Parallel Tool Calling
+- Added `ToolCall` dataclass in engines for structured tool call representation
+- Updated `EngineResult` to support multiple tool calls via `tool_calls` list
+- `NativeEngine` now handles all `response.tool_calls`, not just `[0]`
+- Agent loop validates each call independently, executes concurrently with `asyncio.gather()`
+- One bad call doesn't block good ones — valid calls execute, errors get feedback
+- Circuit breaker checks each call independently
+- ReactEngine stays single-call (by design — small models)
