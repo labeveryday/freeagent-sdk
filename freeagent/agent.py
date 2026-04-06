@@ -15,12 +15,14 @@ from typing import Callable
 
 from ._sync import _SyncBridge
 from .config import AgentConfig
+from .context import check_context_window
 from .circuit_breaker import CircuitBreaker, BreakerAction
 from .engines import NativeEngine, ReactEngine, EngineResult
 from .hooks import HookRegistry, HookContext, HookEvent
 from .memory import Memory, make_memory_tools
 from .messages import Message
 from .providers.ollama import OllamaProvider
+from .sanitize import sanitize_tool_output, truncate_tool_output
 from .skills import load_skills, build_skill_context, BUNDLED_SKILLS_DIR
 from .telemetry import Metrics
 from .tool import Tool
@@ -218,6 +220,9 @@ class Agent:
         retries_remaining = self.config.max_retries
 
         for iteration in range(self.config.max_iterations):
+            # ── Context window check: prune if over threshold
+            messages = check_context_window(messages, self.config)
+
             # Fire before_model hook
             self._fire(HookEvent.BEFORE_MODEL, messages=messages, iteration=iteration)
 
@@ -225,11 +230,23 @@ class Agent:
             self.metrics.record_model_call(iteration)
 
             # Get next action from engine
-            result = await self.engine.execute(
-                messages=messages,
-                tools=self.tools,
-                temperature=self.config.temperature,
-            )
+            try:
+                result = await self.engine.execute(
+                    messages=messages,
+                    tools=self.tools,
+                    temperature=self.config.temperature,
+                )
+            except ConnectionError:
+                # Model fallback on connection failure
+                fallback = self._try_fallback()
+                if fallback:
+                    result = await self.engine.execute(
+                        messages=messages,
+                        tools=self.tools,
+                        temperature=self.config.temperature,
+                    )
+                else:
+                    raise
 
             # Fire after_model hook
             self._fire(
@@ -361,6 +378,15 @@ class Agent:
                 iteration=iteration,
             )
 
+            # Sanitize and truncate tool output
+            tool_output = tool_result.to_message()
+            tool_output = sanitize_tool_output(tool_output)
+            tool_output = truncate_tool_output(
+                tool_output,
+                self.config.max_tool_result_chars,
+                self.config.max_tool_result_strategy,
+            )
+
             # Add messages
             messages.append(Message.assistant(
                 f"Calling {result.tool_name}...",
@@ -373,12 +399,31 @@ class Agent:
             ))
             messages.append(Message.tool_result(
                 result.tool_name,
-                tool_result.to_message(),
+                tool_output,
             ))
 
             retries_remaining = self.config.max_retries
 
         return self._partial_answer(messages)
+
+    # ── Model fallback ────────────────────────────────────
+
+    def _try_fallback(self) -> bool:
+        """Try to switch to a fallback model. Returns True if switched."""
+        for fallback in self.config.fallback_models:
+            if fallback != self.config.model:
+                self.config.model = fallback
+                self.provider = OllamaProvider(
+                    model=fallback,
+                    base_url=self.config.ollama_base_url,
+                )
+                # Re-create engine with new provider
+                if self._mode == "native":
+                    self.engine = NativeEngine(self.provider)
+                elif self._mode == "react":
+                    self.engine = ReactEngine(self.provider)
+                return True
+        return False
 
     # ── Graceful degradation ─────────────────────────────
 

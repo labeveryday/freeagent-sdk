@@ -23,6 +23,17 @@ class AgentConfig:
     temperature: float = 0.1  # low temp for tool calling reliability
     prefer_native_tools: bool = True  # use Ollama native tool API when available
 
+    # Tool output limits
+    max_tool_result_chars: int = 2000
+    max_tool_result_strategy: str = "truncate"  # "truncate" or "summarize_head_tail"
+
+    # Context window management
+    context_window: int = 8192
+    context_soft_threshold: float = 0.8  # start pruning at 80% of context
+
+    # Model fallback
+    fallback_models: list[str] = field(default_factory=list)
+
     # Ollama connection
     ollama_base_url: str = "http://localhost:11434"
     model: str = "llama3.1:8b"

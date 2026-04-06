@@ -55,6 +55,7 @@ class RunRecord:
     loop_detected: bool = False
     max_iter_hit: bool = False
     timed_out: bool = False
+    fallback_model: str = ""
 
     @property
     def tool_call_count(self) -> int:
