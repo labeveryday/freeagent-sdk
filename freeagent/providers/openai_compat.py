@@ -2,7 +2,7 @@
 OpenAI-compatible provider — works with vLLM, LM Studio, LocalAI, TGI, and any
 server that implements the OpenAI /v1/chat/completions API.
 
-Zero external dependencies (stdlib urllib). Supports:
+Async HTTP via httpx. Supports:
 1. Native tool calling via the OpenAI tools API
 2. JSON mode via response_format (for constrained generation)
 
@@ -25,10 +25,10 @@ from __future__ import annotations
 
 import json
 import re
-import urllib.request
-import urllib.error
 from dataclasses import dataclass, field
 from typing import Any
+
+import httpx
 
 from ..messages import Message
 from . import ProviderResponse
@@ -53,28 +53,36 @@ class OpenAICompatProvider:
         self.api_key = api_key
         self.timeout = timeout
         self._extra_headers = extra_headers or {}
+        self._client: httpx.AsyncClient | None = None
 
-    def _post(self, path: str, payload: dict) -> dict:
-        url = f"{self.base_url}{path}"
-        data = json.dumps(payload).encode("utf-8")
+    def _get_client(self) -> httpx.AsyncClient:
+        if self._client is None or self._client.is_closed:
+            headers = {**self._extra_headers}
+            if self.api_key:
+                headers["Authorization"] = f"Bearer {self.api_key}"
+            self._client = httpx.AsyncClient(
+                base_url=self.base_url,
+                timeout=self.timeout,
+                headers=headers,
+            )
+        return self._client
 
-        headers = {
-            "Content-Type": "application/json",
-            **self._extra_headers,
-        }
-        if self.api_key:
-            headers["Authorization"] = f"Bearer {self.api_key}"
-
-        req = urllib.request.Request(url, data=data, headers=headers, method="POST")
+    async def _post(self, path: str, payload: dict) -> dict:
+        client = self._get_client()
         try:
-            with urllib.request.urlopen(req, timeout=self.timeout) as resp:
-                return json.loads(resp.read().decode("utf-8"))
-        except urllib.error.HTTPError as e:
-            body = e.read().decode("utf-8", errors="replace")
-            raise ConnectionError(f"OpenAI-compat API {e.code}: {body}") from e
-        except urllib.error.URLError as e:
+            resp = await client.post(
+                path,
+                json=payload,
+                headers={"Content-Type": "application/json"},
+            )
+            resp.raise_for_status()
+            return resp.json()
+        except httpx.HTTPStatusError as e:
+            body = e.response.text
+            raise ConnectionError(f"OpenAI-compat API {e.response.status_code}: {body}") from e
+        except httpx.ConnectError as e:
             raise ConnectionError(
-                f"Cannot connect to {self.base_url}. Is the server running? ({e.reason})"
+                f"Cannot connect to {self.base_url}. Is the server running? ({e})"
             ) from e
 
     def _to_openai_messages(self, messages: list[Message]) -> list[dict]:
@@ -201,7 +209,7 @@ class OpenAICompatProvider:
             "messages": self._to_openai_messages(messages),
             "temperature": temperature,
         }
-        data = self._post("/v1/chat/completions", payload)
+        data = await self._post("/v1/chat/completions", payload)
         choice = data.get("choices", [{}])[0]
         msg = choice.get("message", {})
         return ProviderResponse(content=self._clean_content(msg.get("content", "") or ""))
@@ -215,7 +223,7 @@ class OpenAICompatProvider:
             "tools": self._to_openai_tools(tools),
             "temperature": temperature,
         }
-        data = self._post("/v1/chat/completions", payload)
+        data = await self._post("/v1/chat/completions", payload)
         choice = data.get("choices", [{}])[0]
         msg = choice.get("message", {})
         return ProviderResponse(
@@ -237,19 +245,20 @@ class OpenAICompatProvider:
             "response_format": {"type": "json_object"},
         }
         try:
-            data = self._post("/v1/chat/completions", payload)
+            data = await self._post("/v1/chat/completions", payload)
             choice = data.get("choices", [{}])[0]
             return choice.get("message", {}).get("content", "{}")
         except ConnectionError:
             # Server doesn't support response_format — fall back to plain chat
-            # The prompt already asks for JSON, so this usually works
             del payload["response_format"]
-            data = self._post("/v1/chat/completions", payload)
+            data = await self._post("/v1/chat/completions", payload)
             choice = data.get("choices", [{}])[0]
             return choice.get("message", {}).get("content", "{}")
 
     async def close(self):
-        pass
+        if self._client and not self._client.is_closed:
+            await self._client.aclose()
+            self._client = None
 
 
 class VLLMProvider(OpenAICompatProvider):

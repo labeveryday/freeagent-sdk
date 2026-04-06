@@ -8,7 +8,7 @@ lifecycle event without subclassing.
     python examples/04_hooks.py
 """
 
-from src import Agent, tool, log_hook, cost_hook
+from freeagent import Agent, tool, log_hook, cost_hook
 
 @tool
 def weather(city: str) -> dict:

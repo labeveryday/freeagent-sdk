@@ -8,7 +8,7 @@ preferences, and context without replaying conversations.
     python examples/05_memory.py
 """
 
-from src import Agent, tool, Memory
+from freeagent import Agent, tool, Memory
 
 # ── Standalone memory usage ──
 print("=== Memory API ===")

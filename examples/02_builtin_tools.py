@@ -9,8 +9,8 @@ tool calling or needs ReAct text parsing.
     python examples/02_builtin_tools.py
 """
 
-from src import Agent
-from src.tools import system_info, calculator
+from freeagent import Agent
+from freeagent.tools import system_info, calculator
 
 agent = Agent(
     model="llama3.1:8b",

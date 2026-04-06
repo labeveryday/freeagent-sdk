@@ -13,6 +13,7 @@ import asyncio
 import time
 from typing import Callable
 
+from ._sync import _SyncBridge
 from .config import AgentConfig
 from .circuit_breaker import CircuitBreaker, BreakerAction
 from .engines import NativeEngine, ReactEngine, EngineResult
@@ -141,15 +142,7 @@ class Agent:
 
     def run(self, user_input: str) -> str:
         """Run the agent synchronously."""
-        try:
-            loop = asyncio.get_running_loop()
-            import concurrent.futures
-            with concurrent.futures.ThreadPoolExecutor() as pool:
-                return loop.run_in_executor(
-                    pool, lambda: asyncio.run(self.arun(user_input))
-                )
-        except RuntimeError:
-            return asyncio.run(self.arun(user_input))
+        return _SyncBridge.run(self.arun(user_input))
 
     async def arun(self, user_input: str) -> str:
         """Run the agent asynchronously."""

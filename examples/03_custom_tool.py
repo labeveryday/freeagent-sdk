@@ -9,7 +9,7 @@ FreeAgent builds the JSON schema automatically.
     python examples/03_custom_tool.py
 """
 
-from src import Agent, tool
+from freeagent import Agent, tool
 
 
 @tool

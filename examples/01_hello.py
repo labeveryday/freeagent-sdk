@@ -8,7 +8,7 @@ Requires: ollama running locally with a model pulled.
     python examples/01_hello.py
 """
 
-from src import Agent
+from freeagent import Agent
 
 agent = Agent(
     model="llama3.1:8b",
