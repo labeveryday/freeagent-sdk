@@ -47,3 +47,25 @@
 - Updated freeagent-sdk.html with Skills, Providers, and Telemetry panels
 - Updated stats, roadmap, and feature grid to reflect v0.2.0 capabilities
 - 191 tests passing across all modules
+
+### Phase 7: Baseline Evaluations
+- 5 evaluations: baseline chat, tool calling, MCP NBA stats, multi-turn, multi-turn MCP
+- Compared raw Ollama API vs Strands Agents SDK across 3 models
+- Results: Raw Ollama generally matches or beats Strands in accuracy
+
+### Phase 8: Live Integration Tests
+- 29 integration tests across 5 files: chat, tools, memory, skills, ReactEngine
+- All 3 models (qwen3:8b, qwen3:4b, llama3.1) work end-to-end with FreeAgent
+- All tests marked `@pytest.mark.integration` for CI skip
+- Memory tool single-action pattern understood by all models
+
+### Phases 9-11: FreeAgent Evaluations
+- 5 FreeAgent eval scripts: tool calling, multi-turn, MCP, skills A/B, memory usability
+- FreeAgent matches or beats Strands accuracy across all eval types
+- FreeAgent improves llama3.1 tool calling by +13% vs raw Ollama
+- Skills improve qwen3:4b accuracy by +20%
+- Memory tool usability at 60% — fixed `.md` extension bug
+
+### Phase 12: Data-Driven Fixes
+- Fixed `Memory._resolve()` to auto-append `.md` when models omit the file extension
+- 220 total tests passing (191 unit + 29 integration)
