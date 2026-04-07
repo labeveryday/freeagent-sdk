@@ -38,6 +38,14 @@ class ToolCallRecord:
 
 
 @dataclass
+class TraceEvent:
+    """A single event in a run's trace timeline."""
+    timestamp: float  # seconds since run start
+    event_type: str
+    data: dict = field(default_factory=dict)
+
+
+@dataclass
 class RunRecord:
     """A single agent.run() invocation."""
     run_id: int = 0
@@ -56,6 +64,7 @@ class RunRecord:
     max_iter_hit: bool = False
     timed_out: bool = False
     fallback_model: str = ""
+    trace_events: list[TraceEvent] = field(default_factory=list)
 
     @property
     def tool_call_count(self) -> int:
@@ -68,6 +77,105 @@ class RunRecord:
     @property
     def error_count(self) -> int:
         return sum(1 for tc in self.tool_calls if not tc.success)
+
+    def trace(self) -> str:
+        """Human-readable trace timeline."""
+        if not self.trace_events:
+            return "No trace events recorded."
+        lines = [f"Trace for run {self.run_id} ({self.model}, {self.mode}):"]
+        for te in self.trace_events:
+            ts = f"+{te.timestamp*1000:>7.0f}ms"
+            detail = ""
+            if te.event_type == "model_call_start":
+                detail = f"iter={te.data.get('iteration', '?')}"
+            elif te.event_type == "model_call_end":
+                preview = te.data.get("content_preview", "")
+                tc_count = len(te.data.get("tool_calls", []))
+                if tc_count:
+                    detail = f"tool_calls={tc_count}"
+                elif preview:
+                    detail = f'"{preview[:60]}"'
+            elif te.event_type == "tool_call":
+                detail = f"{te.data.get('name', '?')}({_fmt_args(te.data.get('args', {}))})"
+            elif te.event_type == "tool_result":
+                name = te.data.get("name", "?")
+                ok = "ok" if te.data.get("success") else "FAIL"
+                ms = te.data.get("duration_ms", 0)
+                detail = f"{name} -> {ok} ({ms:.0f}ms)"
+            elif te.event_type == "validation_error":
+                detail = f"{te.data.get('tool_name', '?')}: {te.data.get('errors', [])}"
+            elif te.event_type == "retry":
+                detail = f"{te.data.get('tool_name', '?')} attempt #{te.data.get('count', '?')}"
+            elif te.event_type == "loop_detected":
+                detail = f"{te.data.get('tool_name', '?')}"
+            elif te.event_type == "context_pruned":
+                detail = f"dropped {te.data.get('messages_dropped', '?')} messages"
+            else:
+                detail = str(te.data) if te.data else ""
+            lines.append(f"  {ts}  {te.event_type:<20s} {detail}")
+        return "\n".join(lines)
+
+    def to_markdown(self) -> str:
+        """Markdown-formatted run report."""
+        lines = [
+            f"# Run {self.run_id}",
+            "",
+            f"- **Model:** {self.model} ({self.mode})",
+            f"- **Input:** {self.user_input[:100]}",
+            f"- **Elapsed:** {self.elapsed_ms:.0f}ms",
+            f"- **Iterations:** {self.iterations}",
+            f"- **Model calls:** {self.model_calls}",
+            f"- **Tool calls:** {self.tool_call_count}",
+        ]
+        if self.validation_errors:
+            lines.append(f"- **Validation errors:** {self.validation_errors}")
+        if self.retries:
+            lines.append(f"- **Retries:** {self.retries}")
+        if self.loop_detected:
+            lines.append("- **Loop detected**")
+        if self.timed_out:
+            lines.append("- **Timed out**")
+
+        if self.tool_calls:
+            lines.extend(["", "## Tool Calls", ""])
+            for tc in self.tool_calls:
+                status = "ok" if tc.success else f"FAIL: {tc.error}"
+                lines.append(f"- `{tc.name}({_fmt_args(tc.args)})` -> {status} ({tc.duration_ms:.0f}ms)")
+
+        if self.trace_events:
+            lines.extend(["", "## Trace", "", "```"])
+            lines.append(self.trace())
+            lines.append("```")
+
+        if self.response:
+            lines.extend(["", "## Response", "", self.response[:500]])
+
+        return "\n".join(lines)
+
+    def summary(self) -> str:
+        """One-line summary of the run."""
+        tools = f", {self.tool_call_count} tools" if self.tool_call_count else ""
+        flags = []
+        if self.loop_detected:
+            flags.append("LOOP")
+        if self.timed_out:
+            flags.append("TIMEOUT")
+        if self.validation_errors:
+            flags.append(f"{self.validation_errors}err")
+        extra = f" [{','.join(flags)}]" if flags else ""
+        return (
+            f"Run {self.run_id}: {self.model} ({self.mode}) "
+            f"{self.elapsed_ms:.0f}ms, {self.iterations} iters{tools}{extra}"
+        )
+
+
+def _fmt_args(args: dict) -> str:
+    """Format args dict concisely for trace output."""
+    if not args:
+        return ""
+    parts = [f"{k}={repr(v)}" for k, v in args.items()]
+    result = ", ".join(parts)
+    return result[:80] + "..." if len(result) > 80 else result
 
 
 # ── Metrics (lives on agent.metrics) ──────────────────────
@@ -97,6 +205,7 @@ class Metrics:
     def start_run(self, user_input: str, model: str, mode: str):
         """Called at the start of agent.arun()."""
         self._run_counter += 1
+        self._run_start_mono = time.monotonic()
         self._current = RunRecord(
             run_id=self._run_counter,
             model=model,
@@ -124,15 +233,25 @@ class Metrics:
 
         self._current = None
 
+    def _trace(self, event_type: str, data: dict | None = None):
+        """Append a trace event to the current run."""
+        if self._current:
+            elapsed = time.monotonic() - self._run_start_mono
+            self._current.trace_events.append(
+                TraceEvent(timestamp=elapsed, event_type=event_type, data=data or {})
+            )
+
     def record_model_call(self, iteration: int):
         """Called each time the model is invoked."""
         if self._current:
             self._current.model_calls += 1
             self._current.iterations = iteration + 1
+        self._trace("model_call_start", {"iteration": iteration})
 
     def start_tool(self, tool_name: str, args: dict):
         """Called before tool execution."""
         self._tool_timers[tool_name] = time.monotonic()
+        self._trace("tool_call", {"name": tool_name, "args": args})
         if self._otel:
             self._otel.start_tool_span(tool_name, args)
 
@@ -155,6 +274,11 @@ class Metrics:
         if self._current:
             self._current.tool_calls.append(record)
 
+        self._trace("tool_result", {
+            "name": tool_name, "success": success,
+            "duration_ms": duration, "preview": result_preview[:100],
+        })
+
         if self._otel:
             self._otel.end_tool_span(tool_name, success, duration)
 
@@ -162,6 +286,7 @@ class Metrics:
         """Called on tool call validation failure."""
         if self._current:
             self._current.validation_errors += 1
+        self._trace("validation_error", {"tool_name": tool_name})
         if self._otel:
             self._otel.record_event("validation_error", {"tool": tool_name})
 
@@ -169,6 +294,7 @@ class Metrics:
         """Called on retry after validation failure."""
         if self._current:
             self._current.retries += 1
+        self._trace("retry", {"tool_name": tool_name, "count": retry_count})
         if self._otel:
             self._otel.record_event("retry", {"tool": tool_name, "count": str(retry_count)})
 
@@ -176,6 +302,7 @@ class Metrics:
         """Called when circuit breaker detects a loop."""
         if self._current:
             self._current.loop_detected = True
+        self._trace("loop_detected", {"tool_name": tool_name})
         if self._otel:
             self._otel.record_event("loop_detected", {"tool": tool_name})
 
@@ -183,6 +310,7 @@ class Metrics:
         """Called when max iterations reached."""
         if self._current:
             self._current.max_iter_hit = True
+        self._trace("max_iterations", {"iteration": iteration})
         if self._otel:
             self._otel.record_event("max_iterations", {"iteration": str(iteration)})
 
@@ -190,6 +318,7 @@ class Metrics:
         """Called on timeout."""
         if self._current:
             self._current.timed_out = True
+        self._trace("timeout")
         if self._otel:
             self._otel.record_event("timeout", {})
 

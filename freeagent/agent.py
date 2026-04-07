@@ -617,6 +617,19 @@ class Agent:
             )
         return "[Request timed out. Try a simpler query or increase timeout.]"
 
+    # ── Inspection ─────────────────────────────────────────
+
+    @property
+    def last_run(self) -> "RunRecord | None":
+        """Most recent run record. Shortcut for agent.metrics.last_run."""
+        return self.metrics.last_run
+
+    def trace(self) -> str:
+        """Human-readable trace of the last run."""
+        if self.last_run:
+            return self.last_run.trace()
+        return "No runs yet."
+
     def __repr__(self) -> str:
         conv = ""
         if self.conversation:

@@ -21,6 +21,15 @@
 - Explicit `bundled_skills=True` or `memory_tool=True` overrides auto-tune
 - 16 new unit tests, 6 live integration tests
 
+### Phase 22: Trace API for Inspection
+- Added `TraceEvent` dataclass to `RunRecord` — timestamped event log for each run
+- Metrics methods now append trace events alongside count updates
+- `RunRecord.trace()` — human-readable timeline with relative timestamps
+- `RunRecord.to_markdown()` — full markdown report with sections
+- `RunRecord.summary()` — one-line run summary
+- `Agent.last_run` property and `Agent.trace()` shortcut
+- 12 new unit tests
+
 ## 0.2.0 (2026-04-06)
 
 ### Phase 1: Package Restructure & httpx Migration
