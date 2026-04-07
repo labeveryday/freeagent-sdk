@@ -23,6 +23,7 @@ from .engines import NativeEngine, ReactEngine, EngineResult, ToolCall
 from .hooks import HookRegistry, HookContext, HookEvent
 from .memory import Memory, make_memory_tools
 from .messages import Message
+from .model_info import ModelInfo, fetch_model_info
 from .providers.ollama import OllamaProvider
 from .sanitize import sanitize_tool_output, truncate_tool_output
 from .skills import load_skills, build_skill_context, BUNDLED_SKILLS_DIR
@@ -67,6 +68,9 @@ class Agent:
         skills: list = None,
         conversation: ConversationManager | None = "default",
         session: str | None = None,
+        auto_tune: bool = True,
+        bundled_skills: bool | None = None,
+        memory_tool: bool | None = None,
         **kwargs,
     ):
         self.config = config or AgentConfig()
@@ -77,18 +81,43 @@ class Agent:
 
         self.system_prompt = system_prompt
 
+        # Model info — detect from Ollama if available
+        self.model_info: ModelInfo | None = None
+        if auto_tune:
+            self.model_info = self._detect_model_info(model)
+
+        # Auto-tune: determine effective bundled_skills and memory_tool
+        use_bundled_skills = bundled_skills if bundled_skills is not None else True
+        use_memory_tool = memory_tool if memory_tool is not None else True
+
+        if auto_tune and self.model_info:
+            # Small models: strip bundled skills and memory tool unless user explicitly set them
+            if self.model_info.is_small:
+                if bundled_skills is None:
+                    use_bundled_skills = False
+                if memory_tool is None:
+                    use_memory_tool = False
+            # Use detected context length
+            if self.model_info.context_length > 0:
+                self.config.context_window = self.model_info.context_length
+
         # Memory — markdown-backed, always on
         self.memory = Memory(memory_dir=kwargs.pop("memory_dir", None))
 
         # Memory tools — agent can read/write/search/list memory files
-        memory_tools = make_memory_tools(self.memory)
-        self.tools = (tools or []) + memory_tools
+        if use_memory_tool:
+            memory_tools = make_memory_tools(self.memory)
+            self.tools = (tools or []) + memory_tools
+        else:
+            self.tools = tools or []
 
-        # Skills — bundled skills always load, user skills extend them
-        skill_sources = [BUNDLED_SKILLS_DIR]
+        # Skills — bundled skills load unless disabled, user skills extend them
+        skill_sources = []
+        if use_bundled_skills:
+            skill_sources.append(BUNDLED_SKILLS_DIR)
         if skills:
             skill_sources.extend(skills)
-        self.skills = load_skills(skill_sources)
+        self.skills = load_skills(skill_sources) if skill_sources else []
 
         # Provider — use custom if given, otherwise default to Ollama
         if provider is not None:
@@ -99,8 +128,14 @@ class Agent:
                 base_url=self.config.ollama_base_url,
             )
 
-        # Engine selection
-        if self.tools and self.config.supports_native_tools(model):
+        # Engine selection — use model_info.supports_native_tools if available
+        supports_tools = False
+        if self.model_info and self.model_info.supports_native_tools:
+            supports_tools = True
+        elif self.config.supports_native_tools(model):
+            supports_tools = True
+
+        if self.tools and supports_tools:
             self.engine = NativeEngine(self.provider)
             self._mode = "native"
         elif self.tools:
@@ -132,6 +167,17 @@ class Agent:
             self._session = Session(session)
             if self.conversation and self._session.exists:
                 self._session.restore(self.conversation)
+
+    # ── Model detection ─────────────────────────────────
+
+    def _detect_model_info(self, model: str) -> ModelInfo | None:
+        """Detect model info from Ollama /api/show. Returns None on failure."""
+        try:
+            return _SyncBridge.run(
+                fetch_model_info(model, self.config.ollama_base_url)
+            )
+        except Exception:
+            return None
 
     # ── Hook registration ────────────────────────────────
 

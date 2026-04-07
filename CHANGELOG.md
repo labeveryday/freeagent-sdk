@@ -12,6 +12,15 @@
 - All event types exported from `freeagent` and `freeagent.events`
 - 19 new unit tests, live integration tests for streaming
 
+### Phase 21: Model-Aware Defaults
+- Added `freeagent/model_info.py` — `ModelInfo` dataclass and `fetch_model_info()` for Ollama `/api/show`
+- Auto-tune: small models (<3B) strip bundled skills and memory tool by default
+- Auto-tune: context window set from model's actual limit
+- Auto-tune: engine selection uses detected capabilities instead of hardcoded list
+- New Agent parameters: `auto_tune` (default True), `bundled_skills`, `memory_tool`
+- Explicit `bundled_skills=True` or `memory_tool=True` overrides auto-tune
+- 16 new unit tests, 6 live integration tests
+
 ## 0.2.0 (2026-04-06)
 
 ### Phase 1: Package Restructure & httpx Migration
