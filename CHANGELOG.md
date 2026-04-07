@@ -45,6 +45,12 @@
 - SlidingWindow._history converted to deque for O(1) popleft during pruning
 - 7 new unit tests
 
+### Phase 25: Documentation Rewrite + v0.3 Release
+- Rewrote README with honest framing — dropped unverified guardrail claims
+- Added CLI, streaming, auto-tuning, trace, and "Real Performance" sections
+- Bumped version to 0.3.0 in pyproject.toml and `__init__.py`
+- Updated CHANGELOG with v0.3 release notes
+
 ## 0.2.0 (2026-04-06)
 
 ### Phase 1: Package Restructure & httpx Migration
