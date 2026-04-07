@@ -161,6 +161,11 @@ class Agent:
         else:
             self.conversation = conversation
 
+        # System prompt cache
+        self._cached_system_prompt: str | None = None
+        self._cache_skill_ids: tuple | None = None
+        self._cache_mem_len: int = -1
+
         # Session — optional persistence
         self._session: Session | None = None
         if session:
@@ -210,7 +215,16 @@ class Agent:
     # ── System Prompt ────────────────────────────────────
 
     def _build_system_prompt(self) -> str:
-        """Assemble system prompt with skills and memory."""
+        """Assemble system prompt with skills and memory. Cached until invalidated."""
+        # Check cache invalidators
+        skill_ids = tuple(s.name for s in self.skills)
+        mem_len = len(self.memory)
+
+        if (self._cached_system_prompt is not None
+                and self._cache_skill_ids == skill_ids
+                and self._cache_mem_len == mem_len):
+            return self._cached_system_prompt
+
         system = self.system_prompt
 
         skill_context = build_skill_context(self.skills)
@@ -220,6 +234,11 @@ class Agent:
         mem_context = self.memory.to_system_prompt()
         if mem_context:
             system = f"{system}\n\n{mem_context}"
+
+        # Update cache
+        self._cached_system_prompt = system
+        self._cache_skill_ids = skill_ids
+        self._cache_mem_len = mem_len
 
         return system
 

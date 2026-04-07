@@ -48,6 +48,10 @@ from typing import Any
 # Bundled skills ship with the package
 BUNDLED_SKILLS_DIR = Path(__file__).parent / "skills"
 
+# Module-level cache for bundled skills
+_BUNDLED_CACHE: list[Skill] | None = None
+_BUNDLED_MTIME: float = 0.0
+
 
 @dataclass
 class Skill:
@@ -78,7 +82,9 @@ def load_skills(sources: list) -> list[Skill]:
         - Skill object → used directly
 
     Returns list of loaded Skill objects. Duplicates by name: last wins.
+    Uses a module-level cache for bundled skills.
     """
+    global _BUNDLED_CACHE, _BUNDLED_MTIME
     loaded: dict[str, Skill] = {}
 
     for source in sources:
@@ -87,10 +93,34 @@ def load_skills(sources: list) -> list[Skill]:
         elif isinstance(source, (str, Path)):
             path = Path(source).expanduser().resolve()
             if path.is_dir():
-                for skill in _load_directory(path):
-                    loaded[skill.name] = skill
+                # Use cache for bundled skills directory
+                if path == BUNDLED_SKILLS_DIR.resolve():
+                    current_mtime = _dir_mtime(path)
+                    if _BUNDLED_CACHE is not None and current_mtime == _BUNDLED_MTIME:
+                        for skill in _BUNDLED_CACHE:
+                            loaded[skill.name] = skill
+                        continue
+                    skills = _load_directory(path)
+                    _BUNDLED_CACHE = skills
+                    _BUNDLED_MTIME = current_mtime
+                    for skill in skills:
+                        loaded[skill.name] = skill
+                else:
+                    for skill in _load_directory(path):
+                        loaded[skill.name] = skill
 
     return list(loaded.values())
+
+
+def _dir_mtime(path: Path) -> float:
+    """Get the max mtime of all SKILL.md files in a directory tree."""
+    max_mtime = 0.0
+    for child in path.rglob("SKILL.md"):
+        try:
+            max_mtime = max(max_mtime, child.stat().st_mtime)
+        except OSError:
+            pass
+    return max_mtime
 
 
 def build_skill_context(skills: list[Skill], max_chars: int = 0) -> str:

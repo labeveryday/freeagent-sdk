@@ -102,6 +102,9 @@ class Memory:
         # Don't create the directory on init — only on first write
         self._initialized = False
 
+        # File cache: path -> (mtime, content) — avoids re-reading unchanged files
+        self._file_cache: dict[str, tuple[float, str]] = {}
+
     # ── Core API (used by agent tools) ────────────────────
 
     def read(self, filename: str) -> str:
@@ -110,7 +113,13 @@ class Memory:
         if not path.is_file():
             return f"[Memory file '{filename}' not found]"
         try:
-            return path.read_text(encoding="utf-8")
+            key = str(path)
+            mtime = path.stat().st_mtime
+            if key in self._file_cache and self._file_cache[key][0] == mtime:
+                return self._file_cache[key][1]
+            content = path.read_text(encoding="utf-8")
+            self._file_cache[key] = (mtime, content)
+            return content
         except OSError:
             return f"[Error reading '{filename}']"
 
@@ -147,6 +156,7 @@ class Memory:
 
         try:
             path.write_text(full_content, encoding="utf-8")
+            self._file_cache.pop(str(path), None)  # invalidate cache
             self._update_index(filename)
             return f"[Saved to {filename}]"
         except OSError as e:
@@ -159,6 +169,7 @@ class Memory:
         try:
             with open(path, "a", encoding="utf-8") as f:
                 f.write(content + "\n")
+            self._file_cache.pop(str(path), None)  # invalidate cache
             self._update_index(filename)
             return f"[Appended to {filename}]"
         except OSError as e:

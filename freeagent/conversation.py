@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import json
 from abc import ABC, abstractmethod
+from collections import deque
 from pathlib import Path
 from typing import Any
 
@@ -102,7 +103,7 @@ class SlidingWindow(ConversationManager):
 
     def __init__(self, max_turns: int = 20):
         self.max_turns = max_turns
-        self._history: list[Message] = []
+        self._history: deque[Message] = deque()
 
     def prepare(self, system: str, user_input: str) -> list[Message]:
         messages = [Message.system(system)]
@@ -112,7 +113,7 @@ class SlidingWindow(ConversationManager):
 
     def commit(self, messages: list[Message]) -> None:
         # Store everything except the system prompt
-        self._history = [m for m in messages if m.role != "system"]
+        self._history = deque(m for m in messages if m.role != "system")
         self._prune()
 
     def clear(self) -> None:
@@ -156,7 +157,8 @@ class SlidingWindow(ConversationManager):
 
         # Drop everything from start to next_user (or all if no next user)
         if next_user is not None:
-            self._history = self._history[next_user:]
+            for _ in range(next_user):
+                self._history.popleft()
         else:
             self._history.clear()
 

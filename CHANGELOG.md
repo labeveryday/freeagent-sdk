@@ -38,6 +38,13 @@
 - CLI entry point via `[project.scripts]` in pyproject.toml
 - 9 new unit tests
 
+### Phase 24: System Prompt Caching + Performance Wins
+- System prompt cached with invalidation on skill/memory changes
+- Bundled skills cached at module level with mtime invalidation
+- Memory file reads cached with mtime invalidation, invalidated on write/append
+- SlidingWindow._history converted to deque for O(1) popleft during pruning
+- 7 new unit tests
+
 ## 0.2.0 (2026-04-06)
 
 ### Phase 1: Package Restructure & httpx Migration
