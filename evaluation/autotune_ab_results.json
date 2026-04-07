@@ -1,0 +1,1207 @@
+{
+  "qwen3:8b": {
+    "auto_tune": {
+      "weather_then_convert": {
+        "passed": true,
+        "turns_passed": 2,
+        "turns_total": 2,
+        "latency_ms": 34178.605916007655,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather like in Tokyo right now?",
+            "response": "The current weather in Tokyo is **85\u00b0F** (which is approximately **29.4\u00b0C**) with sunny conditions.",
+            "passed": true,
+            "latency_ms": 19352.39608300617,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Can you convert that temperature to Celsius?",
+            "response": "The temperature of **85\u00b0F** is approximately **29.4\u00b0C**. Let me know if you need further conversions!",
+            "passed": true,
+            "latency_ms": 14826.209833001485,
+            "tool_calls": 1,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "compare_two_cities": {
+        "passed": true,
+        "turns_passed": 3,
+        "turns_total": 3,
+        "latency_ms": 60192.51233400428,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather in New York?",
+            "response": "The current temperature in New York is **72\u00b0F** with partly cloudy conditions. Would you like this converted to Celsius?",
+            "passed": true,
+            "latency_ms": 11711.828958999831,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Now check London.",
+            "response": "The current temperature in London is **61\u00b0F** with rainy conditions. Would you like this converted to Celsius?",
+            "passed": true,
+            "latency_ms": 21753.623708995292,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 3,
+            "user": "Which city is warmer and by how much?",
+            "response": "New York is warmer than London by **11\u00b0F**. Would you like this temperature difference converted to Celsius?",
+            "passed": true,
+            "latency_ms": 26727.059666009154,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "context_retention_no_tools": {
+        "passed": false,
+        "turns_passed": 1,
+        "turns_total": 2,
+        "latency_ms": 24858.978583972203,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather in Paris?",
+            "response": "The current weather in Paris is overcast with a temperature of 68\u00b0F (20\u00b0C).",
+            "passed": true,
+            "latency_ms": 15758.3406669728,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Based on that weather, should I bring an umbrella?",
+            "response": "The weather in Paris is overcast, but there's no indication of rain. An umbrella isn't necessary unless you want to be prepared for unexpected showers. Would you like me to check for rain probability?",
+            "passed": false,
+            "latency_ms": 9100.637916999403,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "three_city_itinerary": {
+        "passed": true,
+        "turns_passed": 4,
+        "turns_total": 4,
+        "latency_ms": 55544.943582004635,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "I'm planning a trip. First, what's the weather in Tokyo?",
+            "response": "The weather in Tokyo is **85\u00b0F (29.4\u00b0C)** and **sunny**. Would you like help with anything else for your trip planning?",
+            "passed": true,
+            "latency_ms": 14416.37483300292,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "What about Sydney?",
+            "response": "The weather in Sydney is **58\u00b0F (14.4\u00b0C)** and **clear**. Would you like help with anything else for your trip planning?",
+            "passed": true,
+            "latency_ms": 14628.961874986999,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 3,
+            "user": "And Paris?",
+            "response": "The weather in Paris is **68\u00b0F (20\u00b0C)** and **overcast**. Would you like help with anything else for your trip planning?",
+            "passed": true,
+            "latency_ms": 12388.189457997214,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 4,
+            "user": "Rank these three cities from warmest to coldest.",
+            "response": "Here's the ranking from warmest to coldest:  \n**Tokyo** (85\u00b0F / 29.4\u00b0C) > **Paris** (68\u00b0F / 20\u00b0C) > **Sydney** (58\u00b0F / 14.4\u00b0C).  \n\nWould you like help with anything else for your trip? \ud83d\ude0a",
+            "passed": true,
+            "latency_ms": 14111.417416017503,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      }
+    },
+    "all_on": {
+      "weather_then_convert": {
+        "passed": true,
+        "turns_passed": 2,
+        "turns_total": 2,
+        "latency_ms": 29678.963708982337,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather like in Tokyo right now?",
+            "response": "The current weather in Tokyo is **85\u00b0F (29.4\u00b0C)** with sunny conditions. \ud83c\udf1e",
+            "passed": true,
+            "latency_ms": 13123.940291989129,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Can you convert that temperature to Celsius?",
+            "response": "The temperature in Tokyo is **29.44\u00b0C** (which is equivalent to 85\u00b0F). \ud83c\udf21\ufe0f",
+            "passed": true,
+            "latency_ms": 16555.02341699321,
+            "tool_calls": 1,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "compare_two_cities": {
+        "passed": true,
+        "turns_passed": 3,
+        "turns_total": 3,
+        "latency_ms": 39105.06591596641,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather in New York?",
+            "response": "The current temperature in New York is **72\u00b0F** with \"partly cloudy\" conditions. Would you like this converted to Celsius?",
+            "passed": true,
+            "latency_ms": 11814.234124991344,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Now check London.",
+            "response": "The current temperature in London is **61\u00b0F** with \"rainy\" conditions.",
+            "passed": true,
+            "latency_ms": 16091.519165987847,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 3,
+            "user": "Which city is warmer and by how much?",
+            "response": "New York is warmer than London by **11\u00b0F** (72\u00b0F vs. 61\u00b0F). Would you like the difference in Celsius?",
+            "passed": true,
+            "latency_ms": 11199.312624987215,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "context_retention_no_tools": {
+        "passed": false,
+        "turns_passed": 1,
+        "turns_total": 2,
+        "latency_ms": 23275.294707971625,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather in Paris?",
+            "response": "The current weather in Paris is overcast with a temperature of 68\u00b0F (20\u00b0C).",
+            "passed": true,
+            "latency_ms": 15878.326999983983,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Based on that weather, should I bring an umbrella?",
+            "response": "The weather in Paris is overcast but doesn't indicate rain. You likely don't need an umbrella unless clouds develop into rain. Check for updates if you're planning to go out.",
+            "passed": false,
+            "latency_ms": 7396.967707987642,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "three_city_itinerary": {
+        "passed": true,
+        "turns_passed": 4,
+        "turns_total": 4,
+        "latency_ms": 65247.51691700658,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "I'm planning a trip. First, what's the weather in Tokyo?",
+            "response": "The weather in Tokyo is **85\u00b0F (29\u00b0C)** and sunny. Would you like help converting temperatures between units or checking other cities?",
+            "passed": true,
+            "latency_ms": 15106.559957988793,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "What about Sydney?",
+            "response": "The weather in Sydney is **58\u00b0F (14.4\u00b0C)** and clear. Would you like help converting temperatures between units or checking other cities?",
+            "passed": true,
+            "latency_ms": 19658.23954201187,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 3,
+            "user": "And Paris?",
+            "response": "The weather in Paris is **68\u00b0F (20\u00b0C)** and overcast. Would you like help converting temperatures between units or checking other cities?",
+            "passed": true,
+            "latency_ms": 9221.946458012098,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 4,
+            "user": "Rank these three cities from warmest to coldest.",
+            "response": "Here's the ranking from warmest to coldest based on the latest weather data:\n\n1. **Tokyo** (85\u00b0F / 29\u00b0C)  \n2. **Paris** (68\u00b0F / 20\u00b0C)  \n3. **Sydney** (58\u00b0F / 14.4\u00b0C)  \n\nLet me know if you need further",
+            "passed": true,
+            "latency_ms": 21260.770958993817,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      }
+    }
+  },
+  "qwen3:4b": {
+    "auto_tune": {
+      "weather_then_convert": {
+        "passed": true,
+        "turns_passed": 2,
+        "turns_total": 2,
+        "latency_ms": 45171.9044999918,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather like in Tokyo right now?",
+            "response": "Currently in Tokyo, the weather is sunny with a temperature of 85\u00b0F.",
+            "passed": true,
+            "latency_ms": 19860.269708005944,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Can you convert that temperature to Celsius?",
+            "response": "85\u00b0F converts to approximately 29.44\u00b0C.",
+            "passed": true,
+            "latency_ms": 25311.634791985853,
+            "tool_calls": 1,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "compare_two_cities": {
+        "passed": true,
+        "turns_passed": 3,
+        "turns_total": 3,
+        "latency_ms": 28740.44749996392,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather in New York?",
+            "response": "New York is currently partly cloudy with a temperature of 72\u00b0F.",
+            "passed": true,
+            "latency_ms": 10115.505875000963,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Now check London.",
+            "response": "London is currently rainy with a temperature of 61\u00b0F.",
+            "passed": true,
+            "latency_ms": 13965.117624989944,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 3,
+            "user": "Which city is warmer and by how much?",
+            "response": "New York is warmer than London by 11\u00b0F (72\u00b0F vs. 61\u00b0F).",
+            "passed": true,
+            "latency_ms": 4659.823999973014,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "context_retention_no_tools": {
+        "passed": false,
+        "turns_passed": 1,
+        "turns_total": 2,
+        "latency_ms": 35534.19129198301,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather in Paris?",
+            "response": "The current weather in Paris is overcast with a temperature of 68\u00b0F.",
+            "passed": true,
+            "latency_ms": 15159.636750002392,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Based on that weather, should I bring an umbrella?",
+            "response": "Based on the overcast weather in Paris with no rain mentioned, it's not necessary to bring an umbrella.",
+            "passed": false,
+            "latency_ms": 20374.554541980615,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "three_city_itinerary": {
+        "passed": true,
+        "turns_passed": 4,
+        "turns_total": 4,
+        "latency_ms": 43614.14883399266,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "I'm planning a trip. First, what's the weather in Tokyo?",
+            "response": "Tokyo is currently sunny with a temperature of 85\u00b0F.",
+            "passed": true,
+            "latency_ms": 11514.40516699222,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "What about Sydney?",
+            "response": "Sydney is currently clear with a temperature of 58\u00b0F.",
+            "passed": true,
+            "latency_ms": 12054.994457983412,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 3,
+            "user": "And Paris?",
+            "response": "Paris is currently overcast with a temperature of 68\u00b0F.",
+            "passed": true,
+            "latency_ms": 12662.68437501276,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 4,
+            "user": "Rank these three cities from warmest to coldest.",
+            "response": "Tokyo (85\u00b0F) > Paris (68\u00b0F) > Sydney (58\u00b0F)",
+            "passed": true,
+            "latency_ms": 7382.064834004268,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      }
+    },
+    "all_on": {
+      "weather_then_convert": {
+        "passed": true,
+        "turns_passed": 2,
+        "turns_total": 2,
+        "latency_ms": 35304.74691698328,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather like in Tokyo right now?",
+            "response": "In Tokyo right now, it's sunny with a temperature of 85\u00b0F.",
+            "passed": true,
+            "latency_ms": 11310.216999991098,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Can you convert that temperature to Celsius?",
+            "response": "85\u00b0F converts to 29.44\u00b0C.",
+            "passed": true,
+            "latency_ms": 23994.52991699218,
+            "tool_calls": 1,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "compare_two_cities": {
+        "passed": true,
+        "turns_passed": 3,
+        "turns_total": 3,
+        "latency_ms": 43726.92695798469,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather in New York?",
+            "response": "New York is currently partly cloudy with a temperature of 72\u00b0F.",
+            "passed": true,
+            "latency_ms": 11924.094708985649,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Now check London.",
+            "response": "London is currently rainy with a temperature of 61\u00b0F.",
+            "passed": true,
+            "latency_ms": 25797.641665994888,
+            "tool_calls": 2,
+            "validation_errors": 0
+          },
+          {
+            "turn": 3,
+            "user": "Which city is warmer and by how much?",
+            "response": "New York is warmer than London by 11\u00b0F (72\u00b0F vs. 61\u00b0F).",
+            "passed": true,
+            "latency_ms": 6005.1905830041505,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "context_retention_no_tools": {
+        "passed": false,
+        "turns_passed": 1,
+        "turns_total": 2,
+        "latency_ms": 26668.652499996824,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather in Paris?",
+            "response": "It's overcast in Paris with a temperature of 68\u00b0F.",
+            "passed": true,
+            "latency_ms": 12536.432499997318,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Based on that weather, should I bring an umbrella?",
+            "response": "No, it's overcast but not raining, so you don't need an umbrella.",
+            "passed": false,
+            "latency_ms": 14132.219999999506,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "three_city_itinerary": {
+        "passed": true,
+        "turns_passed": 4,
+        "turns_total": 4,
+        "latency_ms": 187512.88683200255,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "I'm planning a trip. First, what's the weather in Tokyo?",
+            "response": "Tokyo is currently sunny with a temperature of 85\u00b0F.",
+            "passed": true,
+            "latency_ms": 14297.767833020771,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "What about Sydney?",
+            "response": "Sydney is currently clear with a temperature of 58\u00b0F.",
+            "passed": true,
+            "latency_ms": 77947.18087499496,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 3,
+            "user": "And Paris?",
+            "response": "Paris is currently overcast with a temperature of 68\u00b0F.",
+            "passed": true,
+            "latency_ms": 29281.47804099717,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 4,
+            "user": "Rank these three cities from warmest to coldest.",
+            "response": "Tokyo (85\u00b0F) > Paris (68\u00b0F) > Sydney (58\u00b0F)",
+            "passed": true,
+            "latency_ms": 65986.46008298965,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      }
+    }
+  },
+  "llama3.1:latest": {
+    "auto_tune": {
+      "weather_then_convert": {
+        "passed": true,
+        "turns_passed": 2,
+        "turns_total": 2,
+        "latency_ms": 17501.055750995874,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather like in Tokyo right now?",
+            "response": "The current temperature in Tokyo is 85\u00b0F and it's a sunny day.",
+            "passed": true,
+            "latency_ms": 13114.14204200264,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Can you convert that temperature to Celsius?",
+            "response": "The temperature in Tokyo is approximately 29.44\u00b0C.",
+            "passed": true,
+            "latency_ms": 4386.913708993234,
+            "tool_calls": 1,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "compare_two_cities": {
+        "passed": true,
+        "turns_passed": 3,
+        "turns_total": 3,
+        "latency_ms": 14025.950501003535,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather in New York?",
+            "response": "The current temperature in New York is 72\u00b0F with partly cloudy conditions.",
+            "passed": true,
+            "latency_ms": 3645.485542016104,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Now check London.",
+            "response": "The current temperature in London is 61\u00b0F with rainy conditions.",
+            "passed": true,
+            "latency_ms": 3462.303834006889,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 3,
+            "user": "Which city is warmer and by how much?",
+            "response": "New York is warmer by approximately 6.11\u00b0F (or 3.4\u00b0C).",
+            "passed": true,
+            "latency_ms": 6918.161124980543,
+            "tool_calls": 2,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "context_retention_no_tools": {
+        "passed": true,
+        "turns_passed": 2,
+        "turns_total": 2,
+        "latency_ms": 6971.474207995925,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather in Paris?",
+            "response": "The current temperature in Paris is 68\u00b0F and it's overcast.",
+            "passed": true,
+            "latency_ms": 3362.0687919901684,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Based on that weather, should I bring an umbrella?",
+            "response": "Yes, it's a good idea to bring an umbrella as the weather is overcast.",
+            "passed": true,
+            "latency_ms": 3609.4054160057567,
+            "tool_calls": 1,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "three_city_itinerary": {
+        "passed": true,
+        "turns_passed": 4,
+        "turns_total": 4,
+        "latency_ms": 21160.468042013235,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "I'm planning a trip. First, what's the weather in Tokyo?",
+            "response": "The current weather in Tokyo is sunny with a temperature of 85\u00b0F.",
+            "passed": true,
+            "latency_ms": 3671.9882920151576,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "What about Sydney?",
+            "response": "The current weather in Sydney is clear with a temperature of 58\u00b0F.",
+            "passed": true,
+            "latency_ms": 3511.7947079997975,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 3,
+            "user": "And Paris?",
+            "response": "The current weather in Paris is overcast with a temperature of 68\u00b0F.",
+            "passed": true,
+            "latency_ms": 3733.282417000737,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 4,
+            "user": "Rank these three cities from warmest to coldest.",
+            "response": "Based on the temperatures in Celsius, the ranking from warmest to coldest is:\n\n1. Tokyo (29.44\u00b0C)\n2. Paris (20.0\u00b0C)\n3. Sydney (14.44\u00b0C)",
+            "passed": true,
+            "latency_ms": 10243.402624997543,
+            "tool_calls": 3,
+            "validation_errors": 0
+          }
+        ]
+      }
+    },
+    "all_on": {
+      "weather_then_convert": {
+        "passed": true,
+        "turns_passed": 2,
+        "turns_total": 2,
+        "latency_ms": 8038.38391698082,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather like in Tokyo right now?",
+            "response": "The current temperature in Tokyo is 85\u00b0F and the weather is sunny.",
+            "passed": true,
+            "latency_ms": 3526.62620798219,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Can you convert that temperature to Celsius?",
+            "response": "The temperature in Tokyo is approximately 29.44\u00b0C.",
+            "passed": true,
+            "latency_ms": 4511.75770899863,
+            "tool_calls": 1,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "compare_two_cities": {
+        "passed": true,
+        "turns_passed": 3,
+        "turns_total": 3,
+        "latency_ms": 13992.368875973625,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather in New York?",
+            "response": "The current temperature in New York is 72\u00b0F with partly cloudy conditions.",
+            "passed": true,
+            "latency_ms": 3817.9678749875166,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Now check London.",
+            "response": "The current temperature in London is 61\u00b0F with rainy conditions.",
+            "passed": true,
+            "latency_ms": 3402.785167010734,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 3,
+            "user": "Which city is warmer and by how much?",
+            "response": "New York is warmer by approximately 6.11\u00b0F (or 3.41\u00b0C).",
+            "passed": true,
+            "latency_ms": 6771.615833975375,
+            "tool_calls": 2,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "context_retention_no_tools": {
+        "passed": true,
+        "turns_passed": 2,
+        "turns_total": 2,
+        "latency_ms": 7338.257708994206,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather in Paris?",
+            "response": "The current temperature in Paris is 68\u00b0F and it's overcast.",
+            "passed": true,
+            "latency_ms": 3554.000999982236,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Based on that weather, should I bring an umbrella?",
+            "response": "Yes, it's a good idea to bring an umbrella as the weather is overcast.",
+            "passed": true,
+            "latency_ms": 3784.25670901197,
+            "tool_calls": 1,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "three_city_itinerary": {
+        "passed": true,
+        "turns_passed": 4,
+        "turns_total": 4,
+        "latency_ms": 21676.392790977843,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "I'm planning a trip. First, what's the weather in Tokyo?",
+            "response": "The current weather in Tokyo is sunny with a temperature of 85\u00b0F.",
+            "passed": true,
+            "latency_ms": 3740.2141249913257,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "What about Sydney?",
+            "response": "The current weather in Sydney is clear with a temperature of 58\u00b0F.",
+            "passed": true,
+            "latency_ms": 3567.80424999306,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 3,
+            "user": "And Paris?",
+            "response": "The current weather in Paris is overcast with a temperature of 68\u00b0F.",
+            "passed": true,
+            "latency_ms": 4517.592207994312,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 4,
+            "user": "Rank these three cities from warmest to coldest.",
+            "response": "Based on the temperatures in Celsius, the ranking from warmest to coldest is:\n\n1. Tokyo (29.44\u00b0C)\n2. Paris (20.0\u00b0C)\n3. Sydney (14.44\u00b0C)",
+            "passed": true,
+            "latency_ms": 9850.782207999146,
+            "tool_calls": 3,
+            "validation_errors": 0
+          }
+        ]
+      }
+    }
+  },
+  "gemma4:e2b": {
+    "auto_tune": {
+      "weather_then_convert": {
+        "passed": true,
+        "turns_passed": 2,
+        "turns_total": 2,
+        "latency_ms": 24329.282082995633,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather like in Tokyo right now?",
+            "response": "The weather in Tokyo right now is 85\u00b0F and sunny.",
+            "passed": true,
+            "latency_ms": 17422.30949999066,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Can you convert that temperature to Celsius?",
+            "response": "The temperature in Tokyo is 29.44\u00b0C.",
+            "passed": true,
+            "latency_ms": 6906.972583004972,
+            "tool_calls": 1,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "compare_two_cities": {
+        "passed": true,
+        "turns_passed": 3,
+        "turns_total": 3,
+        "latency_ms": 178016.82708301814,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather in New York?",
+            "response": "The weather in New York is 72\u00b0F and partly cloudy.",
+            "passed": true,
+            "latency_ms": 106170.36291598924,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Now check London.",
+            "response": "The weather in London is 61\u00b0F and rainy.",
+            "passed": true,
+            "latency_ms": 47686.90608401084,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 3,
+            "user": "Which city is warmer and by how much?",
+            "response": "New York is warmer than London by 11 degrees Fahrenheit (72\u00b0F in New York vs. 61\u00b0F in London).",
+            "passed": true,
+            "latency_ms": 24159.558083018055,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "context_retention_no_tools": {
+        "passed": false,
+        "turns_passed": 1,
+        "turns_total": 2,
+        "latency_ms": 59826.84658400831,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather in Paris?",
+            "response": "The weather in Paris is 68\u00b0F and overcast.",
+            "passed": true,
+            "latency_ms": 47674.16387499543,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Based on that weather, should I bring an umbrella?",
+            "response": "Since the weather is currently overcast, it might be a good idea to bring an umbrella just in case there is a chance of light rain.",
+            "passed": false,
+            "latency_ms": 12152.682709012879,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "three_city_itinerary": {
+        "passed": true,
+        "turns_passed": 4,
+        "turns_total": 4,
+        "latency_ms": 29466.645581997,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "I'm planning a trip. First, what's the weather in Tokyo?",
+            "response": "The weather in Tokyo is 85\u00b0F and sunny.",
+            "passed": true,
+            "latency_ms": 10865.252666000742,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "What about Sydney?",
+            "response": "The weather in Sydney is 58\u00b0F and clear.",
+            "passed": true,
+            "latency_ms": 1704.5152499922551,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 3,
+            "user": "And Paris?",
+            "response": "The weather in Paris is 68\u00b0F and overcast.",
+            "passed": true,
+            "latency_ms": 5744.4830409949645,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 4,
+            "user": "Rank these three cities from warmest to coldest.",
+            "response": "Based on the temperatures I found:\n\n1.  **Tokyo:** 85\u00b0F (Warmest)\n2.  **Paris:** 68\u00b0F\n3.  **Sydney:** 58\u00b0F (Coldest)",
+            "passed": true,
+            "latency_ms": 11152.394625009038,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      }
+    },
+    "all_on": {
+      "weather_then_convert": {
+        "passed": true,
+        "turns_passed": 2,
+        "turns_total": 2,
+        "latency_ms": 15058.732500998303,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather like in Tokyo right now?",
+            "response": "The weather in Tokyo right now is 85\u00b0F and sunny.",
+            "passed": true,
+            "latency_ms": 8961.024084012024,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Can you convert that temperature to Celsius?",
+            "response": "The temperature of 85\u00b0F is 29.44\u00b0C.",
+            "passed": true,
+            "latency_ms": 6097.708416986279,
+            "tool_calls": 1,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "compare_two_cities": {
+        "passed": false,
+        "turns_passed": 1,
+        "turns_total": 3,
+        "latency_ms": 14889.379833010025,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather in New York?",
+            "response": "The weather in New York is 72\u00b0F and partly cloudy.",
+            "passed": true,
+            "latency_ms": 7323.891167005058,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Now check London.",
+            "response": "",
+            "passed": false,
+            "latency_ms": 1898.1724159966689,
+            "tool_calls": 0,
+            "validation_errors": 0
+          },
+          {
+            "turn": 3,
+            "user": "Which city is warmer and by how much?",
+            "response": "",
+            "passed": false,
+            "latency_ms": 5667.316250008298,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "context_retention_no_tools": {
+        "passed": true,
+        "turns_passed": 2,
+        "turns_total": 2,
+        "latency_ms": 11632.975124986842,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather in Paris?",
+            "response": "The current weather in Paris is 68\u00b0F and overcast.",
+            "passed": true,
+            "latency_ms": 6943.149250000715,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Based on that weather, should I bring an umbrella?",
+            "response": "Yes, since the weather is overcast, you should probably bring an umbrella just in case.",
+            "passed": true,
+            "latency_ms": 4689.825874986127,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "three_city_itinerary": {
+        "passed": false,
+        "turns_passed": 1,
+        "turns_total": 4,
+        "latency_ms": 16574.131292989478,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "I'm planning a trip. First, what's the weather in Tokyo?",
+            "response": "The current weather in Tokyo is 85\u00b0F and sunny.",
+            "passed": true,
+            "latency_ms": 6653.996416978771,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "What about Sydney?",
+            "response": "",
+            "passed": false,
+            "latency_ms": 2449.316167010693,
+            "tool_calls": 0,
+            "validation_errors": 0
+          },
+          {
+            "turn": 3,
+            "user": "And Paris?",
+            "response": "",
+            "passed": false,
+            "latency_ms": 2220.6429170037154,
+            "tool_calls": 0,
+            "validation_errors": 0
+          },
+          {
+            "turn": 4,
+            "user": "Rank these three cities from warmest to coldest.",
+            "response": "",
+            "passed": false,
+            "latency_ms": 5250.175791996298,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      }
+    },
+    "manual_strip": {
+      "weather_then_convert": {
+        "passed": true,
+        "turns_passed": 2,
+        "turns_total": 2,
+        "latency_ms": 15541.661250026664,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather like in Tokyo right now?",
+            "response": "The weather in Tokyo right now is 85\u00b0F and sunny.",
+            "passed": true,
+            "latency_ms": 6657.043500017608,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Can you convert that temperature to Celsius?",
+            "response": "The temperature of 85\u00b0F is equal to 29.44\u00b0C.",
+            "passed": true,
+            "latency_ms": 8884.617750009056,
+            "tool_calls": 1,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "compare_two_cities": {
+        "passed": true,
+        "turns_passed": 3,
+        "turns_total": 3,
+        "latency_ms": 20886.35079198866,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather in New York?",
+            "response": "The weather in New York is partly cloudy with a temperature of 72\u00b0F.",
+            "passed": true,
+            "latency_ms": 7190.680458006682,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Now check London.",
+            "response": "The weather in London is rainy with a temperature of 61\u00b0F.",
+            "passed": true,
+            "latency_ms": 3692.832125001587,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 3,
+            "user": "Which city is warmer and by how much?",
+            "response": "Thought: I need to compare the temperatures I previously retrieved for New York (72\u00b0F) and London (61\u00b0F) to determine which is warmer and by how much.\n\nNew York: 72\u00b0F\nLondon: 61\u00b0F\n\nCalculation: 72 - 6",
+            "passed": true,
+            "latency_ms": 10002.838208980393,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "context_retention_no_tools": {
+        "passed": false,
+        "turns_passed": 1,
+        "turns_total": 2,
+        "latency_ms": 11859.987999981968,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "What's the weather in Paris?",
+            "response": "The current weather in Paris is 68\u00b0F and overcast.",
+            "passed": true,
+            "latency_ms": 6687.384499993641,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "Based on that weather, should I bring an umbrella?",
+            "response": "Since the weather is overcast, you might want to bring an umbrella just in case there is some rain.",
+            "passed": false,
+            "latency_ms": 5172.603499988327,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      },
+      "three_city_itinerary": {
+        "passed": false,
+        "turns_passed": 2,
+        "turns_total": 4,
+        "latency_ms": 17798.306333017536,
+        "turn_log": [
+          {
+            "turn": 1,
+            "user": "I'm planning a trip. First, what's the weather in Tokyo?",
+            "response": "The current weather in Tokyo is 85\u00b0F and sunny.",
+            "passed": true,
+            "latency_ms": 6469.675000000279,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 2,
+            "user": "What about Sydney?",
+            "response": "The current weather in Sydney is 58\u00b0F and clear.",
+            "passed": true,
+            "latency_ms": 3552.8000830090605,
+            "tool_calls": 1,
+            "validation_errors": 0
+          },
+          {
+            "turn": 3,
+            "user": "And Paris?",
+            "response": "Calling weather...",
+            "passed": false,
+            "latency_ms": 2469.218250014819,
+            "tool_calls": 0,
+            "validation_errors": 0
+          },
+          {
+            "turn": 4,
+            "user": "Rank these three cities from warmest to coldest.",
+            "response": "",
+            "passed": false,
+            "latency_ms": 5306.612999993376,
+            "tool_calls": 0,
+            "validation_errors": 0
+          }
+        ]
+      }
+    }
+  }
+}

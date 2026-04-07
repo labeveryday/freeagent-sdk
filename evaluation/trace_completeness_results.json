@@ -1,0 +1,135 @@
+[
+  {
+    "name": "simple_chat",
+    "expected": [
+      "model_call_end",
+      "model_call_start",
+      "run_end",
+      "run_start"
+    ],
+    "found": [
+      "model_call_end",
+      "model_call_start",
+      "run_end",
+      "run_start"
+    ],
+    "missing": [],
+    "all_events": [
+      "run_start",
+      "model_call_start",
+      "model_call_end",
+      "run_end"
+    ],
+    "passed": true
+  },
+  {
+    "name": "tool_call",
+    "expected": [
+      "model_call_end",
+      "model_call_start",
+      "run_end",
+      "run_start",
+      "tool_call",
+      "tool_result"
+    ],
+    "found": [
+      "model_call_end",
+      "model_call_start",
+      "run_end",
+      "run_start",
+      "tool_call",
+      "tool_result"
+    ],
+    "missing": [],
+    "all_events": [
+      "run_start",
+      "model_call_start",
+      "model_call_end",
+      "tool_call",
+      "tool_result",
+      "model_call_start",
+      "model_call_end",
+      "run_end"
+    ],
+    "passed": true
+  },
+  {
+    "name": "validation_error",
+    "expected_core": [
+      "model_call_end",
+      "model_call_start",
+      "run_end",
+      "run_start"
+    ],
+    "found_core": [
+      "model_call_end",
+      "model_call_start",
+      "run_end",
+      "run_start"
+    ],
+    "missing_core": [],
+    "validation_error_fired": false,
+    "all_events": [
+      "run_start",
+      "model_call_start",
+      "model_call_end",
+      "run_end"
+    ],
+    "passed": true,
+    "note": "validation_error is best-effort \u2014 models may produce valid calls"
+  },
+  {
+    "name": "loop_trap",
+    "expected_core": [
+      "run_end",
+      "run_start"
+    ],
+    "found_core": [
+      "run_end",
+      "run_start"
+    ],
+    "missing_core": [],
+    "tool_call_count": 1,
+    "loop_or_max_event": false,
+    "all_events": [
+      "run_start",
+      "model_call_start",
+      "model_call_end",
+      "tool_call",
+      "tool_result",
+      "model_call_start",
+      "timeout",
+      "run_end"
+    ],
+    "passed": true
+  },
+  {
+    "name": "multi_turn",
+    "run1_events": [
+      "run_start",
+      "model_call_start",
+      "model_call_end",
+      "tool_call",
+      "tool_result",
+      "model_call_start",
+      "model_call_end",
+      "run_end"
+    ],
+    "run1_count": 8,
+    "run2_events": [
+      "run_start",
+      "model_call_start",
+      "model_call_end",
+      "tool_call",
+      "tool_result",
+      "model_call_start",
+      "model_call_end",
+      "run_end"
+    ],
+    "run2_count": 8,
+    "run1_has_core": true,
+    "run2_has_core": true,
+    "traces_independent": true,
+    "passed": true
+  }
+]

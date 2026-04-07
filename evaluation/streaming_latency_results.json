@@ -1,0 +1,194 @@
+{
+  "qwen3:8b": {
+    "chat_stream_ttft_ms": 12832,
+    "chat_stream_total_ms": 14234,
+    "tool_stream_ttft_ms": 5183,
+    "tool_stream_total_ms": 9968,
+    "chat_nonstream_total_ms": 13873,
+    "tool_nonstream_total_ms": 9972,
+    "raw": {
+      "chat_streaming": {
+        "ttft_ms": [
+          17339,
+          12830,
+          12832
+        ],
+        "total_ms": [
+          18734,
+          14228,
+          14234
+        ]
+      },
+      "tool_streaming": {
+        "ttft_ms": [
+          5946,
+          5183,
+          5180
+        ],
+        "total_ms": [
+          10732,
+          9968,
+          9961
+        ]
+      },
+      "chat_nonstreaming": {
+        "total_ms": [
+          13756,
+          14139,
+          13873
+        ]
+      },
+      "tool_nonstreaming": {
+        "total_ms": [
+          10727,
+          9972,
+          9952
+        ]
+      }
+    }
+  },
+  "qwen3:4b": {
+    "chat_stream_ttft_ms": 14662,
+    "chat_stream_total_ms": 15131,
+    "tool_stream_ttft_ms": 28237,
+    "tool_stream_total_ms": 29639,
+    "chat_nonstream_total_ms": 14513,
+    "tool_nonstream_total_ms": 31614,
+    "raw": {
+      "chat_streaming": {
+        "ttft_ms": [
+          27334,
+          12924,
+          14662
+        ],
+        "total_ms": [
+          27752,
+          13319,
+          15131
+        ]
+      },
+      "tool_streaming": {
+        "ttft_ms": [
+          61962,
+          28237,
+          16002
+        ],
+        "total_ms": [
+          63197,
+          29639,
+          17541
+        ]
+      },
+      "chat_nonstreaming": {
+        "total_ms": [
+          13801,
+          14513,
+          19750
+        ]
+      },
+      "tool_nonstreaming": {
+        "total_ms": [
+          44359,
+          31614,
+          29766
+        ]
+      }
+    }
+  },
+  "llama3.1:latest": {
+    "chat_stream_ttft_ms": 1493,
+    "chat_stream_total_ms": 1525,
+    "tool_stream_ttft_ms": 1793,
+    "tool_stream_total_ms": 2079,
+    "chat_nonstream_total_ms": 1397,
+    "tool_nonstream_total_ms": 2065,
+    "raw": {
+      "chat_streaming": {
+        "ttft_ms": [
+          10016,
+          1487,
+          1493
+        ],
+        "total_ms": [
+          10044,
+          1520,
+          1525
+        ]
+      },
+      "tool_streaming": {
+        "ttft_ms": [
+          1685,
+          1795,
+          1793
+        ],
+        "total_ms": [
+          2062,
+          2172,
+          2079
+        ]
+      },
+      "chat_nonstreaming": {
+        "total_ms": [
+          2047,
+          1397,
+          1386
+        ]
+      },
+      "tool_nonstreaming": {
+        "total_ms": [
+          2057,
+          2065,
+          2176
+        ]
+      }
+    }
+  },
+  "gemma4:e2b": {
+    "chat_stream_ttft_ms": 4700,
+    "chat_stream_total_ms": 5085,
+    "tool_stream_ttft_ms": 8219,
+    "tool_stream_total_ms": 11590,
+    "chat_nonstream_total_ms": 5082,
+    "tool_nonstream_total_ms": 12105,
+    "raw": {
+      "chat_streaming": {
+        "ttft_ms": [
+          10291,
+          4700,
+          4593
+        ],
+        "total_ms": [
+          10644,
+          5085,
+          4937
+        ]
+      },
+      "tool_streaming": {
+        "ttft_ms": [
+          8493,
+          5943,
+          8219
+        ],
+        "total_ms": [
+          12949,
+          9610,
+          11590
+        ]
+      },
+      "chat_nonstreaming": {
+        "total_ms": [
+          5091,
+          5070,
+          5082
+        ]
+      },
+      "tool_nonstreaming": {
+        "total_ms": [
+          12105,
+          13074,
+          9683
+        ]
+      }
+    }
+  }
+}
