@@ -14,7 +14,7 @@ from pathlib import Path
 OLLAMA_BASE_URL = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
 
 # Models to evaluate
-MODELS = ["qwen3:8b", "qwen3:4b", "llama3.1:latest"]
+MODELS = ["qwen3:8b", "qwen3:4b", "llama3.1:latest", "gemma4:e2b"]
 
 
 def check_ollama():

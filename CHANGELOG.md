@@ -69,3 +69,39 @@
 ### Phase 12: Data-Driven Fixes
 - Fixed `Memory._resolve()` to auto-append `.md` when models omit the file extension
 - 220 total tests passing (191 unit + 29 integration)
+
+### Phase 13: Final Documentation & Release Prep
+- Added Benchmarks panel to freeagent-sdk.html with full comparison data
+- Updated evaluation REPORT.md title and description to reflect FreeAgent results
+- Updated test counts (191 → 220) across HTML and footer
+- Verified all examples run end-to-end with Ollama
+- Verified `pip install -e .` works and all 191 unit tests pass
+
+### Conversation Manager & SyncBridge Fix
+- Added `freeagent/conversation.py` — pluggable multi-turn conversation strategies
+  - `SlidingWindow(max_turns=20)` — default, keeps last N turns
+  - `TokenWindow(max_tokens=4000)` — budget-based pruning for small context models
+  - `UnlimitedHistory` — no pruning, use with caution
+  - `ConversationManager` ABC for custom strategies
+  - `Session` persistence — save/restore conversations to `.freeagent/sessions/`
+- Agent defaults to `SlidingWindow(max_turns=20)` — multi-turn works out of the box
+- `conversation=None` for stateless mode (each `run()` independent, like v0.1)
+- `session="name"` parameter for automatic session persistence
+- Fixed `_SyncBridge` to use a persistent background event loop instead of `asyncio.run()`
+  - Old code created/destroyed loops on each `run()`, breaking httpx connection pool
+  - Now the loop persists for the process lifetime
+- 218 unit tests (including 27 conversation tests), 5 live integration tests
+
+### Phases 14-15: Multi-Turn Evaluation with Conversation Manager
+- New eval: `evaluation/11_freeagent_conversation.py` — 6 conversations, 15 turns, 4 models
+- First evaluation of gemma4:e2b (2B) with ReactEngine
+- FreeAgent conversation manager: 87% accuracy (qwen3:8b, qwen3:4b), up from 78% without state
+- FreeAgent beats Strands on multi-turn: 87% vs 73-80% across models
+- gemma4:e2b achieves 80% via ReactEngine — matches llama3.1 accuracy at 1/4 the size
+- Comparison report: `evaluation/CONVERSATION_REPORT.md`
+
+### Phase 16: Documentation Update
+- README: Added Conversation Manager section (strategies, persistence, clear/reset)
+- README: Added multi-turn benchmark results with conversation manager
+- README: Added gemma4:e2b to tested models table
+- CHANGELOG: Updated with conversation manager, SyncBridge fix, evaluation results

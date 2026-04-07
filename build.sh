@@ -10,7 +10,7 @@ set -e
 
 cd "$(dirname "$0")"
 
-MAX_RUNS=9
+MAX_RUNS=6
 RUN=0
 LOG_DIR="build-logs"
 mkdir -p "$LOG_DIR"

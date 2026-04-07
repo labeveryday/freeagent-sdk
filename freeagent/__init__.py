@@ -13,6 +13,7 @@ from .memory import Memory
 from .providers.ollama import OllamaProvider
 from .providers.openai_compat import OpenAICompatProvider, VLLMProvider
 from .skills import Skill
+from .conversation import ConversationManager, SlidingWindow, TokenWindow, UnlimitedHistory
 from .telemetry import Metrics
 
 __all__ = [

@@ -5,6 +5,7 @@ Framework-assisted, not model-driven. The model does what it can.
 The framework catches everything else.
 
 Telemetry is built in — agent.metrics is always available.
+Conversation history accumulates across run() calls by default.
 """
 
 from __future__ import annotations
@@ -16,6 +17,7 @@ from typing import Callable
 from ._sync import _SyncBridge
 from .config import AgentConfig
 from .context import check_context_window
+from .conversation import ConversationManager, SlidingWindow, Session
 from .circuit_breaker import CircuitBreaker, BreakerAction
 from .engines import NativeEngine, ReactEngine, EngineResult, ToolCall
 from .hooks import HookRegistry, HookContext, HookEvent
@@ -34,18 +36,20 @@ class Agent:
     A local-first AI agent with guardrails, built-in telemetry, and memory.
 
     Usage:
-        # Basic
-        agent = Agent(model="qwen3:8b", tools=[my_tool])
+        # Multi-turn by default
+        agent = Agent(model="qwen3:8b", tools=[weather])
+        agent.run("What's the weather in Tokyo?")
+        agent.run("Convert that to Celsius")  # remembers Tokyo
 
-        # With skills
-        agent = Agent(
-            model="qwen3:8b",
-            tools=[weather, calculator],
-            skills=["./my-skills"],   # directory of skill folders
-        )
+        # Custom conversation strategy
+        from freeagent.conversation import TokenWindow
+        agent = Agent(model="qwen3:4b", conversation=TokenWindow(max_tokens=3000))
 
-        response = agent.run("What's the weather?")
-        print(agent.metrics)
+        # Persistent session
+        agent = Agent(model="qwen3:8b", session="my-chat")
+
+        # No conversation (each run independent)
+        agent = Agent(model="qwen3:8b", conversation=None)
     """
 
     def __init__(
@@ -56,6 +60,8 @@ class Agent:
         config: AgentConfig = None,
         provider=None,
         skills: list = None,
+        conversation: ConversationManager | None = "default",
+        session: str | None = None,
         **kwargs,
     ):
         self.config = config or AgentConfig()
@@ -109,6 +115,19 @@ class Agent:
         # Telemetry — always on, no setup needed
         self.metrics = Metrics()
 
+        # Conversation — default is SlidingWindow(20), None disables
+        if conversation == "default":
+            self.conversation = SlidingWindow(max_turns=20)
+        else:
+            self.conversation = conversation
+
+        # Session — optional persistence
+        self._session: Session | None = None
+        if session:
+            self._session = Session(session)
+            if self.conversation and self._session.exists:
+                self._session.restore(self.conversation)
+
     # ── Hook registration ────────────────────────────────
 
     def on(self, event: str | HookEvent, callback: Callable = None):
@@ -118,9 +137,6 @@ class Agent:
         @agent.on("before_tool")
         def my_hook(ctx):
             print(ctx.tool_name)
-
-        # or
-        agent.on("before_tool", my_callback)
         """
         if callback is not None:
             self._hooks.register(event, callback)
@@ -139,6 +155,22 @@ class Agent:
         """Fire a hook event and return the context."""
         ctx = HookContext(event=event, agent=self, **kwargs)
         return self._hooks.dispatch(ctx)
+
+    # ── System Prompt ────────────────────────────────────
+
+    def _build_system_prompt(self) -> str:
+        """Assemble system prompt with skills and memory."""
+        system = self.system_prompt
+
+        skill_context = build_skill_context(self.skills)
+        if skill_context:
+            system = f"{system}\n\n{skill_context}"
+
+        mem_context = self.memory.to_system_prompt()
+        if mem_context:
+            system = f"{system}\n\n{mem_context}"
+
+        return system
 
     # ── Run ──────────────────────────────────────────────
 
@@ -161,23 +193,14 @@ class Agent:
             self.metrics.end_run(ctx.override_response, elapsed)
             return ctx.override_response
 
-        # Build messages with skills + memory context
-        system = self.system_prompt
+        # Build system prompt (skills + memory refreshed every turn)
+        system = self._build_system_prompt()
 
-        # Inject skills
-        skill_context = build_skill_context(self.skills)
-        if skill_context:
-            system = f"{system}\n\n{skill_context}"
-
-        # Inject memory
-        mem_context = self.memory.to_system_prompt()
-        if mem_context:
-            system = f"{system}\n\n{mem_context}"
-
-        messages = [
-            Message.system(system),
-            Message.user(user_input),
-        ]
+        # Build messages via conversation manager (or fresh if no manager)
+        if self.conversation:
+            messages = self.conversation.prepare(system, user_input)
+        else:
+            messages = [Message.system(system), Message.user(user_input)]
 
         # Simple chat (no tools)
         if not self.tools or self.engine is None:
@@ -186,6 +209,7 @@ class Agent:
                 messages, temperature=self.config.temperature
             )
             result = response.content
+            messages.append(Message.assistant(result))
         else:
             # Agent loop with timeout
             try:
@@ -199,6 +223,14 @@ class Agent:
                 result = self._graceful_timeout(messages)
 
         elapsed = (time.monotonic() - start) * 1000
+
+        # ── Conversation: commit messages for next turn
+        if self.conversation:
+            self.conversation.commit(messages)
+
+        # ── Session: persist if enabled
+        if self._session and self.conversation:
+            self._session.save(self.conversation)
 
         # ── Telemetry: end run
         self.metrics.end_run(result, elapsed)
@@ -237,7 +269,6 @@ class Agent:
                     temperature=self.config.temperature,
                 )
             except ConnectionError:
-                # Model fallback on connection failure
                 fallback = self._try_fallback()
                 if fallback:
                     result = await self.engine.execute(
@@ -395,7 +426,6 @@ class Agent:
                     model=fallback,
                     base_url=self.config.ollama_base_url,
                 )
-                # Re-create engine with new provider
                 if self._mode == "native":
                     self.engine = NativeEngine(self.provider)
                 elif self._mode == "react":
@@ -430,9 +460,12 @@ class Agent:
         return "[Request timed out. Try a simpler query or increase timeout.]"
 
     def __repr__(self) -> str:
+        conv = ""
+        if self.conversation:
+            conv = f", turns={self.conversation.turn_count}"
         mem = f", memory={len(self.memory)}" if len(self.memory) > 0 else ""
         return (
             f"Agent(model='{self.config.model}', "
             f"mode='{self._mode}', "
-            f"tools={[t.name for t in self.tools]}{mem})"
+            f"tools={[t.name for t in self.tools]}{conv}{mem})"
         )

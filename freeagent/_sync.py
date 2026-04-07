@@ -1,11 +1,9 @@
 """
-Sync bridge — run async code from synchronous callers safely.
+Sync bridge — run async code from synchronous callers.
 
-Handles the tricky cases:
-- No running loop → just use asyncio.run()
-- Already in an async context (Jupyter, nested calls) → use a background thread
-
-This replaces the fragile asyncio.run() / ThreadPoolExecutor pattern.
+Uses a single persistent background event loop that stays alive for
+the lifetime of the process. This prevents httpx connection pool issues
+that occur when asyncio.run() creates/destroys loops on each call.
 """
 
 from __future__ import annotations
@@ -19,8 +17,11 @@ T = TypeVar("T")
 
 class _SyncBridge:
     """
-    Run async coroutines from sync code without conflicting with
-    an existing event loop.
+    Run async coroutines from sync code on a persistent background loop.
+
+    The loop is created once and reused for all calls. This is critical
+    for httpx AsyncClient — if the loop closes between calls, the client's
+    connection pool becomes invalid.
     """
 
     _loop: asyncio.AbstractEventLoop | None = None
@@ -29,24 +30,14 @@ class _SyncBridge:
 
     @classmethod
     def run(cls, coro: Coroutine[Any, Any, T]) -> T:
-        """
-        Run an async coroutine and return its result synchronously.
-
-        If no event loop is running, uses asyncio.run() directly.
-        If an event loop is already running (e.g. Jupyter), schedules
-        the coroutine on a background thread's loop.
-        """
-        try:
-            asyncio.get_running_loop()
-            # We're inside an async context — use the background loop
-            return cls._run_in_background(coro)
-        except RuntimeError:
-            # No running loop — safe to use asyncio.run()
-            return asyncio.run(coro)
+        """Run an async coroutine and return its result synchronously."""
+        cls._ensure_loop()
+        future = asyncio.run_coroutine_threadsafe(coro, cls._loop)
+        return future.result()
 
     @classmethod
-    def _run_in_background(cls, coro: Coroutine[Any, Any, T]) -> T:
-        """Schedule on a dedicated background event loop thread."""
+    def _ensure_loop(cls):
+        """Create the background loop + thread if not already running."""
         with cls._lock:
             if cls._loop is None or cls._loop.is_closed():
                 cls._loop = asyncio.new_event_loop()
@@ -56,6 +47,3 @@ class _SyncBridge:
                     name="freeagent-sync-bridge",
                 )
                 cls._thread.start()
-
-        future = asyncio.run_coroutine_threadsafe(coro, cls._loop)
-        return future.result()
