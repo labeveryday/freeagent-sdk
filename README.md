@@ -45,7 +45,7 @@ print(agent.run("What is Python?"))
 
 ## Streaming
 
-Token-level streaming with semantic events:
+Real token-by-token streaming, even for tool-using agents:
 
 ```python
 from freeagent import Agent
@@ -228,7 +228,7 @@ Install with: `pip install freeagent-sdk[mcp]`
 
 ## Real Performance
 
-Tested against raw Ollama API and Strands Agents SDK with the same eval suite. Full data in `evaluation/`.
+Tested against raw Ollama API and Strands Agents SDK with the same eval suite (100+ cases, 4 models). Full data in `evaluation/`.
 
 ### Multi-Turn Conversations (6 conversations, 15 turns)
 
@@ -247,14 +247,34 @@ Tested against raw Ollama API and Strands Agents SDK with the same eval suite. F
 | qwen3:4b | 100% | 88% | 88% |
 | llama3.1:8b | 62% | 62% | **75% (+13%)** |
 
-### What's honest about this
+### Streaming Latency (median of 3 runs)
 
-- FreeAgent matches raw Ollama accuracy — no penalty from framework overhead
-- FreeAgent beats Strands by 7-14% on multi-turn (conversation manager)
-- Framework is 2% faster than raw Ollama (HTTP connection reuse)
-- Guardrails (fuzzy matching, type coercion) exist but rarely fire — modern models handle these natively
-- Skills help small models (+25% for qwen3:4b) but hurt the smallest (gemma4:e2b 25% default vs 50% stripped)
-- Auto-tuning fixes this: small models now get stripped defaults automatically
+| Model | Chat TTFT | Chat Total | Tool TTFT | Tool Total |
+|-------|----------|-----------|----------|-----------|
+| qwen3:8b | 12.8s | 13.9s | 5.2s | 10.0s |
+| qwen3:4b | 14.7s | 14.5s | 28.2s | 31.6s |
+| llama3.1:8b | 1.5s | 1.4s | 1.8s | 2.1s |
+| gemma4:e2b | 4.7s | 5.1s | 8.2s | 12.1s |
+
+TTFT ≈ total for chat (generation is fast once started). Tool TTFT includes tool execution round-trip.
+
+### Auto-Tune (v0.3.1)
+
+| Model | auto_tune=True | All On | Manual Strip | Delta vs All On |
+|-------|---------------|--------|-------------|----------------|
+| qwen3:8b | 91% | 91% | — | +0% |
+| qwen3:4b | 91% | 91% | — | +0% |
+| llama3.1:8b | 100% | 100% | — | +0% |
+| gemma4:e2b | **91%** | 55% | 73% | **+36%** |
+
+Auto-tune detects gemma4:e2b as a small model and strips bundled skills + memory tool. This improves accuracy from 55% → 91%.
+
+### Honest Caveats
+
+- **Guardrails rarely fire**: 0/40 real rescues in adversarial testing. Modern models handle fuzzy names and type coercion natively.
+- **Multi-turn gap to raw Ollama is noise**: 87% vs 93% — re-running failures produces passes. Non-deterministic.
+- **Skills help qwen3:4b but hurt gemma4:e2b** — fixed by auto-tune, which strips them for small models.
+- **Streaming TTFT ≈ total time** on small models: generation is fast, model thinking dominates latency.
 
 Full analysis: `evaluation/THESIS_ANALYSIS.md`
 
@@ -263,7 +283,7 @@ Full analysis: `evaluation/THESIS_ANALYSIS.md`
 | Model | Size | Mode | Reliability |
 |-------|------|------|-------------|
 | Qwen3 8B | 8.2B | Native | Very Good |
-| Qwen3 4B | 3.5B | Native | Good (best with skills) |
+| Qwen3 4B | 4.0B | Native | Good (best with skills) |
 | Llama 3.1 8B | 8.0B | Native | Good |
 | Gemma4 E2B | 5.1B | Native | Good (auto-tuned) |
 
