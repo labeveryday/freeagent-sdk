@@ -26,12 +26,12 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, AsyncIterator
 
 import httpx
 
 from ..messages import Message
-from . import ProviderResponse
+from . import ProviderResponse, StreamChunk
 
 
 class OpenAICompatProvider:
@@ -254,6 +254,70 @@ class OpenAICompatProvider:
             data = await self._post("/v1/chat/completions", payload)
             choice = data.get("choices", [{}])[0]
             return choice.get("message", {}).get("content", "{}")
+
+    async def chat_stream(self, messages: list[Message], temperature: float = 0.1) -> AsyncIterator[StreamChunk]:
+        """Stream chat response via SSE."""
+        payload = {
+            "model": self.model,
+            "messages": self._to_openai_messages(messages),
+            "temperature": temperature,
+            "stream": True,
+        }
+        async for chunk in self._stream_sse("/v1/chat/completions", payload):
+            yield chunk
+
+    async def chat_stream_with_tools(self, messages: list[Message], tools: list[dict], temperature: float = 0.1) -> AsyncIterator[StreamChunk]:
+        """Stream chat response with tools via SSE."""
+        payload = {
+            "model": self.model,
+            "messages": self._to_openai_messages(messages),
+            "tools": self._to_openai_tools(tools),
+            "temperature": temperature,
+            "stream": True,
+        }
+        async for chunk in self._stream_sse("/v1/chat/completions", payload):
+            yield chunk
+
+    async def _stream_sse(self, path: str, payload: dict) -> AsyncIterator[StreamChunk]:
+        """POST with SSE streaming, parse data: lines."""
+        client = self._get_client()
+        try:
+            async with client.stream("POST", path, json=payload, headers={"Content-Type": "application/json"}) as resp:
+                resp.raise_for_status()
+                async for line in resp.aiter_lines():
+                    line = line.strip()
+                    if not line or not line.startswith("data: "):
+                        continue
+                    data_str = line[6:]  # strip "data: "
+                    if data_str == "[DONE]":
+                        yield StreamChunk(done=True)
+                        return
+                    try:
+                        data = json.loads(data_str)
+                    except json.JSONDecodeError:
+                        continue
+                    choice = data.get("choices", [{}])[0]
+                    delta = choice.get("delta", {})
+                    content = self._clean_content(delta.get("content", "") or "")
+
+                    # Parse streaming tool calls
+                    tool_calls = []
+                    if delta.get("tool_calls"):
+                        tool_calls = self._parse_tool_calls(delta["tool_calls"])
+
+                    finish = choice.get("finish_reason")
+                    yield StreamChunk(
+                        content=content,
+                        tool_calls=tool_calls,
+                        done=finish is not None,
+                    )
+        except httpx.HTTPStatusError as e:
+            body = e.response.text
+            raise ConnectionError(f"OpenAI-compat API {e.response.status_code}: {body}") from e
+        except httpx.ConnectError as e:
+            raise ConnectionError(
+                f"Cannot connect to {self.base_url}. Is the server running? ({e})"
+            ) from e
 
     async def close(self):
         if self._client and not self._client.is_closed:

@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.0 (2026-04-07)
+
+### Phase 20: Streaming Support
+- Added `freeagent/events.py` with semantic event types: `RunStartEvent`, `TokenEvent`, `ToolCallEvent`, `ToolResultEvent`, `ValidationErrorEvent`, `RetryEvent`, `IterationEvent`, `RunCompleteEvent`
+- Added `StreamChunk` dataclass and `chat_stream`/`chat_stream_with_tools` to Provider protocol
+- Implemented streaming in `OllamaProvider` (JSONL parsing) and `OpenAICompatProvider` (SSE parsing)
+- Added `Agent.arun_stream()` — async generator yielding `RunEvent`s
+- Added `Agent.run_stream()` — sync wrapper using `SyncBridge` queue
+- Refactored `Agent.arun()` to internally consume `arun_stream()` (backward compatible)
+- All event types exported from `freeagent` and `freeagent.events`
+- 19 new unit tests, live integration tests for streaming
+
 ## 0.2.0 (2026-04-06)
 
 ### Phase 1: Package Restructure & httpx Migration

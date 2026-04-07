@@ -15,6 +15,10 @@ from .providers.openai_compat import OpenAICompatProvider, VLLMProvider
 from .skills import Skill
 from .conversation import ConversationManager, SlidingWindow, TokenWindow, UnlimitedHistory
 from .telemetry import Metrics
+from .events import (
+    RunStartEvent, TokenEvent, ToolCallEvent, ToolResultEvent,
+    ValidationErrorEvent, RetryEvent, IterationEvent, RunCompleteEvent, RunEvent,
+)
 
 __all__ = [
     "Agent",
@@ -32,6 +36,15 @@ __all__ = [
     "VLLMProvider",
     "Skill",
     "Metrics",
+    "RunStartEvent",
+    "TokenEvent",
+    "ToolCallEvent",
+    "ToolResultEvent",
+    "ValidationErrorEvent",
+    "RetryEvent",
+    "IterationEvent",
+    "RunCompleteEvent",
+    "RunEvent",
 ]
 
 # Conditional MCP export (only if mcp package is installed)

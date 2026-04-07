@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import asyncio
 import time
-from typing import Callable
+from typing import AsyncIterator, Callable, Iterator
 
 from ._sync import _SyncBridge
 from .config import AgentConfig
@@ -27,6 +27,11 @@ from .providers.ollama import OllamaProvider
 from .sanitize import sanitize_tool_output, truncate_tool_output
 from .skills import load_skills, build_skill_context, BUNDLED_SKILLS_DIR
 from .telemetry import Metrics
+from .events import (
+    RunStartEvent, TokenEvent, ToolCallEvent, ToolResultEvent,
+    ValidationErrorEvent, RetryEvent, IterationEvent, RunCompleteEvent, RunEvent,
+)
+from .providers import StreamChunk
 from .tool import Tool, ToolResult
 from .validator import Validator, ValidationOk, ValidationError
 
@@ -179,19 +184,60 @@ class Agent:
         return _SyncBridge.run(self.arun(user_input))
 
     async def arun(self, user_input: str) -> str:
-        """Run the agent asynchronously."""
+        """Run the agent asynchronously. Internally consumes arun_stream."""
+        result = ""
+        async for event in self.arun_stream(user_input):
+            if isinstance(event, TokenEvent):
+                result += event.text
+            elif isinstance(event, RunCompleteEvent):
+                result = event.response
+        return result
+
+    def run_stream(self, user_input: str) -> Iterator[RunEvent]:
+        """Stream events synchronously. Uses SyncBridge to convert async iterator."""
+        _SyncBridge._ensure_loop()
+        loop = _SyncBridge._loop
+        queue = asyncio.Queue()
+        _SENTINEL = object()
+
+        async def _producer():
+            try:
+                async for event in self.arun_stream(user_input):
+                    await queue.put(event)
+            finally:
+                await queue.put(_SENTINEL)
+
+        future = asyncio.run_coroutine_threadsafe(_producer(), loop)
+
+        while True:
+            item = asyncio.run_coroutine_threadsafe(queue.get(), loop).result()
+            if item is _SENTINEL:
+                break
+            yield item
+
+        # Propagate any exception from the producer
+        future.result()
+
+    async def arun_stream(self, user_input: str) -> AsyncIterator[RunEvent]:
+        """Run the agent asynchronously, yielding semantic events."""
         start = time.monotonic()
         self.breaker.reset()
 
         # ── Telemetry: start run
         self.metrics.start_run(user_input, self.config.model, self._mode)
 
+        yield RunStartEvent(model=self.config.model, mode=self._mode)
+
         # Fire before_run hook
         ctx = self._fire(HookEvent.BEFORE_RUN, user_input=user_input)
         if ctx.override_response is not None:
             elapsed = (time.monotonic() - start) * 1000
             self.metrics.end_run(ctx.override_response, elapsed)
-            return ctx.override_response
+            yield RunCompleteEvent(
+                response=ctx.override_response, elapsed_ms=elapsed,
+                metrics={"iterations": 0, "tool_calls": 0},
+            )
+            return
 
         # Build system prompt (skills + memory refreshed every turn)
         system = self._build_system_prompt()
@@ -205,19 +251,33 @@ class Agent:
         # Simple chat (no tools)
         if not self.tools or self.engine is None:
             self.metrics.record_model_call(0)
-            response = await self.provider.chat(
-                messages, temperature=self.config.temperature
-            )
-            result = response.content
+            result = ""
+            if hasattr(self.provider, 'chat_stream'):
+                async for chunk in self.provider.chat_stream(
+                    messages, temperature=self.config.temperature
+                ):
+                    if chunk.content:
+                        result += chunk.content
+                        yield TokenEvent(text=chunk.content, iteration=0)
+            else:
+                response = await self.provider.chat(
+                    messages, temperature=self.config.temperature
+                )
+                result = response.content
+                yield TokenEvent(text=result, iteration=0)
             messages.append(Message.assistant(result))
         else:
             # Agent loop with timeout
             try:
-                result = await asyncio.wait_for(
-                    self._agent_loop(messages),
-                    timeout=self.config.timeout_seconds,
-                )
-            except asyncio.TimeoutError:
+                result = ""
+                async with asyncio.timeout(self.config.timeout_seconds):
+                    async for event in self._agent_loop_stream(messages):
+                        if isinstance(event, TokenEvent):
+                            result += event.text
+                        elif isinstance(event, RunCompleteEvent):
+                            result = event.response
+                        yield event
+            except (asyncio.TimeoutError, TimeoutError):
                 self.metrics.record_timeout()
                 self._fire(HookEvent.ON_TIMEOUT, user_input=user_input)
                 result = self._graceful_timeout(messages)
@@ -245,13 +305,34 @@ class Agent:
         if ctx.override_response is not None:
             result = ctx.override_response
 
-        return result
+        last = self.metrics.last_run
+        yield RunCompleteEvent(
+            response=result,
+            elapsed_ms=elapsed,
+            metrics={
+                "iterations": last.iterations if last else 0,
+                "tool_calls": last.tool_call_count if last else 0,
+                "model_calls": last.model_calls if last else 0,
+            },
+        )
 
     async def _agent_loop(self, messages: list[Message]) -> str:
-        """The core reason → act → observe loop."""
+        """The core reason -> act -> observe loop. Non-streaming."""
+        result = ""
+        async for event in self._agent_loop_stream(messages):
+            if isinstance(event, TokenEvent):
+                result += event.text
+            elif isinstance(event, RunCompleteEvent):
+                result = event.response
+        return result
+
+    async def _agent_loop_stream(self, messages: list[Message]) -> AsyncIterator[RunEvent]:
+        """The core reason -> act -> observe loop, yielding events."""
         retries_remaining = self.config.max_retries
 
         for iteration in range(self.config.max_iterations):
+            yield IterationEvent(iteration=iteration)
+
             # ── Context window check: prune if over threshold
             messages = check_context_window(messages, self.config)
 
@@ -289,7 +370,10 @@ class Agent:
             # ── Text response (final answer) ──
             if not result.is_tool_call:
                 messages.append(Message.assistant(result.content))
-                return result.content
+                # Yield the final text as tokens (single chunk from non-streaming engine)
+                if result.content:
+                    yield TokenEvent(text=result.content, iteration=iteration)
+                return
 
             # ── Tool call(s) — handle single or parallel ──
             calls_to_execute = result.tool_calls or [
@@ -304,6 +388,9 @@ class Agent:
 
                 if isinstance(validation, ValidationError):
                     self.metrics.record_validation_error(tc.name)
+                    yield ValidationErrorEvent(
+                        tool_name=tc.name, errors=validation.errors,
+                    )
                     self._fire(
                         HookEvent.ON_VALIDATION_ERROR,
                         tool_name=tc.name, args=tc.args,
@@ -314,12 +401,12 @@ class Agent:
                         tc.name, validation.errors, validation.schema,
                     ))
                     retries_remaining -= 1
-                    self.metrics.record_retry(
-                        tc.name, self.config.max_retries - retries_remaining,
-                    )
+                    retry_count = self.config.max_retries - retries_remaining
+                    self.metrics.record_retry(tc.name, retry_count)
+                    yield RetryEvent(tool_name=tc.name, retry_count=retry_count)
                     self._fire(
                         HookEvent.ON_RETRY, tool_name=tc.name,
-                        retry_count=self.config.max_retries - retries_remaining,
+                        retry_count=retry_count,
                     )
                     had_error = True
                 else:
@@ -349,10 +436,16 @@ class Agent:
                 if breaker_result.action == BreakerAction.MAX_ITERATIONS:
                     self.metrics.record_max_iterations(iteration)
                     self._fire(HookEvent.ON_MAX_ITER, iteration=iteration)
-                    return self._partial_answer(messages)
+                    partial = self._partial_answer(messages)
+                    yield TokenEvent(text=partial, iteration=iteration)
+                    return
 
             if skip_loop:
                 continue
+
+            # Emit tool call events
+            for tc, _ in validated:
+                yield ToolCallEvent(name=tc.name, args=tc.args)
 
             # Execute tools (concurrently if multiple)
             async def _exec_one(tc: ToolCall, validation: ValidationOk):
@@ -389,6 +482,24 @@ class Agent:
                     *[_exec_one(tc, v) for tc, v in validated]
                 )
 
+            # Emit tool result events
+            for tc, tool_result in results:
+                if tool_result is None:
+                    continue
+                duration = 0.0
+                # Get duration from the last matching tool call record
+                if self.metrics._current:
+                    for tcr in reversed(self.metrics._current.tool_calls):
+                        if tcr.name == tc.name:
+                            duration = tcr.duration_ms
+                            break
+                yield ToolResultEvent(
+                    name=tc.name,
+                    result=tool_result.to_message()[:200],
+                    success=tool_result.success,
+                    duration_ms=duration,
+                )
+
             # Build assistant message with all tool calls
             all_tool_calls = [{
                 "function": {"name": tc.name, "arguments": tc.args}
@@ -413,7 +524,8 @@ class Agent:
 
             retries_remaining = self.config.max_retries
 
-        return self._partial_answer(messages)
+        partial = self._partial_answer(messages)
+        yield TokenEvent(text=partial, iteration=self.config.max_iterations - 1)
 
     # ── Model fallback ────────────────────────────────────
 
