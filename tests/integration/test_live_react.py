@@ -31,12 +31,12 @@ class TestLiveReactQwen8b:
 
     def test_react_mode_selected(self):
         config = _make_react_config(MODELS["qwen3_8b"])
-        agent = Agent(model=MODELS["qwen3_8b"], tools=[calculator], config=config)
+        agent = Agent(model=MODELS["qwen3_8b"], tools=[calculator], config=config, auto_tune=False)
         assert agent._mode == "react"
 
     def test_calculator_via_react(self):
         config = _make_react_config(MODELS["qwen3_8b"])
-        agent = Agent(model=MODELS["qwen3_8b"], tools=[calculator], config=config)
+        agent = Agent(model=MODELS["qwen3_8b"], tools=[calculator], config=config, auto_tune=False)
         response = agent.run("What is 6 * 7? Use the calculator tool.")
         assert response is not None
         assert isinstance(response, str)
@@ -50,7 +50,7 @@ class TestLiveReactQwen8b:
 
     def test_system_info_via_react(self):
         config = _make_react_config(MODELS["qwen3_8b"])
-        agent = Agent(model=MODELS["qwen3_8b"], tools=[system_info], config=config)
+        agent = Agent(model=MODELS["qwen3_8b"], tools=[system_info], config=config, auto_tune=False)
         response = agent.run("What OS am I running? Use the system_info tool with check='os'.")
         assert response is not None
         assert isinstance(response, str)
@@ -63,7 +63,7 @@ class TestLiveReactQwen4b:
 
     def test_calculator_via_react(self):
         config = _make_react_config(MODELS["qwen3_4b"])
-        agent = Agent(model=MODELS["qwen3_4b"], tools=[calculator], config=config)
+        agent = Agent(model=MODELS["qwen3_4b"], tools=[calculator], config=config, auto_tune=False)
         response = agent.run(
             "What is 10 + 5? Use the calculator tool. "
             "Format: Thought, Action, Action Input."
@@ -85,7 +85,7 @@ class TestLiveReactLlama:
 
     def test_calculator_via_react(self):
         config = _make_react_config(MODELS["llama31"])
-        agent = Agent(model=MODELS["llama31"], tools=[calculator], config=config)
+        agent = Agent(model=MODELS["llama31"], tools=[calculator], config=config, auto_tune=False)
         response = agent.run("What is 9 * 9? Use the calculator tool.")
         assert response is not None
         assert isinstance(response, str)
