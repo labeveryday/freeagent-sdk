@@ -30,6 +30,14 @@
 - `Agent.last_run` property and `Agent.trace()` shortcut
 - 12 new unit tests
 
+### Phase 23: CLI
+- New `freeagent` CLI: `ask`, `chat`, `models`, `version`, `trace` commands
+- `freeagent ask qwen3:8b "hello"` — one-shot with streaming
+- `freeagent chat qwen3:8b` — interactive REPL with conversation, slash commands
+- `freeagent models` — list available Ollama models
+- CLI entry point via `[project.scripts]` in pyproject.toml
+- 9 new unit tests
+
 ## 0.2.0 (2026-04-06)
 
 ### Phase 1: Package Restructure & httpx Migration

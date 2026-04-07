@@ -39,6 +39,9 @@ otel = [
     "opentelemetry-exporter-otlp>=1.20.0",
 ]
 
+[project.scripts]
+freeagent = "freeagent.cli:main"
+
 [project.urls]
 Homepage = "https://github.com/freeagent-sdk/freeagent"
 Documentation = "https://freeagent-sdk.dev"
