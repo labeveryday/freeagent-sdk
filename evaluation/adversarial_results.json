@@ -1,0 +1,1099 @@
+{
+  "summary": {
+    "total": 40,
+    "both_pass": 36,
+    "rescues": 1,
+    "real_rescues": 0,
+    "regressions": 1,
+    "both_fail": 2
+  },
+  "rescue_log": [
+    {
+      "case": "fuzzy_get_weather",
+      "target": "fuzzy_match",
+      "model": "qwen3:8b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather in Tokyo is 85\u00b0F and sunny. Don't forget sunscreen! \ud83c\udf1e",
+      "fa_response": "The current weather in Tokyo is **85\u00b0F** and **sunny**. A great day to be outdoors! \ud83c\udf1e",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 14229.852626012871,
+      "fa_latency_ms": 12507.119167014025
+    },
+    {
+      "case": "fuzzy_check_weather",
+      "target": "fuzzy_match",
+      "model": "qwen3:8b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather in London is rainy with a temperature of 61\u00b0F. You might want to carry an umbrella if you're heading out! \ud83c\udf02",
+      "fa_response": "The current weather in London is 61\u00b0F with rainy conditions.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 13957.526291982504,
+      "fa_latency_ms": 11971.42933300347
+    },
+    {
+      "case": "fuzzy_weather_lookup",
+      "target": "fuzzy_match",
+      "model": "qwen3:8b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather in Paris is **68\u00b0F** with **overcast** conditions. \ud83c\udf24\ufe0f",
+      "fa_response": "The current weather in Paris is overcast with a temperature of 68\u00b0F.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 9028.241291991435,
+      "fa_latency_ms": 10273.470124986488
+    },
+    {
+      "case": "missing_city_field",
+      "target": "validation_retry",
+      "model": "qwen3:8b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather in Tokyo is **85\u00b0F** with **sunny** conditions. This reflects typical weather patterns for the region, especially during spring or early summer. Let me know if you need further det",
+      "fa_response": "The current weather in Tokyo, Japan is 85\u00b0F with sunny conditions.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 16777.423958003055,
+      "fa_latency_ms": 13592.603791999863
+    },
+    {
+      "case": "wrong_arg_name",
+      "target": "validation_retry",
+      "model": "qwen3:8b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather in New York is partly cloudy with a temperature of 72\u00b0F. It looks like a pleasant day!",
+      "fa_response": "The current weather in New York is partly cloudy with a temperature of 72\u00b0F.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 8898.940043000039,
+      "fa_latency_ms": 11767.677000025287
+    },
+    {
+      "case": "huge_tool_output",
+      "target": "truncation",
+      "model": "qwen3:8b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather in London is rainy, with a temperature of 61\u00b0F. \ud83c\udf27\ufe0f Let me know if you need more details!",
+      "fa_response": "The current weather in London is rainy with a temperature of 61\u00b0F.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 14164.187916001538,
+      "fa_latency_ms": 12890.49733398133
+    },
+    {
+      "case": "loop_trap",
+      "target": "circuit_breaker",
+      "model": "qwen3:8b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather in NowhereCity is 70\u00b0F with an unknown condition.",
+      "fa_response": "The weather in NowhereCity is 70\u00b0F with an unknown condition.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 2,
+        "tools_used": [
+          "weather",
+          "memory"
+        ],
+        "iterations": 3
+      },
+      "raw_latency_ms": 23781.9970829878,
+      "fa_latency_ms": 33585.645583982114
+    },
+    {
+      "case": "type_coercion_temp",
+      "target": "type_coercion",
+      "model": "qwen3:8b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The converted value of 85 degrees Fahrenheit to Celsius is **29.44\u00b0C**.",
+      "fa_response": "85\u00b0F is equivalent to **29.44\u00b0C**.  \n\nThe conversion formula is:  \n\u00b0C = (\u00b0F - 32) \u00d7 5/9  \n\nLet me know if you need further assistance!",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": true,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 4,
+        "tools_used": [
+          "unit_converter",
+          "unit_converter",
+          "unit_converter",
+          "unit_converter"
+        ],
+        "iterations": 6
+      },
+      "raw_latency_ms": 55472.8119999927,
+      "fa_latency_ms": 69154.58741600742
+    },
+    {
+      "case": "precision_calc",
+      "target": "validation_retry",
+      "model": "qwen3:8b",
+      "raw_pass": false,
+      "fa_pass": false,
+      "outcome": "both_fail",
+      "real_rescue": false,
+      "raw_response": "The exact result of multiplying 347 by 29 is **10,063**. \n\n**Calculation:**  \n347 \u00d7 29 = 10,063",
+      "fa_response": "The product of 347 and 29 is **10,063**.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "calculator"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 21743.440458987607,
+      "fa_latency_ms": 13818.328125023982
+    },
+    {
+      "case": "hallucinate_tool",
+      "target": "fuzzy_match",
+      "model": "qwen3:8b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current temperature in Tokyo is **85\u00b0F** with sunny conditions. \u2600\ufe0f Let me know if you need more details!",
+      "fa_response": "The current temperature in Tokyo is 85\u00b0F with sunny conditions.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 10375.161583011504,
+      "fa_latency_ms": 11049.716167006409
+    },
+    {
+      "case": "fuzzy_get_weather",
+      "target": "fuzzy_match",
+      "model": "qwen3:4b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather in Tokyo is **85\u00b0F** with **sunny** conditions. \u2600\ufe0f",
+      "fa_response": "Tokyo is currently sunny with a temperature of 85\u00b0F.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 15812.287167005707,
+      "fa_latency_ms": 11434.566875017481
+    },
+    {
+      "case": "fuzzy_check_weather",
+      "target": "fuzzy_match",
+      "model": "qwen3:4b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather in London is **rainy** with a temperature of **61\u00b0F**. Let me know if you'd like further details! \ud83c\udf27\ufe0f",
+      "fa_response": "London is currently rainy with a temperature of 61\u00b0F.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 15963.924832991324,
+      "fa_latency_ms": 11514.823500008788
+    },
+    {
+      "case": "fuzzy_weather_lookup",
+      "target": "fuzzy_match",
+      "model": "qwen3:4b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather in Paris is **68\u00b0F** with **overcast** conditions.",
+      "fa_response": "The current weather in Paris is overcast with a temperature of 68\u00b0F.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 13692.430751019856,
+      "fa_latency_ms": 16623.838458996033
+    },
+    {
+      "case": "missing_city_field",
+      "target": "validation_retry",
+      "model": "qwen3:4b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather in Tokyo is sunny with a temperature of 85\u00b0F.",
+      "fa_response": "The current weather in Tokyo is 85\u00b0F and sunny.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 13969.190042000264,
+      "fa_latency_ms": 18176.302458014106
+    },
+    {
+      "case": "wrong_arg_name",
+      "target": "validation_retry",
+      "model": "qwen3:4b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather in New York is **partly cloudy** with a temperature of **72\u00b0F**.",
+      "fa_response": "New York is currently partly cloudy with a temperature of 72\u00b0F.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 12297.166333999485,
+      "fa_latency_ms": 12992.680708004627
+    },
+    {
+      "case": "huge_tool_output",
+      "target": "truncation",
+      "model": "qwen3:4b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather in London is rainy with a temperature of **61\u00b0F**.",
+      "fa_response": "The current temperature in London is 61\u00b0F with rainy conditions.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 10244.419041991932,
+      "fa_latency_ms": 17647.614832996624
+    },
+    {
+      "case": "loop_trap",
+      "target": "circuit_breaker",
+      "model": "qwen3:4b",
+      "raw_pass": false,
+      "fa_pass": true,
+      "outcome": "RESCUE",
+      "real_rescue": false,
+      "raw_response": "",
+      "fa_response": "NowhereCity weather: 70\u00b0F (condition unknown)",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 87487.1959160082,
+      "fa_latency_ms": 40074.467041995376
+    },
+    {
+      "case": "type_coercion_temp",
+      "target": "type_coercion",
+      "model": "qwen3:4b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The conversion of 85 degrees Fahrenheit to Celsius is **29.44\u00b0C**. \n\nThis result was calculated using the standard formula:  \n$$\n\u00b0C = \\frac{(\u00b0F - 32) \\times 5}{9}\n$$  \nPlugging in 85\u00b0F:  \n$$\n\u00b0C = \\fra",
+      "fa_response": "The conversion of 85\u00b0F to Celsius is **29.44\u00b0C**.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 2,
+        "tools_used": [
+          "unit_converter",
+          "unit_converter"
+        ],
+        "iterations": 3
+      },
+      "raw_latency_ms": 66328.75158300158,
+      "fa_latency_ms": 78449.44379199296
+    },
+    {
+      "case": "precision_calc",
+      "target": "validation_retry",
+      "model": "qwen3:4b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The exact result of 347 multiplied by 29 is **10063**.",
+      "fa_response": "The result of 347 multiplied by 29 is **10063**.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "calculator"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 17120.99091600976,
+      "fa_latency_ms": 20298.77037499682
+    },
+    {
+      "case": "hallucinate_tool",
+      "target": "fuzzy_match",
+      "model": "qwen3:4b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current temperature in Tokyo is **85\u00b0F** with sunny weather.",
+      "fa_response": "The current temperature in Tokyo is 85\u00b0F.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 9734.389832010493,
+      "fa_latency_ms": 19787.551375018666
+    },
+    {
+      "case": "fuzzy_get_weather",
+      "target": "fuzzy_match",
+      "model": "llama3.1:latest",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather in Tokyo is sunny with a temperature of 85\u00b0F.",
+      "fa_response": "The current weather in Tokyo is sunny with a temperature of 85\u00b0F.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 8705.555166961858,
+      "fa_latency_ms": 3127.9813750006724
+    },
+    {
+      "case": "fuzzy_check_weather",
+      "target": "fuzzy_match",
+      "model": "llama3.1:latest",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather in London is rainy with a temperature of 61\u00b0F.",
+      "fa_response": "The current weather in London is rainy with a temperature of 61\u00b0F.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 1955.7737499999348,
+      "fa_latency_ms": 2841.337582998676
+    },
+    {
+      "case": "fuzzy_weather_lookup",
+      "target": "fuzzy_match",
+      "model": "llama3.1:latest",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current temperature in Paris is 68\u00b0F and the conditions are overcast.",
+      "fa_response": "The current temperature in Paris is 68\u00b0F and the conditions are overcast.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 1960.4807920113672,
+      "fa_latency_ms": 2867.604582977947
+    },
+    {
+      "case": "missing_city_field",
+      "target": "validation_retry",
+      "model": "llama3.1:latest",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather for Tokyo is sunny with a temperature of 85\u00b0F.",
+      "fa_response": "The current weather in Tokyo is sunny with a temperature of 85\u00b0F.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 2207.4934160045814,
+      "fa_latency_ms": 2988.8400829804596
+    },
+    {
+      "case": "wrong_arg_name",
+      "target": "validation_retry",
+      "model": "llama3.1:latest",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current temperature in New York is 72\u00b0F and the weather condition is partly cloudy.",
+      "fa_response": "The current temperature in New York is 72\u00b0F and the weather condition is partly cloudy.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 2427.8162920090836,
+      "fa_latency_ms": 3077.0638750109356
+    },
+    {
+      "case": "huge_tool_output",
+      "target": "truncation",
+      "model": "llama3.1:latest",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current temperature in London is 61\u00b0F (15\u00b0C) and it's rainy.",
+      "fa_response": "The current temperature in London is 61\u00b0F, and it's rainy.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 4455.061042011948,
+      "fa_latency_ms": 3765.2894589991774
+    },
+    {
+      "case": "loop_trap",
+      "target": "circuit_breaker",
+      "model": "llama3.1:latest",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather in NowhereCity is a temperature of 70\u00b0F with an unknown condition.",
+      "fa_response": "The current temperature in NowhereCity is 70\u00b0F with an unknown condition.",
+      "raw_errors": [
+        "type_error:weather_fn() got an unexpected keyword argument 'function'"
+      ],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 4415.901082975324,
+      "fa_latency_ms": 3551.9153340137564
+    },
+    {
+      "case": "type_coercion_temp",
+      "target": "type_coercion",
+      "model": "llama3.1:latest",
+      "raw_pass": true,
+      "fa_pass": false,
+      "outcome": "REGRESSION",
+      "real_rescue": false,
+      "raw_response": "I'm unable to convert 85 degrees Fahrenheit to Celsius using the unit_converter tool. The tool does not support this specific conversion.\n\nHowever, I can provide you with a manual calculation:\n\nTo con",
+      "fa_response": "To convert 85 degrees Fahrenheit to Celsius, we can use the formula:\n\n\u00b0C = (\u00b0F - 32) \u00d7 5/9\n\nPlugging in the value of 85 for \u00b0F, we get:\n\n\u00b0C = (85 - 32) \u00d7 5/9\n= 53.89\u00b0C\n\nSo, 85 degrees Fahrenheit is eq",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "unit_converter"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 5532.923999999184,
+      "fa_latency_ms": 5767.904458014527
+    },
+    {
+      "case": "precision_calc",
+      "target": "validation_retry",
+      "model": "llama3.1:latest",
+      "raw_pass": false,
+      "fa_pass": false,
+      "outcome": "both_fail",
+      "real_rescue": false,
+      "raw_response": "{\"name\": \"Evaluate\", \"parameters\": {\"expression\": \"347 * 29\"}}",
+      "fa_response": "The result of multiplying 347 by 29 is 10,063.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "calculator"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 1228.7388749828096,
+      "fa_latency_ms": 3053.8685000210535
+    },
+    {
+      "case": "hallucinate_tool",
+      "target": "fuzzy_match",
+      "model": "llama3.1:latest",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current temperature in Tokyo is 85\u00b0F (29\u00b0C) and the weather condition is sunny.",
+      "fa_response": "The current temperature in Tokyo is 85\u00b0F with sunny conditions.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 2321.3501250138506,
+      "fa_latency_ms": 2923.117583995918
+    },
+    {
+      "case": "fuzzy_get_weather",
+      "target": "fuzzy_match",
+      "model": "gemma4:e2b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The weather in Tokyo is 85\u00b0F and sunny.",
+      "fa_response": "The current weather in Tokyo is 85\u00b0F and sunny.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 10656.542291020742,
+      "fa_latency_ms": 3969.949666992761
+    },
+    {
+      "case": "fuzzy_check_weather",
+      "target": "fuzzy_match",
+      "model": "gemma4:e2b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather in London is 61\u00b0F and rainy.",
+      "fa_response": "The current weather in London is 61\u00b0F and rainy.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 3915.662917017471,
+      "fa_latency_ms": 3776.1801249871496
+    },
+    {
+      "case": "fuzzy_weather_lookup",
+      "target": "fuzzy_match",
+      "model": "gemma4:e2b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather in Paris is 68\u00b0F and overcast.",
+      "fa_response": "The current weather in Paris is 68\u00b0F and overcast.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 4417.097875004401,
+      "fa_latency_ms": 5403.999625006691
+    },
+    {
+      "case": "missing_city_field",
+      "target": "validation_retry",
+      "model": "gemma4:e2b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather in Tokyo, the most popular city in Japan, is 85\u00b0F and sunny.",
+      "fa_response": "The current weather in Tokyo is 85\u00b0F and sunny.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 8070.177751011215,
+      "fa_latency_ms": 6511.466291995021
+    },
+    {
+      "case": "wrong_arg_name",
+      "target": "validation_retry",
+      "model": "gemma4:e2b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The current weather in New York is 72\u00b0F and partly cloudy.",
+      "fa_response": "The current weather in New York is 72\u00b0F and partly cloudy.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 5232.645292009693,
+      "fa_latency_ms": 4451.101250015199
+    },
+    {
+      "case": "huge_tool_output",
+      "target": "truncation",
+      "model": "gemma4:e2b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The weather in London is 61\u00b0F and it is rainy.",
+      "fa_response": "The temperature in London is 61\u00b0F and the condition is rainy.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 5478.169124980923,
+      "fa_latency_ms": 5034.027750021778
+    },
+    {
+      "case": "loop_trap",
+      "target": "circuit_breaker",
+      "model": "gemma4:e2b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The weather in NowhereCity is 70\u00b0F with an unknown condition.",
+      "fa_response": "The current weather in NowhereCity is 70\u00b0F and the condition is unknown.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 6659.288251015823,
+      "fa_latency_ms": 7165.2457079908345
+    },
+    {
+      "case": "type_coercion_temp",
+      "target": "type_coercion",
+      "model": "gemma4:e2b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "85 degrees Fahrenheit is equal to approximately 29.44 degrees Celsius.",
+      "fa_response": "Eighty-five degrees Fahrenheit is approximately 29.44 degrees Celsius.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "unit_converter"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 9050.846541009378,
+      "fa_latency_ms": 11563.98037498002
+    },
+    {
+      "case": "precision_calc",
+      "target": "validation_retry",
+      "model": "gemma4:e2b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "347 multiplied by 29 is 10063.",
+      "fa_response": "The exact result of 347 multiplied by 29 is 10063.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "calculator"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 6203.5900830233,
+      "fa_latency_ms": 4763.710791012272
+    },
+    {
+      "case": "hallucinate_tool",
+      "target": "fuzzy_match",
+      "model": "gemma4:e2b",
+      "raw_pass": true,
+      "fa_pass": true,
+      "outcome": "both_pass",
+      "real_rescue": false,
+      "raw_response": "The temperature in Tokyo is 85\u00b0F and the weather condition is sunny.",
+      "fa_response": "The temperature in Tokyo is 85\u00b0F and the condition is sunny.",
+      "raw_errors": [],
+      "fa_guardrails": {
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "max_iter_hit": false,
+        "timed_out": false,
+        "fallback_model": "",
+        "tool_calls": 1,
+        "tools_used": [
+          "weather"
+        ],
+        "iterations": 2
+      },
+      "raw_latency_ms": 5859.3230000115,
+      "fa_latency_ms": 6306.199707993073
+    }
+  ]
+}

@@ -1,0 +1,341 @@
+[
+  {
+    "failure": {
+      "model": "qwen3:8b",
+      "case": "compare_two_cities_turn2",
+      "convo": "compare_two_cities",
+      "turn_index": 1
+    },
+    "system_prompt": "You are a helpful assistant.\n\n## Active Skills\n\n\n### Skill: general-assistant\nDefault assistant behavior\n- Be concise. Short answers over long explanations.\n- Summarize tool results \u2014 don't dump raw data.\n- If unsure and no tool helps, say so.\n- Use memory tool to save important facts for later.\n\n### Skill: tool-user\nReliable tool usage for local models\n- Use exact tool names. Do not invent names.\n- Provide all required parameters with correct types (numbers not strings).\n- If a tool fails, read the error and fix the specific issue.\n- Do not repeat the same tool call with identical arguments.\n- When you have what you need, stop calling tools and answer.",
+    "system_prompt_chars": 661,
+    "system_prompt_tokens_est": 165,
+    "tool_count": 4,
+    "tool_names": [
+      "weather",
+      "unit_converter",
+      "calculator",
+      "memory"
+    ],
+    "skill_names": [
+      "general-assistant",
+      "tool-user"
+    ],
+    "turns": [
+      {
+        "turn": 1,
+        "user": "What's the weather in New York?",
+        "response": "The current weather in New York is partly cloudy with a temperature of 72\u00b0F.",
+        "passed": true,
+        "expected": [
+          "72"
+        ],
+        "iterations": 2,
+        "tools_used": [
+          "weather"
+        ],
+        "tool_calls": 1,
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "latency_ms": 21843.809707992477
+      },
+      {
+        "turn": 2,
+        "user": "Now check London.",
+        "response": "The current weather in London is rainy with a temperature of 61\u00b0F.",
+        "passed": true,
+        "expected": [
+          "61"
+        ],
+        "iterations": 3,
+        "tools_used": [
+          "weather",
+          "weather"
+        ],
+        "tool_calls": 2,
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "latency_ms": 19786.938499979442
+      }
+    ]
+  },
+  {
+    "failure": {
+      "model": "llama3.1:latest",
+      "case": "compare_two_cities_turn3",
+      "convo": "compare_two_cities",
+      "turn_index": 2
+    },
+    "system_prompt": "You are a helpful assistant.\n\n## Active Skills\n\n\n### Skill: general-assistant\nDefault assistant behavior\n- Be concise. Short answers over long explanations.\n- Summarize tool results \u2014 don't dump raw data.\n- If unsure and no tool helps, say so.\n- Use memory tool to save important facts for later.\n\n### Skill: tool-user\nReliable tool usage for local models\n- Use exact tool names. Do not invent names.\n- Provide all required parameters with correct types (numbers not strings).\n- If a tool fails, read the error and fix the specific issue.\n- Do not repeat the same tool call with identical arguments.\n- When you have what you need, stop calling tools and answer.",
+    "system_prompt_chars": 661,
+    "system_prompt_tokens_est": 165,
+    "tool_count": 4,
+    "tool_names": [
+      "weather",
+      "unit_converter",
+      "calculator",
+      "memory"
+    ],
+    "skill_names": [
+      "general-assistant",
+      "tool-user"
+    ],
+    "turns": [
+      {
+        "turn": 1,
+        "user": "What's the weather in New York?",
+        "response": "The current temperature in New York is 72\u00b0F with partly cloudy conditions.",
+        "passed": true,
+        "expected": [
+          "72"
+        ],
+        "iterations": 2,
+        "tools_used": [
+          "weather"
+        ],
+        "tool_calls": 1,
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "latency_ms": 10844.557542004623
+      },
+      {
+        "turn": 2,
+        "user": "Now check London.",
+        "response": "The current temperature in London is 61\u00b0F with rainy conditions.",
+        "passed": true,
+        "expected": [
+          "61"
+        ],
+        "iterations": 2,
+        "tools_used": [
+          "weather"
+        ],
+        "tool_calls": 1,
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "latency_ms": 2484.123667003587
+      },
+      {
+        "turn": 3,
+        "user": "Which city is warmer and by how much?",
+        "response": "New York is warmer than London by 11\u00b0F.",
+        "passed": true,
+        "expected": [
+          "new york",
+          "11"
+        ],
+        "iterations": 2,
+        "tools_used": [
+          "calculator"
+        ],
+        "tool_calls": 1,
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "latency_ms": 2533.9225420029834
+      }
+    ]
+  },
+  {
+    "failure": {
+      "model": "llama3.1:latest",
+      "case": "context_retention_no_tools_turn2",
+      "convo": "context_retention_no_tools",
+      "turn_index": 1
+    },
+    "system_prompt": "You are a helpful assistant.\n\n## Active Skills\n\n\n### Skill: general-assistant\nDefault assistant behavior\n- Be concise. Short answers over long explanations.\n- Summarize tool results \u2014 don't dump raw data.\n- If unsure and no tool helps, say so.\n- Use memory tool to save important facts for later.\n\n### Skill: tool-user\nReliable tool usage for local models\n- Use exact tool names. Do not invent names.\n- Provide all required parameters with correct types (numbers not strings).\n- If a tool fails, read the error and fix the specific issue.\n- Do not repeat the same tool call with identical arguments.\n- When you have what you need, stop calling tools and answer.",
+    "system_prompt_chars": 661,
+    "system_prompt_tokens_est": 165,
+    "tool_count": 4,
+    "tool_names": [
+      "weather",
+      "unit_converter",
+      "calculator",
+      "memory"
+    ],
+    "skill_names": [
+      "general-assistant",
+      "tool-user"
+    ],
+    "turns": [
+      {
+        "turn": 1,
+        "user": "What's the weather in Paris?",
+        "response": "The current temperature in Paris is 68\u00b0F and it's overcast.",
+        "passed": true,
+        "expected": [
+          "68",
+          "overcast"
+        ],
+        "iterations": 2,
+        "tools_used": [
+          "weather"
+        ],
+        "tool_calls": 1,
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "latency_ms": 2396.4946669875644
+      },
+      {
+        "turn": 2,
+        "user": "Based on that weather, should I bring an umbrella?",
+        "response": "Yes, it's a good idea to bring an umbrella as the weather is overcast.",
+        "passed": true,
+        "expected": [
+          "yes"
+        ],
+        "iterations": 2,
+        "tools_used": [
+          "weather"
+        ],
+        "tool_calls": 1,
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "latency_ms": 2605.9790830186103
+      }
+    ]
+  },
+  {
+    "failure": {
+      "model": "llama3.1:latest",
+      "case": "three_city_itinerary_turn4",
+      "convo": "three_city_itinerary",
+      "turn_index": 3
+    },
+    "system_prompt": "You are a helpful assistant.\n\n## Active Skills\n\n\n### Skill: general-assistant\nDefault assistant behavior\n- Be concise. Short answers over long explanations.\n- Summarize tool results \u2014 don't dump raw data.\n- If unsure and no tool helps, say so.\n- Use memory tool to save important facts for later.\n\n### Skill: tool-user\nReliable tool usage for local models\n- Use exact tool names. Do not invent names.\n- Provide all required parameters with correct types (numbers not strings).\n- If a tool fails, read the error and fix the specific issue.\n- Do not repeat the same tool call with identical arguments.\n- When you have what you need, stop calling tools and answer.",
+    "system_prompt_chars": 661,
+    "system_prompt_tokens_est": 165,
+    "tool_count": 4,
+    "tool_names": [
+      "weather",
+      "unit_converter",
+      "calculator",
+      "memory"
+    ],
+    "skill_names": [
+      "general-assistant",
+      "tool-user"
+    ],
+    "turns": [
+      {
+        "turn": 1,
+        "user": "I'm planning a trip. First, what's the weather in Tokyo?",
+        "response": "The current weather in Tokyo is sunny with a temperature of 85\u00b0F.",
+        "passed": true,
+        "expected": [
+          "tokyo"
+        ],
+        "iterations": 2,
+        "tools_used": [
+          "weather"
+        ],
+        "tool_calls": 1,
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "latency_ms": 2650.161625002511
+      },
+      {
+        "turn": 2,
+        "user": "What about Sydney?",
+        "response": "The current weather in Sydney is clear with a temperature of 58\u00b0F.",
+        "passed": true,
+        "expected": [
+          "sydney"
+        ],
+        "iterations": 2,
+        "tools_used": [
+          "weather"
+        ],
+        "tool_calls": 1,
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "latency_ms": 2587.9979160090443
+      },
+      {
+        "turn": 3,
+        "user": "And Paris?",
+        "response": "The current weather in Paris is overcast with a temperature of 68\u00b0F.",
+        "passed": true,
+        "expected": [
+          "paris"
+        ],
+        "iterations": 2,
+        "tools_used": [
+          "weather"
+        ],
+        "tool_calls": 1,
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "latency_ms": 2548.1886669876985
+      },
+      {
+        "turn": 4,
+        "user": "Rank these three cities from warmest to coldest.",
+        "response": "It seems like the calculator tool is not able to perform this operation. However, we can manually rank the cities based on their temperatures.\n\nTokyo: 85\u00b0F\nSydney: 58\u00b0F\nParis: 68\u00b0F\n\nSo, the ranking from warmest to coldest is:\n\n1. Tokyo (85\u00b0F)\n2. Paris (68\u00b0F)\n3. Sydney (58\u00b0F)",
+        "passed": true,
+        "expected": [
+          "tokyo"
+        ],
+        "iterations": 2,
+        "tools_used": [
+          "calculator"
+        ],
+        "tool_calls": 1,
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "latency_ms": 5095.5262500210665
+      }
+    ]
+  },
+  {
+    "failure": {
+      "model": "qwen3:4b",
+      "case": "chained_conversion_and_calc_turn1",
+      "convo": "chained_conversion_and_calc",
+      "turn_index": 0
+    },
+    "system_prompt": "You are a helpful assistant.\n\n## Active Skills\n\n\n### Skill: general-assistant\nDefault assistant behavior\n- Be concise. Short answers over long explanations.\n- Summarize tool results \u2014 don't dump raw data.\n- If unsure and no tool helps, say so.\n- Use memory tool to save important facts for later.\n\n### Skill: tool-user\nReliable tool usage for local models\n- Use exact tool names. Do not invent names.\n- Provide all required parameters with correct types (numbers not strings).\n- If a tool fails, read the error and fix the specific issue.\n- Do not repeat the same tool call with identical arguments.\n- When you have what you need, stop calling tools and answer.",
+    "system_prompt_chars": 661,
+    "system_prompt_tokens_est": 165,
+    "tool_count": 4,
+    "tool_names": [
+      "weather",
+      "unit_converter",
+      "calculator",
+      "memory"
+    ],
+    "skill_names": [
+      "general-assistant",
+      "tool-user"
+    ],
+    "turns": [
+      {
+        "turn": 1,
+        "user": "Convert 10 miles to kilometers.",
+        "response": "10 miles is equal to 16.09 kilometers.",
+        "passed": true,
+        "expected": [
+          "16.09"
+        ],
+        "iterations": 2,
+        "tools_used": [
+          "unit_converter"
+        ],
+        "tool_calls": 1,
+        "validation_errors": 0,
+        "retries": 0,
+        "loop_detected": false,
+        "latency_ms": 23553.662291989895
+      }
+    ]
+  }
+]

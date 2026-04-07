@@ -495,10 +495,72 @@ Each turn is independent (FreeAgent has no multi-turn state), with context provi
 
 6. **FreeAgent adds ~2-5x latency vs raw Ollama** due to system prompt overhead (skills, memory context, tool specs). This is comparable to Strands' overhead.
 
-7. **Zero crashes across 100+ eval runs.** All failures are accuracy issues (wrong answer, wrong tool), never framework errors. The guardrails work.
+7. **Zero crashes across 100+ eval runs.** All failures are accuracy issues (wrong answer, wrong tool), never framework errors.
 
 ### Failure modes observed:
 - **content_miss:** Model calls correct tool but paraphrases the result (doesn't include expected substring)
 - **tools_wrong:** Model calls extra tools on complex chained tasks
 - **NO_MEMORY_CALL:** Some models don't recognize "save a note" as a memory operation
 - **context_retention:** Model re-calls a tool instead of reasoning from prior context
+
+---
+
+## Adversarial Rescue Test (Eval 12)
+
+10 adversarial cases × 4 models (qwen3:8b, qwen3:4b, llama3.1, gemma4:e2b) = 40 total.
+Each case targets a specific guardrail: fuzzy match, type coercion, validation retry, circuit breaker, truncation.
+
+| Outcome | Count | % |
+|---------|-------|---|
+| Both pass | 36 | 90% |
+| Rescue (raw fails, FA passes) | 1 | 2.5% |
+| Regression (raw passes, FA fails) | 1 | 2.5% |
+| Both fail | 2 | 5% |
+
+**Real rescues where a guardrail fired: 0.** The one rescue (qwen3:4b loop_trap) was due to model non-determinism, not a guardrail intervention.
+
+### Per-Model Adversarial Accuracy
+
+| Model | Raw Ollama | FreeAgent |
+|-------|-----------|-----------|
+| qwen3:8b | 90% | 90% |
+| qwen3:4b | 90% | 100% |
+| llama3.1 | 80% | 80% |
+| gemma4:e2b | 100% | 100% |
+
+---
+
+## Component A/B Test (Eval 13)
+
+4 conversations × 4 models × 4 variants (default, no_skills, no_memory_tool, stripped).
+
+| Model | default | no_skills | no_memory_tool | stripped |
+|-------|---------|-----------|----------------|---------|
+| qwen3:8b | 75% | 75% | 75% | 75% |
+| qwen3:4b | **100%** | 75% | **100%** | 75% |
+| llama3.1 | **100%** | **100%** | 75% | **100%** |
+| gemma4:e2b | 25% | 50% | 50% | 50% |
+
+**Finding:** Skills help qwen3:4b (+25% vs stripped). Skills + memory tool overwhelm gemma4:e2b (-25% vs stripped). For qwen3:8b and llama3.1, component choice is neutral.
+
+---
+
+## Failure Diagnostic (Eval 14)
+
+Re-ran 5 previously-failing cases with full trace capture. **All 5 passed on re-run** with zero guardrails fired. Failures in the multi-turn eval are non-deterministic — within the noise band of small model inference.
+
+System prompt overhead: ~165 tokens (~4% of 4K context).
+
+---
+
+## Thesis Assessment
+
+See `evaluation/THESIS_ANALYSIS.md` for the full analysis.
+
+**The guardrails (fuzzy match, type coercion, circuit breaker, validation retry) do not fire in practice** with the tested models. These models handle adversarial tool-calling inputs natively.
+
+**Framework value is in:**
+1. Conversation management (+9% multi-turn accuracy)
+2. Skills for small models (+25% for qwen3:4b)
+3. Multi-model/multi-provider abstraction
+4. Memory persistence and telemetry

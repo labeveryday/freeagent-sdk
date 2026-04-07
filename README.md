@@ -264,7 +264,26 @@ Tested against the same eval suite as raw Ollama API and Strands Agents SDK. Ful
 | qwen3:8b | 80% | 80% |
 | llama3.1:8b | 80% | 80% |
 
-**Key findings:** FreeAgent matches or beats Strands across all models. Conversation manager boosts multi-turn from 78% to 87%. Skills improve the smallest model (qwen3:4b) by +20%. gemma4:e2b (2B) achieves 80% on multi-turn via ReactEngine. Zero crashes across 100+ evaluation runs.
+### Adversarial Rescue Test (10 cases × 4 models)
+
+Tests whether framework guardrails rescue failures that raw Ollama can't handle (fuzzy tool names, type coercion, loops, large outputs).
+
+| Outcome | Count |
+|---------|-------|
+| Both pass | 36/40 (90%) |
+| Rescue (raw fails, FA passes) | 1/40 |
+| Regression | 1/40 |
+
+### Component A/B Test (4 conversations × 4 variants)
+
+| Model | default | no_skills | stripped |
+|-------|---------|-----------|---------|
+| qwen3:4b | **100%** | 75% | 75% |
+| qwen3:8b | 75% | 75% | 75% |
+| llama3.1 | **100%** | **100%** | **100%** |
+| gemma4:e2b | 25% | 50% | 50% |
+
+**Key findings:** FreeAgent matches or beats Strands across all models. Conversation manager boosts multi-turn from 78% to 87%. Skills improve qwen3:4b by +25% on multi-turn. Models handle adversarial inputs (fuzzy names, type coercion) natively — guardrails are safety nets that rarely fire. Zero crashes across 140+ evaluation runs.
 
 ## Tested Models
 

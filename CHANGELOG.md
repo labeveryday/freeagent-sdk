@@ -105,3 +105,14 @@
 - README: Added multi-turn benchmark results with conversation manager
 - README: Added gemma4:e2b to tested models table
 - CHANGELOG: Updated with conversation manager, SyncBridge fix, evaluation results
+
+### Phases 17-18: Adversarial, Component A/B, and Failure Diagnostic Evals
+- Added `evaluation/12_adversarial.py` — 10 adversarial cases × 4 models testing guardrail rescue rate
+- Added `evaluation/13_component_ab.py` — A/B test of 4 FreeAgent variants (default, no_skills, no_memory_tool, stripped)
+- Added `evaluation/14_failure_diagnostic.py` — trace-level diagnosis of 5 previously-failing cases
+- Added `evaluation/adversarial_cases.py` — adversarial case definitions
+- Added `evaluation/THESIS_ANALYSIS.md` — honest assessment of framework value based on eval data
+- **Finding:** Guardrails (fuzzy match, type coercion, circuit breaker) don't fire in practice — models handle adversarial inputs natively
+- **Finding:** Skills improve qwen3:4b by +25% on multi-turn but overwhelm gemma4:e2b (2B)
+- **Finding:** Multi-turn failures are non-deterministic (noise), not systematic framework penalty
+- Updated REPORT.md, README.md with adversarial and component A/B results
