@@ -51,9 +51,9 @@ freeagent = "freeagent.cli:main"
 [project.urls]
 Homepage = "https://freeagentsdk.com"
 Documentation = "https://freeagentsdk.com"
-Repository = "https://github.com/labeveryday/free-agent-sdk"
-Issues = "https://github.com/labeveryday/free-agent-sdk/issues"
-Changelog = "https://github.com/labeveryday/free-agent-sdk/blob/main/CHANGELOG.md"
+Repository = "https://github.com/labeveryday/freeagent-sdk"
+Issues = "https://github.com/labeveryday/freeagent-sdk/issues"
+Changelog = "https://github.com/labeveryday/freeagent-sdk/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 include = ["freeagent*"]
