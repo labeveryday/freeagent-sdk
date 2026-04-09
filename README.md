@@ -298,7 +298,7 @@ Full analysis: `evaluation/THESIS_ANALYSIS.md`
 
 ## Requirements
 
-- Python 3.10+
+- Python 3.11+
 - Ollama running locally (`ollama serve`)
 - A model pulled (`ollama pull qwen3:8b`)
 

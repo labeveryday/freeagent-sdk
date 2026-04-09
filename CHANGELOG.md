@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.3 (2026-04-09)
+
+- **Minimum Python bumped to 3.11.** The agent loop uses `asyncio.timeout()`, which was added in 3.11. The 3.10 declaration was incorrect — 0.3.2 would fail to import on 3.10.
+- CI matrix now runs on Python 3.11, 3.12, and 3.13.
+
 ## 0.3.2 (2026-04-09)
 
 ### Housekeeping & community release
