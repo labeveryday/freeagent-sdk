@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.2 (2026-04-09)
+
+### Housekeeping & community release
+
+- Repository renamed to `freeagent-sdk` and published under the custom domain https://freeagentsdk.com.
+- Docs site moved from CloudFront to GitHub Pages, restyled with a dark premium theme.
+- README: PyPI version, Python version, license, tests, and docs badges added.
+- `pyproject.toml`: expanded classifiers (Beta, Python 3.10/3.11/3.12, Typed, OS Independent) and project URLs.
+- GitHub Actions: `tests.yml` for CI on every push/PR, `publish.yml` for tag-triggered PyPI publishing via Trusted Publishing.
+- Repo cleanup: removed build scaffolding, comparison-only evals, and scratch research notes so the tree is ready for community contribution.
+
 ## 0.3.1 (2026-04-07)
 
 ### Fixes discovered by post-release verification
