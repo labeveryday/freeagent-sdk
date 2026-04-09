@@ -26,13 +26,39 @@ class ModelInfo:
 
     @property
     def is_small(self) -> bool:
-        """Models under 3B params — skills/memory can overwhelm them."""
-        return 0 < self.parameter_count < 3_000_000_000
+        """
+        Models that need stripped defaults to perform well.
+
+        Includes:
+        - Actual parameter count under 4B (e.g., phi3, tinyllama, qwen3:4b variants)
+        - Google's "effective" models (gemma3n, gemma4:eXb) which advertise as 2B/4B
+          but have 5B+ actual params and behave like the smaller variant
+        - Any model in the gemma3n or gemma4 family (MoE with limited active params)
+
+        These models are hurt by bundled skills and memory tool overhead
+        (validated by eval data: gemma4:e2b 25% default vs 50% stripped).
+        """
+        if self.parameter_count and self.parameter_count < 4_000_000_000:
+            return True
+        # Google "effective" models: gemma3n:e2b, gemma4:e2b, etc.
+        # These use MoE and behave like their "effective" size, not actual.
+        name_lower = self.name.lower()
+        if "gemma3n" in name_lower or "gemma4" in name_lower:
+            # Check for :eXb pattern (e2b, e4b)
+            if ":e" in name_lower and "b" in name_lower.split(":e", 1)[1][:3]:
+                return True
+        family_lower = self.family.lower()
+        if family_lower in ("gemma3n", "gemma4"):
+            # Conservative: strip for all gemma3n/4 until we have data otherwise
+            return True
+        return False
 
     @property
     def is_medium(self) -> bool:
-        """Models 3B-14B — sweet spot for defaults."""
-        return 3_000_000_000 <= self.parameter_count < 14_000_000_000
+        """Models 4B-14B — sweet spot for defaults."""
+        if self.is_small:
+            return False
+        return 4_000_000_000 <= self.parameter_count < 14_000_000_000
 
     @property
     def supports_native_tools(self) -> bool:

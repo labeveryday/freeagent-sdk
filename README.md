@@ -8,6 +8,8 @@ Streaming. Multi-turn out of the box. Markdown skills and memory. Built-in telem
 pip install freeagent-sdk
 ```
 
+**Links:** [Documentation site](https://labeveryday.github.io/free-agent-sdk/) · [Tutorial](docs/TUTORIAL.md) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) · [Examples](examples/) · [Evaluation data](evaluation/)
+
 ## Why FreeAgent
 
 - **Local-first**: works with Ollama and vLLM — your data never leaves your machine
@@ -292,6 +294,15 @@ Full analysis: `evaluation/THESIS_ANALYSIS.md`
 - Python 3.10+
 - Ollama running locally (`ollama serve`)
 - A model pulled (`ollama pull qwen3:8b`)
+
+## Documentation
+
+- **[Tutorial](docs/TUTORIAL.md)** — 5-minute walkthrough from install to working agent
+- **[Website](https://labeveryday.github.io/free-agent-sdk/)** — landing page and feature overview
+- **[Examples](examples/)** — runnable scripts covering tools, memory, hooks, MCP
+- **[Evaluation data](evaluation/)** — benchmark results and thesis analysis
+- **[Changelog](CHANGELOG.md)** — release history
+- **[Contributing](CONTRIBUTING.md)** — how to run tests, add skills, submit PRs
 
 ## License
 

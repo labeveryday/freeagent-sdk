@@ -173,7 +173,20 @@ async def test_arun_stream_with_tools():
             yield StreamChunk(content="The answer is 3", done=True)
 
         async def chat_stream_with_tools(self, messages, tools, temperature=0.1):
-            yield StreamChunk(content="The answer is 3", done=True)
+            nonlocal call_count
+            call_count += 1
+            if call_count == 1:
+                # First iteration: yield a tool call
+                yield StreamChunk(
+                    content="",
+                    tool_calls=[{
+                        "function": {"name": "add", "arguments": {"a": 1, "b": 2}}
+                    }],
+                    done=True,
+                )
+            else:
+                # Second iteration: yield the final text
+                yield StreamChunk(content="The answer is 3", done=True)
 
     agent = Agent(
         model="qwen3:8b",

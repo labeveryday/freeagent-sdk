@@ -86,15 +86,25 @@ class RunRecord:
         for te in self.trace_events:
             ts = f"+{te.timestamp*1000:>7.0f}ms"
             detail = ""
-            if te.event_type == "model_call_start":
+            if te.event_type == "run_start":
+                ui = te.data.get("user_input", "")
+                detail = f'"{ui[:60]}"' if ui else ""
+            elif te.event_type == "run_end":
+                preview = te.data.get("response_preview", "")
+                elapsed = te.data.get("elapsed_ms", 0)
+                detail = f'{elapsed:.0f}ms "{preview[:50]}"'
+            elif te.event_type == "model_call_start":
                 detail = f"iter={te.data.get('iteration', '?')}"
             elif te.event_type == "model_call_end":
                 preview = te.data.get("content_preview", "")
-                tc_count = len(te.data.get("tool_calls", []))
+                tc = te.data.get("tool_calls", 0)
+                tc_count = tc if isinstance(tc, int) else len(tc)
                 if tc_count:
                     detail = f"tool_calls={tc_count}"
                 elif preview:
                     detail = f'"{preview[:60]}"'
+                else:
+                    detail = "(empty)"
             elif te.event_type == "tool_call":
                 detail = f"{te.data.get('name', '?')}({_fmt_args(te.data.get('args', {}))})"
             elif te.event_type == "tool_result":
@@ -214,6 +224,7 @@ class Metrics:
             start_time=time.time(),
         )
         self.runs.append(self._current)
+        self._trace("run_start", {"model": model, "mode": mode, "user_input": user_input[:200]})
 
         if self._otel:
             self._otel.start_run_span(user_input, model, mode)
@@ -223,6 +234,12 @@ class Metrics:
         if self._current:
             self._current.response = response[:500] if response else ""
             self._current.elapsed_ms = elapsed_ms
+        self._trace("run_end", {
+            "response_preview": (response or "")[:200],
+            "elapsed_ms": elapsed_ms,
+            "iterations": self._current.iterations if self._current else 0,
+            "tool_calls": self._current.tool_call_count if self._current else 0,
+        })
 
         if self._otel:
             self._otel.end_run_span(
@@ -242,11 +259,19 @@ class Metrics:
             )
 
     def record_model_call(self, iteration: int):
-        """Called each time the model is invoked."""
+        """Called each time the model is invoked (start of call)."""
         if self._current:
             self._current.model_calls += 1
             self._current.iterations = iteration + 1
         self._trace("model_call_start", {"iteration": iteration})
+
+    def record_model_call_end(self, iteration: int, content_preview: str = "", tool_calls: int = 0):
+        """Called when a model call completes (after streaming or engine.execute)."""
+        self._trace("model_call_end", {
+            "iteration": iteration,
+            "content_preview": (content_preview or "")[:120],
+            "tool_calls": tool_calls,
+        })
 
     def start_tool(self, tool_name: str, args: dict):
         """Called before tool execution."""

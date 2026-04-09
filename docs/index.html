@@ -52,47 +52,52 @@ footer{text-align:center;padding:3rem 1rem;color:var(--tf);font-size:0.75rem;fon
 <body>
 <header>
   <div class="logo">Free<span>Agent</span></div>
-  <div class="tagline">Local-first AI agent framework. Built for models that aren't perfect.</div>
-  <div class="badge">v0.2.0 · hooks · memory · benchmarked · mit</div>
+  <div class="tagline">A clean local agent SDK for Ollama, vLLM, and OpenAI-compatible servers.</div>
+  <div class="badge">v0.3.1 · streaming · auto-tune · trace · cli · mit</div>
 </header>
 
 <nav id="nav">
   <button class="active" data-t="overview">Overview</button>
   <button data-t="start">Quick Start</button>
+  <button data-t="cli">CLI</button>
+  <button data-t="stream">Streaming</button>
   <button data-t="conv">Conversation</button>
-  <button data-t="hooks">Hooks</button>
+  <button data-t="autotune">Auto-Tune</button>
+  <button data-t="trace">Trace</button>
   <button data-t="memory">Memory</button>
-  <button data-t="tools">@tool</button>
   <button data-t="skills">Skills</button>
+  <button data-t="tools">@tool</button>
   <button data-t="providers">Providers</button>
-  <button data-t="engine">Dual Engine</button>
+  <button data-t="engine">Engines</button>
   <button data-t="guard">Guardrails</button>
   <button data-t="bench">Benchmarks</button>
   <button data-t="tests">Tests</button>
-  <button data-t="tree">Project</button>
   <button data-t="next">Roadmap</button>
 </nav>
 
 <!-- OVERVIEW -->
 <div class="panel active" id="tab-overview">
 <h2>FreeAgent SDK</h2>
-<p>A Python SDK for building AI agents on <strong>local models</strong> (Ollama, vLLM). Unlike Strands and LangChain, FreeAgent wraps your model in guardrails, hooks, and persistent memory — because small models need a co-pilot, not a blank check.</p>
+<p>A small, honest Python SDK for AI agents on <strong>local models</strong>. Streaming. Multi-turn by default. Markdown skills and memory. Auto-tuned per model. Single dependency. Actually <em>faster</em> than writing your own loop (HTTP connection reuse).</p>
+<p><strong>Not magic.</strong> The "framework catches what models can't" thesis is disproven for modern models — 0/40 adversarial cases triggered a real guardrail rescue. What it IS: the plumbing you'd write yourself, but done once, tested, and measured.</p>
 <div class="stats">
-  <div class="stat"><div class="sn">220</div><div class="sl">Tests</div></div>
+  <div class="stat"><div class="sn">281</div><div class="sl">Unit Tests</div></div>
   <div class="stat"><div class="sn">1</div><div class="sl">Dep (httpx)</div></div>
   <div class="stat"><div class="sn">3</div><div class="sl">Providers</div></div>
-  <div class="stat"><div class="sn">13</div><div class="sl">Hook Events</div></div>
+  <div class="stat"><div class="sn">4</div><div class="sl">Models Benchmarked</div></div>
   <div class="stat"><div class="sn">~300</div><div class="sl">Token Overhead</div></div>
 </div>
 <h2>What's In The Box</h2>
 <div class="gr">
-<div class="cd"><div class="cl g">Hooks</div><p>13 lifecycle events. Decorator or direct registration. Pre-built logging and cost tracking. Hooks can skip tool calls, override responses, and modify behavior without subclassing.</p></div>
-<div class="cd"><div class="cl cy">Memory</div><p>Markdown-backed files in <code>.freeagent/memory/</code>. Single <code>memory</code> tool (read/write/append/search/list). Auto-load files in system prompt. Daily logs. Token-efficient.</p></div>
-<div class="cd"><div class="cl g">Dual Engine</div><p>Native tool calling for capable models (llama3.1, qwen3). ReAct text parsing with constrained JSON for everything else. Auto-detected per model.</p></div>
-<div class="cd"><div class="cl a">Guardrails</div><p>Fuzzy tool matching, type coercion, retry with error feedback, circuit breakers, timeouts, output sanitization, context window management.</p></div>
-<div class="cd"><div class="cl p">Skills</div><p>Markdown SKILL.md with frontmatter. Bundled defaults. User skills extend or override. Injected into system prompt. ~157 tokens.</p></div>
-<div class="cd"><div class="cl b">Multi-Provider</div><p>Ollama, vLLM, OpenAI-compat (LM Studio, LocalAI, TGI). Small-model guardrails in every provider. Thinking tag stripping, JSON recovery.</p></div>
-<div class="cd"><div class="cl cy">MCP</div><p>Connect to MCP servers via stdio or HTTP. Tool schemas auto-converted. Description truncation for small models. <code>pip install freeagent-sdk[mcp]</code></p></div>
+<div class="cd"><div class="cl g">Streaming</div><p>Token-by-token streaming with semantic events: <code>TokenEvent</code>, <code>ToolCallEvent</code>, <code>ToolResultEvent</code>, <code>RunCompleteEvent</code>. Works with tool-using agents, not just chat.</p></div>
+<div class="cd"><div class="cl b">Auto-Tune</div><p>Queries Ollama <code>/api/show</code> on init. Small models get stripped defaults. Context window from the model, not a guess. Opt-out with <code>auto_tune=False</code>.</p></div>
+<div class="cd"><div class="cl p">Conversation</div><p>Multi-turn just works. Pluggable strategies: <code>SlidingWindow</code>, <code>TokenWindow</code>, <code>UnlimitedHistory</code>. Optional session persistence across process restarts.</p></div>
+<div class="cd"><div class="cl cy">Memory</div><p>Markdown files in <code>.freeagent/memory/</code>. Single <code>memory</code> tool (read/write/append/search/list). Auto-load files in system prompt. Daily logs.</p></div>
+<div class="cd"><div class="cl g">Skills</div><p>Markdown <code>SKILL.md</code> with frontmatter. Bundled defaults. User skills extend or override. +25% accuracy on qwen3:4b (measured).</p></div>
+<div class="cd"><div class="cl a">Trace API</div><p><code>agent.trace()</code> shows every model call, tool call, retry, and validation event with relative timestamps. The debugger you always wanted.</p></div>
+<div class="cd"><div class="cl b">CLI</div><p><code>freeagent ask qwen3:8b "hello"</code> — one-shot with live streaming. <code>freeagent chat</code> — REPL. <code>freeagent models</code> — list. No extra deps (stdlib argparse).</p></div>
+<div class="cd"><div class="cl cy">Multi-Provider</div><p>Ollama, vLLM, OpenAI-compat (LM Studio, LocalAI, TGI). Provider protocol means any new backend is one file.</p></div>
+<div class="cd"><div class="cl p">MCP</div><p>Connect to MCP servers via stdio or HTTP. Tool schemas auto-converted. Description truncation for small models. <code>pip install freeagent-sdk[mcp]</code></p></div>
 </div>
 </div>
 
@@ -120,10 +125,88 @@ agent = <span class="tp">Agent</span>(model=<span class="st">"llama3.1:8b"</span
 agent = <span class="tp">Agent</span>(
     model=<span class="st">"qwen3:8b"</span>,
     tools=[weather, system_info, calculator],
-    memory_path=<span class="st">"~/.freeagent/memory.json"</span>,
 )
 
 <span class="fn">print</span>(agent.<span class="fn">run</span>(<span class="st">"Weather in Portland and disk space?"</span>))</pre></div>
+<p>Memory is on by default. The agent gets a <code>memory</code> tool. Conversation is multi-turn by default. Telemetry is captured automatically.</p>
+</div>
+
+<!-- CLI -->
+<div class="panel" id="tab-cli">
+<h2>Command Line</h2>
+<p><code>pip install freeagent-sdk</code> gives you a <code>freeagent</code> command.</p>
+
+<h3>One-shot query</h3>
+<div class="cb"><div class="f">shell</div>
+<pre>$ freeagent ask qwen3:8b <span class="st">"What's the capital of France?"</span>
+Paris is the capital of France.</pre></div>
+<p>Streams tokens as they arrive. Exits when done.</p>
+
+<h3>Interactive REPL</h3>
+<div class="cb"><div class="f">shell</div>
+<pre>$ freeagent chat qwen3:8b
+freeagent &gt; What is Python?
+Python is a high-level programming language...
+freeagent &gt; When was it released?
+Python was first released in 1991...
+freeagent &gt; /trace
+Trace for run 2 (qwen3:8b, native):
+  +     0ms  run_start            <span class="st">"When was it released?"</span>
+  ...
+freeagent &gt; /exit</pre></div>
+<p>Slash commands: <code>/clear</code> reset conversation, <code>/trace</code> show last run, <code>/exit</code> quit.</p>
+
+<h3>List models</h3>
+<div class="cb"><div class="f">shell</div>
+<pre>$ freeagent models
+Name                           Size       Modified
+gemma4:e2b                     7.2GB      2026-04-06
+qwen3:8b                       5.2GB      2025-12-09
+llama3.1:latest                4.9GB      2025-12-12</pre></div>
+
+<h3>Other commands</h3>
+<div class="gr">
+<div class="cd"><div class="cl g">freeagent version</div><p>Print the installed FreeAgent version.</p></div>
+<div class="cd"><div class="cl b">freeagent trace</div><p>Show the trace of the last recorded run.</p></div>
+</div>
+</div>
+
+<!-- STREAMING -->
+<div class="panel" id="tab-stream">
+<h2>Streaming</h2>
+<p>Token-level streaming with semantic events. Works for both chat and tool-using agents.</p>
+
+<h3>Sync iterator</h3>
+<div class="cb"><div class="f">stream.py</div>
+<pre><span class="kw">from</span> freeagent <span class="kw">import</span> <span class="tp">Agent</span>, <span class="tp">TokenEvent</span>, <span class="tp">ToolCallEvent</span>, <span class="tp">ToolResultEvent</span>
+
+agent = <span class="tp">Agent</span>(model=<span class="st">"qwen3:8b"</span>, tools=[weather])
+
+<span class="kw">for</span> event <span class="kw">in</span> agent.<span class="fn">run_stream</span>(<span class="st">"Weather in Tokyo?"</span>):
+    <span class="kw">if</span> <span class="fn">isinstance</span>(event, <span class="tp">TokenEvent</span>):
+        <span class="fn">print</span>(event.text, end=<span class="st">""</span>, flush=<span class="tp">True</span>)
+    <span class="kw">elif</span> <span class="fn">isinstance</span>(event, <span class="tp">ToolCallEvent</span>):
+        <span class="fn">print</span>(<span class="st">f"\n[Calling {event.name}...]"</span>)
+    <span class="kw">elif</span> <span class="fn">isinstance</span>(event, <span class="tp">ToolResultEvent</span>):
+        <span class="fn">print</span>(<span class="st">f"[{event.name} -&gt; {'ok' if event.success else 'fail'}]"</span>)</pre></div>
+
+<h3>Async generator</h3>
+<div class="cb"><div class="f">stream_async.py</div>
+<pre><span class="kw">async for</span> event <span class="kw">in</span> agent.<span class="fn">arun_stream</span>(<span class="st">"Weather in Tokyo?"</span>):
+    <span class="kw">if</span> <span class="fn">isinstance</span>(event, <span class="tp">TokenEvent</span>):
+        <span class="fn">print</span>(event.text, end=<span class="st">""</span>, flush=<span class="tp">True</span>)</pre></div>
+
+<h3>Event types</h3>
+<div class="gr">
+<div class="cd"><div class="cl g">RunStartEvent</div><p><code>model</code>, <code>mode</code>. Fired once at the start of each run.</p></div>
+<div class="cd"><div class="cl b">IterationEvent</div><p><code>iteration</code>. Fired at the start of each agent loop cycle.</p></div>
+<div class="cd"><div class="cl p">TokenEvent</div><p><code>text</code>, <code>iteration</code>. Each token as it arrives from the model.</p></div>
+<div class="cd"><div class="cl a">ToolCallEvent</div><p><code>name</code>, <code>args</code>. Fired when the model requests a tool call.</p></div>
+<div class="cd"><div class="cl cy">ToolResultEvent</div><p><code>name</code>, <code>result</code>, <code>success</code>, <code>duration_ms</code>. After tool execution.</p></div>
+<div class="cd"><div class="cl r">ValidationErrorEvent</div><p><code>tool_name</code>, <code>errors</code>. Fired when a tool call fails validation.</p></div>
+<div class="cd"><div class="cl a">RetryEvent</div><p><code>tool_name</code>, <code>retry_count</code>. Fired on tool call retry.</p></div>
+<div class="cd"><div class="cl g">RunCompleteEvent</div><p><code>response</code>, <code>elapsed_ms</code>, <code>metrics</code>. Fired once when the run finishes.</p></div>
+</div>
 </div>
 
 <!-- CONVERSATION -->
@@ -168,6 +251,102 @@ agent = <span class="tp">Agent</span>(model=<span class="st">"qwen3:8b"</span>, 
 <div class="cd"><div class="cl a">UnlimitedHistory</div><p>Keep everything. Use with caution on small models — will overflow context window.</p></div>
 <div class="cd"><div class="cl p">Custom</div><p>Subclass <code>ConversationManager</code>. Implement <code>prepare()</code>, <code>commit()</code>, <code>clear()</code>.</p></div>
 </div>
+</div>
+
+<!-- AUTO-TUNE -->
+<div class="panel" id="tab-autotune">
+<h2>Model-Aware Defaults</h2>
+<p>FreeAgent queries Ollama's <code>/api/show</code> on init to detect model capabilities and auto-tune the framework. Small models get stripped defaults. Context window comes from the model, not a guess. Engine selection uses real capabilities, not a hardcoded list.</p>
+
+<h3>How it works</h3>
+<div class="cb"><div class="f">autotune.py</div>
+<pre><span class="kw">from</span> freeagent <span class="kw">import</span> <span class="tp">Agent</span>
+
+<span class="cm"># Auto-tuned: 2B model → strips skills + memory tool</span>
+agent = <span class="tp">Agent</span>(model=<span class="st">"gemma4:e2b"</span>)
+<span class="fn">print</span>(agent.model_info.parameter_size)   <span class="cm"># 5.1B</span>
+<span class="fn">print</span>(agent.model_info.is_small)         <span class="cm"># True (MoE pattern)</span>
+<span class="fn">print</span>(<span class="fn">len</span>(agent.skills))                 <span class="cm"># 0</span>
+<span class="fn">print</span>(agent.config.context_window)       <span class="cm"># 131072 (real)</span>
+
+<span class="cm"># Auto-tuned: 8B model → keeps full defaults</span>
+agent = <span class="tp">Agent</span>(model=<span class="st">"qwen3:8b"</span>)
+<span class="fn">print</span>(agent.model_info.parameter_size)   <span class="cm"># 8.2B</span>
+<span class="fn">print</span>(<span class="fn">len</span>(agent.skills))                 <span class="cm"># 2</span>
+<span class="fn">print</span>(agent.config.context_window)       <span class="cm"># 40960 (real)</span></pre></div>
+
+<h3>Overriding auto-tune</h3>
+<div class="cb"><div class="f">override.py</div>
+<pre><span class="cm"># Force bundled skills on a small model</span>
+agent = <span class="tp">Agent</span>(model=<span class="st">"gemma4:e2b"</span>, bundled_skills=<span class="tp">True</span>, memory_tool=<span class="tp">True</span>)
+
+<span class="cm"># Disable auto-tune entirely</span>
+agent = <span class="tp">Agent</span>(model=<span class="st">"qwen3:8b"</span>, auto_tune=<span class="tp">False</span>)</pre></div>
+
+<h3>Detection rules</h3>
+<div class="gr">
+<div class="cd"><div class="cl g">Small (&lt;4B)</div><p>Strip bundled skills and memory tool. Tiny models get overwhelmed by the extra context.</p></div>
+<div class="cd"><div class="cl b">MoE pattern</div><p><code>gemma3n:eXb</code>, <code>gemma4:eXb</code> — treated as small regardless of actual param count (effective size matters).</p></div>
+<div class="cd"><div class="cl p">Medium (4-14B)</div><p>Keep full defaults. This is the sweet spot where skills help and the memory tool doesn't overwhelm.</p></div>
+<div class="cd"><div class="cl cy">Context window</div><p>Set from <code>model_info.context_length</code>. qwen3:4b has 262k, llama3.1:latest has 131k — no more guessing.</p></div>
+<div class="cd"><div class="cl a">Engine selection</div><p>Uses <code>capabilities.includes("tools")</code>, not a hardcoded model name list.</p></div>
+<div class="cd"><div class="cl r">No Ollama?</div><p>Auto-tune silently no-ops for vLLM/OpenAI-compat providers. Defaults are used as specified.</p></div>
+</div>
+</div>
+
+<!-- TRACE -->
+<div class="panel" id="tab-trace">
+<h2>Trace Inspection</h2>
+<p>Every run is automatically traced. <code>agent.trace()</code> shows a complete timeline of what happened — model calls, tool calls, retries, validation errors — with relative timestamps.</p>
+
+<h3>Example</h3>
+<div class="cb"><div class="f">trace.py</div>
+<pre><span class="kw">from</span> freeagent <span class="kw">import</span> <span class="tp">Agent</span>, <span class="fn">tool</span>
+
+<span class="an">@tool</span>
+<span class="kw">def</span> <span class="fn">adder</span>(a: <span class="tp">int</span>, b: <span class="tp">int</span>) -&gt; <span class="tp">int</span>:
+    <span class="st">"""Add two numbers."""</span>
+    <span class="kw">return</span> a + b
+
+agent = <span class="tp">Agent</span>(model=<span class="st">"qwen3:4b"</span>, tools=[adder])
+agent.<span class="fn">run</span>(<span class="st">"What is 47 + 23?"</span>)
+
+<span class="fn">print</span>(agent.<span class="fn">trace</span>())</pre></div>
+
+<div class="to">
+Trace for run 1 (qwen3:4b, native):
+  +      0ms  <span class="p">run_start</span>            <span class="lb">"What is 47 + 23?"</span>
+  +      0ms  <span class="p">model_call_start</span>     iter=0
+  +   5800ms  <span class="p">model_call_end</span>       tool_calls=1
+  +   5801ms  <span class="p">tool_call</span>            adder(a=47, b=23)
+  +   5801ms  <span class="p">tool_result</span>          adder -&gt; ok (0ms)
+  +   5802ms  <span class="p">model_call_start</span>     iter=1
+  +  12191ms  <span class="p">model_call_end</span>       <span class="lb">"The result of 47 + 23 is **70**."</span>
+  +  12191ms  <span class="p">run_end</span>              12191ms "The result of 47 + 23 is **70**."
+</div>
+
+<h3>What's recorded</h3>
+<div class="gr">
+<div class="cd"><div class="cl g">run_start / run_end</div><p>User input, final response, elapsed ms, iteration count.</p></div>
+<div class="cd"><div class="cl b">model_call_start / end</div><p>Iteration number, content preview, tool call count. Timings show the model's generation latency.</p></div>
+<div class="cd"><div class="cl p">tool_call / tool_result</div><p>Tool name, arguments, success, duration_ms, result preview.</p></div>
+<div class="cd"><div class="cl a">validation_error</div><p>When a tool call fails validation — tool name and specific error messages.</p></div>
+<div class="cd"><div class="cl a">retry</div><p>When the agent retries after a validation error, with the retry count.</p></div>
+<div class="cd"><div class="cl r">loop_detected / timeout</div><p>When the circuit breaker fires or the run hits its timeout.</p></div>
+</div>
+
+<h3>Other formats</h3>
+<div class="cb"><div class="f">formats.py</div>
+<pre><span class="cm"># One-line summary</span>
+<span class="fn">print</span>(agent.last_run.<span class="fn">summary</span>())
+<span class="cm"># Run 1: qwen3:4b (native) 12191ms, 2 iters, 1 tool calls</span>
+
+<span class="cm"># Markdown report</span>
+<span class="fn">print</span>(agent.last_run.<span class="fn">to_markdown</span>())
+
+<span class="cm"># Raw trace events</span>
+<span class="kw">for</span> te <span class="kw">in</span> agent.last_run.trace_events:
+    <span class="fn">print</span>(te.timestamp, te.event_type, te.data)</pre></div>
 </div>
 
 <!-- HOOKS -->
@@ -552,24 +731,28 @@ llama3.1:8b     <span class="p">60%</span>         <span class="p">4/5</span>
 
 <!-- ROADMAP -->
 <div class="panel" id="tab-next">
-<h2>What's Done (v0.2.0)</h2>
+<h2>What's Done (v0.3.1)</h2>
 <div class="gr">
-<div class="cd"><div class="cl g">✓ Core Agent Loop</div><p>Dual-mode, guardrails, timeout, partial results, parallel tool calling</p></div>
-<div class="cd"><div class="cl g">✓ Hooks</div><p>13 events, decorator API, skip/override, pre-built hooks</p></div>
-<div class="cd"><div class="cl g">✓ Memory</div><p>Markdown-backed files, single memory tool, auto_load, daily logs</p></div>
-<div class="cd"><div class="cl g">✓ Skills</div><p>Markdown SKILL.md with frontmatter, bundled defaults, user extensions</p></div>
-<div class="cd"><div class="cl g">✓ Multi-Provider</div><p>Ollama, vLLM, OpenAI-compat with small-model guardrails</p></div>
-<div class="cd"><div class="cl g">✓ MCP Support</div><p>Stdio + HTTP transports, schema conversion, conditional import</p></div>
-<div class="cd"><div class="cl g">✓ Reliability</div><p>Output sanitization, context window management, model fallback</p></div>
-<div class="cd"><div class="cl g">✓ Telemetry</div><p>Built-in metrics, optional OTEL export, per-tool stats</p></div>
+<div class="cd"><div class="cl g">✓ Streaming</div><p>Token-by-token streaming via <code>agent.run_stream()</code> / <code>arun_stream()</code>. Works for tool-using agents, not just chat. Semantic events: <code>TokenEvent</code>, <code>ToolCallEvent</code>, etc.</p></div>
+<div class="cd"><div class="cl g">✓ Auto-Tune</div><p>Queries Ollama <code>/api/show</code>. Small models get stripped defaults. Context window from the model. Engine selection from real capabilities.</p></div>
+<div class="cd"><div class="cl g">✓ Trace API</div><p><code>agent.trace()</code> full timeline with relative timestamps. <code>run_start</code>, <code>model_call_*</code>, <code>tool_*</code>, <code>validation_*</code>, <code>run_end</code>.</p></div>
+<div class="cd"><div class="cl g">✓ CLI</div><p><code>freeagent ask</code>, <code>freeagent chat</code>, <code>freeagent models</code>, <code>freeagent trace</code>, <code>freeagent version</code>. Stdlib argparse, no extra deps.</p></div>
+<div class="cd"><div class="cl g">✓ Conversation</div><p>Multi-turn by default. <code>SlidingWindow</code>, <code>TokenWindow</code>, <code>UnlimitedHistory</code>, session persistence.</p></div>
+<div class="cd"><div class="cl g">✓ Memory</div><p>Markdown-backed files, single <code>memory</code> tool, auto_load, daily logs, caching.</p></div>
+<div class="cd"><div class="cl g">✓ Skills</div><p>Markdown <code>SKILL.md</code> with frontmatter, bundled defaults, user extensions.</p></div>
+<div class="cd"><div class="cl g">✓ Multi-Provider</div><p>Ollama (streaming), vLLM (streaming), OpenAI-compat (streaming).</p></div>
+<div class="cd"><div class="cl g">✓ MCP Support</div><p>Stdio + streamable HTTP transports, schema conversion.</p></div>
+<div class="cd"><div class="cl g">✓ Telemetry</div><p>Built-in metrics, optional OTEL export, per-tool stats, full trace events.</p></div>
 </div>
 <h2>What's Next</h2>
-<div class="cd"><div class="cl a">Streaming</div><p>Token-by-token output via hooks (<code>on_token</code> event). Works with both native and ReAct engines.</p></div>
-<div class="cd"><div class="cl b">Multi-Agent</div><p>Agent-as-tool. Manager routes to specialists. Each with own tools, memory, hooks.</p></div>
-<div class="cd"><div class="cl p">Cron / Heartbeat</div><p>Lightweight daemon. Wake agent on interval. Run a checklist. Proactive, not reactive.</p></div>
+<div class="gr">
+<div class="cd"><div class="cl b">Structured Output</div><p>First-class Pydantic schema support via <code>agent.run_structured()</code>. Already works under the hood via the constrained JSON path.</p></div>
+<div class="cd"><div class="cl p">Subagents</div><p>Agent-as-tool composition. Spawn a specialist from inside a tool. Shared conversation context or isolated.</p></div>
+<div class="cd"><div class="cl a">Tool Policies</div><p><code>allow</code> / <code>deny</code> / <code>ask</code> per tool. Safety rails for production deployments.</p></div>
+</div>
 </div>
 
-<footer>FreeAgent SDK v0.2.0 · 220 tests · httpx only · skills + memory + MCP · benchmarked · MIT</footer>
+<footer>FreeAgent SDK v0.3.1 · 281 tests · httpx only · streaming · auto-tune · CLI · benchmarked · MIT</footer>
 
 <script>
 document.getElementById('nav').addEventListener('click',e=>{

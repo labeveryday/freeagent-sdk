@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.1 (2026-04-07)
+
+### Fixes discovered by post-release verification
+
+- **Streaming actually streams for tool-using agents.** The 0.3.0 streaming path only worked for chat-only agents because `_agent_loop_stream` called the non-streaming `engine.execute()`, then emitted the full response as one `TokenEvent`. Now the agent loop streams chunks directly from `provider.chat_stream_with_tools()`, yielding `TokenEvent`s as tokens arrive from Ollama. Verified: 16 token events on a qwen3:4b tool run instead of 1.
+- **Auto-tune threshold raised to <4B params + MoE pattern match.** The 0.3.0 threshold of `<3B` meant gemma4:e2b (5.1B actual params despite the "e2b" name) never got stripped defaults, even though eval data said it should. Threshold is now `<4B` with additional detection for the `gemma3n/gemma4:eXb` pattern (MoE models where effective size matters). gemma4:e2b now correctly receives stripped defaults (0 skills, no memory tool).
+- **Trace API now complete.** 0.3.0 only recorded `model_call_start`. Added `run_start`, `run_end`, and `model_call_end` trace events. Renderer updated to handle integer tool_calls counts (was expecting a list). `agent.trace()` now shows a full timeline with final response preview.
+- Added `ConversationManager`, `SlidingWindow`, `TokenWindow`, `UnlimitedHistory` to `__all__` (were imported but not exported).
+- `ToolMockProvider` test updated to yield tool calls in chunks, matching real streaming providers.
+
 ## 0.3.0 (2026-04-07)
 
 ### Phase 20: Streaming Support

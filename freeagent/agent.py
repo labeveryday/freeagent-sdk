@@ -330,6 +330,7 @@ class Agent:
                 )
                 result = response.content
                 yield TokenEvent(text=result, iteration=0)
+            self.metrics.record_model_call_end(0, content_preview=result, tool_calls=0)
             messages.append(Message.assistant(result))
         else:
             # Agent loop with timeout
@@ -407,23 +408,82 @@ class Agent:
             # ── Telemetry: model call
             self.metrics.record_model_call(iteration)
 
-            # Get next action from engine
-            try:
-                result = await self.engine.execute(
-                    messages=messages,
-                    tools=self.tools,
-                    temperature=self.config.temperature,
-                )
-            except ConnectionError:
-                fallback = self._try_fallback()
-                if fallback:
+            # Get next action — stream via provider if available, fallback to engine
+            result = None
+            use_stream = (
+                self._mode == "native"
+                and hasattr(self.provider, "chat_stream_with_tools")
+            )
+
+            if use_stream:
+                # Stream chunks directly from the provider, yielding TokenEvents live
+                tool_specs = [t.to_ollama_spec() for t in self.tools]
+                accumulated_content = ""
+                accumulated_tool_calls: list[dict] = []
+                try:
+                    async for chunk in self.provider.chat_stream_with_tools(
+                        messages=messages,
+                        tools=tool_specs,
+                        temperature=self.config.temperature,
+                    ):
+                        if chunk.content:
+                            accumulated_content += chunk.content
+                            yield TokenEvent(text=chunk.content, iteration=iteration)
+                        if chunk.tool_calls:
+                            accumulated_tool_calls.extend(chunk.tool_calls)
+                except ConnectionError:
+                    fallback = self._try_fallback()
+                    if not fallback:
+                        raise
+                    # On fallback, retry non-streaming
+                    use_stream = False
+
+                if use_stream:
+                    # Assemble EngineResult from streamed accumulations
+                    if accumulated_tool_calls:
+                        calls = []
+                        for i, call in enumerate(accumulated_tool_calls):
+                            fn = call.get("function", {})
+                            calls.append(ToolCall(
+                                id=call.get("id", f"call_{i}"),
+                                name=fn.get("name", ""),
+                                args=fn.get("arguments", {}),
+                            ))
+                        if len(calls) == 1:
+                            result = EngineResult.tool_call(calls[0].name, calls[0].args)
+                        else:
+                            result = EngineResult.multi_tool_call(calls)
+                    else:
+                        result = EngineResult.text(accumulated_content)
+
+            if result is None:
+                # Non-streaming path (ReactEngine, or fallback)
+                try:
                     result = await self.engine.execute(
                         messages=messages,
                         tools=self.tools,
                         temperature=self.config.temperature,
                     )
-                else:
-                    raise
+                except ConnectionError:
+                    fallback = self._try_fallback()
+                    if fallback:
+                        result = await self.engine.execute(
+                            messages=messages,
+                            tools=self.tools,
+                            temperature=self.config.temperature,
+                        )
+                    else:
+                        raise
+                # Non-streaming: emit the content as a single TokenEvent
+                if not result.is_tool_call and result.content:
+                    yield TokenEvent(text=result.content, iteration=iteration)
+
+            # Record model call end for trace
+            self.metrics.record_model_call_end(
+                iteration,
+                content_preview=result.content or "",
+                tool_calls=len(result.tool_calls) if result.tool_calls else (1 if result.is_tool_call else 0),
+            )
 
             # Fire after_model hook
             self._fire(
@@ -435,9 +495,7 @@ class Agent:
             # ── Text response (final answer) ──
             if not result.is_tool_call:
                 messages.append(Message.assistant(result.content))
-                # Yield the final text as tokens (single chunk from non-streaming engine)
-                if result.content:
-                    yield TokenEvent(text=result.content, iteration=iteration)
+                # Token events already yielded above (streaming or single chunk)
                 return
 
             # ── Tool call(s) — handle single or parallel ──

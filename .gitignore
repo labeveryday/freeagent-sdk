@@ -209,6 +209,10 @@ __marimo__/
 # Autonomous build artifacts
 build-logs/
 BUILD_PROGRESS.md
+PLAN.md
 PROMPT.md
+build.sh
 CLAUDE.md
 .claude/
+.deploy-docs/
+.freeagent/

@@ -3,7 +3,7 @@ FreeAgent SDK — Local-first AI agent framework.
 Built for models that aren't perfect.
 """
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 from .agent import Agent
 from .tool import tool, Tool, ToolResult
@@ -35,6 +35,10 @@ __all__ = [
     "OpenAICompatProvider",
     "VLLMProvider",
     "Skill",
+    "ConversationManager",
+    "SlidingWindow",
+    "TokenWindow",
+    "UnlimitedHistory",
     "Metrics",
     "RunStartEvent",
     "TokenEvent",
