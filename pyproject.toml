@@ -12,13 +12,19 @@ requires-python = ">=3.10"
 authors = [
     {name = "FreeAgent Contributors"},
 ]
-keywords = ["ai", "agents", "llm", "ollama", "local", "tool-calling"]
+keywords = ["ai", "agents", "llm", "ollama", "vllm", "local", "tool-calling", "mcp", "streaming"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
 ]
 
 dependencies = [
@@ -43,8 +49,11 @@ otel = [
 freeagent = "freeagent.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/freeagent-sdk/freeagent"
-Documentation = "https://freeagent-sdk.dev"
+Homepage = "https://freeagentsdk.com"
+Documentation = "https://freeagentsdk.com"
+Repository = "https://github.com/labeveryday/free-agent-sdk"
+Issues = "https://github.com/labeveryday/free-agent-sdk/issues"
+Changelog = "https://github.com/labeveryday/free-agent-sdk/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 include = ["freeagent*"]

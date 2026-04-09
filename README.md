@@ -1,5 +1,12 @@
 # FreeAgent SDK
 
+[![PyPI version](https://img.shields.io/pypi/v/freeagent-sdk.svg?color=1c5d99&labelColor=222)](https://pypi.org/project/freeagent-sdk/)
+[![Python versions](https://img.shields.io/pypi/pyversions/freeagent-sdk.svg?color=639fab&labelColor=222)](https://pypi.org/project/freeagent-sdk/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-bbcde5.svg?labelColor=222)](LICENSE)
+[![Tests](https://github.com/labeveryday/free-agent-sdk/actions/workflows/tests.yml/badge.svg)](https://github.com/labeveryday/free-agent-sdk/actions/workflows/tests.yml)
+[![Docs](https://img.shields.io/badge/docs-freeagentsdk.com-1c5d99?labelColor=222)](https://freeagentsdk.com)
+[![Downloads](https://img.shields.io/pypi/dm/freeagent-sdk.svg?color=639fab&labelColor=222)](https://pypi.org/project/freeagent-sdk/)
+
 **A clean local agent SDK for Ollama, vLLM, and OpenAI-compatible servers.**
 
 Streaming. Multi-turn out of the box. Markdown skills and memory. Built-in telemetry. Single dependency.
@@ -8,7 +15,7 @@ Streaming. Multi-turn out of the box. Markdown skills and memory. Built-in telem
 pip install freeagent-sdk
 ```
 
-**Links:** [Documentation site](https://labeveryday.github.io/free-agent-sdk/) · [Tutorial](docs/TUTORIAL.md) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) · [Examples](examples/) · [Evaluation data](evaluation/)
+**Links:** [Documentation](https://freeagentsdk.com) · [Tutorial](docs/TUTORIAL.md) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) · [Examples](examples/) · [Evaluation data](evaluation/)
 
 ## Why FreeAgent
 
