@@ -230,24 +230,24 @@ Install with: `pip install freeagent-sdk[mcp]`
 
 ## Real Performance
 
-Tested against raw Ollama API and Strands Agents SDK with the same eval suite (100+ cases, 4 models). Full data in `evaluation/`.
+Tested against the raw Ollama API with the same eval suite (100+ cases, 4 models). Full data in `evaluation/`.
 
 ### Multi-Turn Conversations (6 conversations, 15 turns)
 
-| Model | Raw Ollama | Strands | FreeAgent |
-|-------|-----------|---------|-----------|
-| qwen3:8b | 93% | 73% | **87% (+14% vs Strands)** |
-| qwen3:4b | 93% | 80% | **87% (+7% vs Strands)** |
-| llama3.1:8b | 87% | 73% | **80% (+7% vs Strands)** |
-| gemma4:e2b (2B) | N/A | N/A | **80%** |
+| Model | Raw Ollama | FreeAgent |
+|-------|-----------|-----------|
+| qwen3:8b | 93% | **87%** |
+| qwen3:4b | 93% | **87%** |
+| llama3.1:8b | 87% | **80%** |
+| gemma4:e2b (2B) | N/A | **80%** |
 
 ### Tool Calling Accuracy (8 cases)
 
-| Model | Raw Ollama | Strands | FreeAgent |
-|-------|-----------|---------|-----------|
-| qwen3:8b | 75% | 75% | 75% |
-| qwen3:4b | 100% | 88% | 88% |
-| llama3.1:8b | 62% | 62% | **75% (+13%)** |
+| Model | Raw Ollama | FreeAgent |
+|-------|-----------|-----------|
+| qwen3:8b | 75% | 75% |
+| qwen3:4b | 100% | 88% |
+| llama3.1:8b | 62% | **75% (+13%)** |
 
 ### Streaming Latency (median of 3 runs)
 

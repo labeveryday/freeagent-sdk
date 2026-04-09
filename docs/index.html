@@ -600,23 +600,23 @@ agent.metrics.to_json(<span class="st">"m.json"</span>)   <span class="cm"># exp
 
 <!-- BENCHMARKS -->
 <div class="panel" id="tab-bench">
-<h2>FreeAgent vs Raw Ollama vs Strands</h2>
-<p>Tested with the same eval suite across 3 frameworks, 3 models, and 72+ runs. Full results in <code>evaluation/REPORT.md</code>.</p>
+<h2>FreeAgent vs Raw Ollama</h2>
+<p>Tested with the same eval suite across 4 models and 100+ runs. Full results in <code>evaluation/</code>.</p>
 
 <h3>Tool Calling Accuracy (8 cases)</h3>
 <div class="to">
-<span class="lb">Model           Raw Ollama    Strands    FreeAgent</span>
-qwen3:8b        <span class="p">75%</span>           <span class="p">75%</span>        <span class="p">75%</span>
-qwen3:4b        <span class="p">100%</span>          <span class="fl">88%</span>        <span class="fl">88%</span>
-llama3.1:8b     <span class="fl">62%</span>           <span class="fl">62%</span>        <span class="p">75% (+13%)</span>
+<span class="lb">Model           Raw Ollama    FreeAgent</span>
+qwen3:8b        <span class="p">75%</span>           <span class="p">75%</span>
+qwen3:4b        <span class="p">100%</span>          <span class="fl">88%</span>
+llama3.1:8b     <span class="fl">62%</span>           <span class="p">75% (+13%)</span>
 </div>
 
 <h3>MCP Tool Calling (21 NBA tools, 8 cases)</h3>
 <div class="to">
-<span class="lb">Model           Raw Ollama    Strands    FreeAgent</span>
-qwen3:8b        <span class="p">100%</span>          <span class="fl">88%</span>        <span class="fl">88%</span>
-qwen3:4b        <span class="fl">88%</span>           <span class="fl">75%</span>        <span class="p">88% (+13%)</span>
-llama3.1:8b     <span class="p">100%</span>          <span class="p">100%</span>       <span class="fl">88%</span>
+<span class="lb">Model           Raw Ollama    FreeAgent</span>
+qwen3:8b        <span class="p">100%</span>          <span class="fl">88%</span>
+qwen3:4b        <span class="fl">88%</span>           <span class="p">88%</span>
+llama3.1:8b     <span class="p">100%</span>          <span class="fl">88%</span>
 </div>
 
 <h3>Skills Impact (A/B test, 5 cases)</h3>
@@ -629,11 +629,11 @@ llama3.1:8b     <span class="p">80%</span>            <span class="p">80%</span>
 
 <h3>Multi-Turn Conversations (6 conversations, 15 turns)</h3>
 <div class="to">
-<span class="lb">Model           Raw Ollama    Strands    FreeAgent (conv)</span>
-qwen3:8b        <span class="p">93%</span>           <span class="fl">73%</span>        <span class="p">87% (+14% vs Strands)</span>
-qwen3:4b        <span class="p">93%</span>           <span class="fl">80%</span>        <span class="p">87% (+7% vs Strands)</span>
-llama3.1:8b     <span class="fl">87%</span>           <span class="fl">73%</span>        <span class="p">80% (+7% vs Strands)</span>
-gemma4:e2b      N/A           N/A        <span class="p">80% (ReactEngine, 2B)</span>
+<span class="lb">Model           Raw Ollama    FreeAgent (conv)</span>
+qwen3:8b        <span class="p">93%</span>           <span class="p">87%</span>
+qwen3:4b        <span class="p">93%</span>           <span class="p">87%</span>
+llama3.1:8b     <span class="fl">87%</span>           <span class="p">80%</span>
+gemma4:e2b      N/A           <span class="p">80% (ReactEngine, 2B)</span>
 </div>
 
 <h3>Memory Tool Usability (5 operations)</h3>
@@ -646,8 +646,8 @@ llama3.1:8b     <span class="p">60%</span>         <span class="p">4/5</span>
 
 <h2>Key Findings</h2>
 <div class="gr">
-<div class="cd"><div class="cl g">Beats Strands on multi-turn</div><p>Conversation manager: 87% vs Strands 73-80%. Up from 78% without state. SlidingWindow default just works.</p></div>
-<div class="cd"><div class="cl g">Matches or beats Strands</div><p>FreeAgent consistently matches or beats Strands accuracy across all eval types. Improves llama3.1 tool calling by +13%.</p></div>
+<div class="cd"><div class="cl g">Multi-turn just works</div><p>Conversation manager delivers 87% on multi-turn conversations out of the box. SlidingWindow default needs no configuration.</p></div>
+<div class="cd"><div class="cl g">Improves llama3.1</div><p>FreeAgent boosts llama3.1 tool calling accuracy by +13% through fuzzy name matching and type coercion.</p></div>
 <div class="cd"><div class="cl g">ReactEngine works</div><p>gemma4:e2b (2B) achieves 80% on multi-turn via text-based ReAct. Matches llama3.1 (8B) at 1/4 the size. No parse errors.</p></div>
 <div class="cd"><div class="cl g">Skills help small models</div><p>Bundled tool-user skill improves qwen3:4b by +20%. Skills are neutral for larger models — they don't need the guidance.</p></div>
 <div class="cd"><div class="cl a">Memory works</div><p>All models understand the single-tool action pattern (4-5/5 usage rate). Write operations had a .md extension bug (now fixed).</p></div>

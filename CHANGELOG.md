@@ -111,8 +111,7 @@
 
 ### Phase 7: Baseline Evaluations
 - 5 evaluations: baseline chat, tool calling, MCP NBA stats, multi-turn, multi-turn MCP
-- Compared raw Ollama API vs Strands Agents SDK across 3 models
-- Results: Raw Ollama generally matches or beats Strands in accuracy
+- Baseline comparisons against raw Ollama API across 3 models
 
 ### Phase 8: Live Integration Tests
 - 29 integration tests across 5 files: chat, tools, memory, skills, ReactEngine
@@ -122,7 +121,6 @@
 
 ### Phases 9-11: FreeAgent Evaluations
 - 5 FreeAgent eval scripts: tool calling, multi-turn, MCP, skills A/B, memory usability
-- FreeAgent matches or beats Strands accuracy across all eval types
 - FreeAgent improves llama3.1 tool calling by +13% vs raw Ollama
 - Skills improve qwen3:4b accuracy by +20%
 - Memory tool usability at 60% — fixed `.md` extension bug
@@ -157,7 +155,6 @@
 - New eval: `evaluation/11_freeagent_conversation.py` — 6 conversations, 15 turns, 4 models
 - First evaluation of gemma4:e2b (2B) with ReactEngine
 - FreeAgent conversation manager: 87% accuracy (qwen3:8b, qwen3:4b), up from 78% without state
-- FreeAgent beats Strands on multi-turn: 87% vs 73-80% across models
 - gemma4:e2b achieves 80% via ReactEngine — matches llama3.1 accuracy at 1/4 the size
 - Comparison report: `evaluation/CONVERSATION_REPORT.md`
 

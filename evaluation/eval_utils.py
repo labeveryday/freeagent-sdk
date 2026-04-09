@@ -79,7 +79,6 @@ class EvalSuite:
             successes = sum(1 for r in results if r.success)
             correct = sum(1 for r in results if r.correct)
             avg_latency = sum(r.latency_ms for r in results) / total if total else 0
-            # Only average TPS across results that have it (skip Strands zeros)
             tps_results = [r.tokens_per_second for r in results if r.tokens_per_second > 0]
             avg_tps = sum(tps_results) / len(tps_results) if tps_results else 0
             errors = [r.error for r in results if r.error]
@@ -347,28 +346,6 @@ OLLAMA_TOOL_SPECS = [
 ]
 
 
-def make_strands_tools():
-    """Create Strands tool wrappers. Names match the Ollama tool specs exactly."""
-    import strands
-
-    @strands.tool(name="weather")
-    def weather_tool(city: str) -> dict:
-        """Get current weather for a city."""
-        return weather(city)
-
-    @strands.tool(name="calculator")
-    def calculator_tool(expression: str) -> dict:
-        """Evaluate a math expression. Supports basic arithmetic."""
-        return calculator(expression)
-
-    @strands.tool(name="unit_converter")
-    def unit_converter_tool(value: float, from_unit: str, to_unit: str) -> dict:
-        """Convert between common units (miles/km, fahrenheit/celsius, pounds/kg, feet/meters)."""
-        return unit_converter(value, from_unit, to_unit)
-
-    return [weather_tool, calculator_tool, unit_converter_tool]
-
-
 # ── Helpers ───────────────────────────────────────────────
 
 def check_response_contains(response_text: str, expected: list[str]) -> bool:
@@ -392,56 +369,3 @@ def save_results(suite: EvalSuite, filename: str):
     print(f"Results saved to {path}")
 
 
-# ── Strands Metrics Extraction ────────────────────────────
-
-def extract_strands_metrics(agent) -> dict:
-    """
-    Extract tool calls, cycles, timing, and token usage from a Strands agent
-    after a run. Works with agent.event_loop_metrics.
-
-    Returns dict with:
-        cycles, total_duration, avg_cycle_time,
-        tools_called (list of names), tool_details (per-tool stats),
-        total_tool_calls, accumulated_usage (tokens)
-    """
-    m = agent.event_loop_metrics
-    summary = m.get_summary()
-
-    tools_called = []
-    tool_details = {}
-    for tool_name, info in summary.get("tool_usage", {}).items():
-        stats = info.get("execution_stats", {})
-        tools_called.append(tool_name)
-        tool_details[tool_name] = {
-            "count": stats.get("call_count", 0),
-            "success": stats.get("success_count", 0),
-            "errors": stats.get("error_count", 0),
-            "avg_time": round(stats.get("average_time", 0), 3),
-            "success_rate": round(stats.get("success_rate", 0), 3),
-        }
-
-    usage = summary.get("accumulated_usage", {})
-
-    return {
-        "cycles": summary.get("total_cycles", 0),
-        "total_duration": summary.get("total_duration", 0),
-        "avg_cycle_time": summary.get("average_cycle_time", 0),
-        "tools_called": tools_called,
-        "tool_details": tool_details,
-        "total_tool_calls": sum(d["count"] for d in tool_details.values()),
-        "input_tokens": usage.get("inputTokens", 0),
-        "output_tokens": usage.get("outputTokens", 0),
-        "total_tokens": usage.get("totalTokens", 0),
-    }
-
-
-def format_strands_metrics(sm: dict) -> str:
-    """Format strands metrics dict into a compact log string."""
-    tools_str = ", ".join(sm["tools_called"]) if sm["tools_called"] else "none"
-    tokens = f"  tokens:{sm['total_tokens']}" if sm["total_tokens"] else ""
-    return (
-        f"{sm['cycles']} cycles  "
-        f"calls:{sm['total_tool_calls']}  "
-        f"tools:[{tools_str}]"
-        f"{tokens}"
-    )
