@@ -216,3 +216,4 @@ CLAUDE.md
 .claude/
 .deploy-docs/
 .freeagent/
+.vscode/
